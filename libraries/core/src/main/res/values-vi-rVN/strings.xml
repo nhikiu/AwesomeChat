@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="viet_nam">Việt Nam</string>
+    <string name="english">Tiếng Anh</string>
+    <string name="text_empty" />
+
+    <!--    setting-->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="not_connected_internet">Not connected internet</string>
+</resources>
