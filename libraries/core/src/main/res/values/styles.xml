@@ -15,6 +15,10 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="text_bold_32" parent="text_bold">
+        <item name="android:textSize">@dimen/text_size_32</item>
+    </style>
+
     <style name="text_bold_16" parent="text_bold">
         <item name="android:textSize">@dimen/text_size_16</item>
     </style>
