@@ -2,6 +2,30 @@
     <string name="app_name" translatable="false">Awesome Chat</string>
     <string name="home">Home</string>
     <string name="favorite">Favorite</string>
-    <string name="splash">Splash</string>
+    <string name="splash" translatable="false">Splash</string>
+
+    <!--    splash screen-->
+    <string name="start_with_awesome_chat">Start with Awesome chat</string>
+    <string name="awesome" translatable="false">Awesome</string>
+    <string name="chat" translatable="false">chat</string>
+
+    <!--    log in screen-->
+    <string name="login">Login</string>
+    <string name="email" translatable="false">Email</string>
+    <string name="password">Password</string>
+    <string name="email_hint" translatable="false">yourname@rikkeisoft.com</string>
+
+    <string name="forgot_password">Forgot password ?</string>
+    <string name="dont_have_account">Do not have an account?</string>
+    <string name="sign_up_now">Sign Up</string>
+
+    <!--    sign up screen-->
+    <string name="full_name">Full Name</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="name_hint" translatable="false">rikkeisoft</string>
+    <string name="policy">I agree to the policies and terms</string>
+
+    <string name="login_now">Log In</string>
+    <string name="already_have_an_account">Already have an account?</string>
 
 </resources>
