@@ -2,6 +2,25 @@
 <resources>
     <string name="home">Trang chu</string>
     <string name="favorite">Yeu thich</string>
-    <string name="splash">Bắn tung tóe</string>
+
+    <!--    splash screen-->
+    <string name="start_with_awesome_chat">Trải nghiệm Awesome chat</string>
+
+
+    <!--    log in screen-->
+    <string name="login">Đăng nhập</string>
+    <string name="password">Mật khẩu</string>
+
+    <string name="forgot_password">Quên mật khẩu ?</string>
+    <string name="dont_have_account">Chưa có tài khoản?</string>
+    <string name="sign_up_now">Đăng ký ngay</string>
+
+    <!--    sign up screen-->
+    <string name="full_name">Họ và tên</string>
+    <string name="sign_up">Đăng ký</string>
+    <string name="policy">Tôi đồng ý với các chính sách và điều khoản</string>
+
+    <string name="login_now">Đăng nhập ngay</string>
+    <string name="already_have_an_account">Bạn đã có tài khoản?</string>
 
 </resources>
