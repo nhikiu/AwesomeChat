@@ -24,15 +24,14 @@ class SplashFragment :
         super.bindingAction()
 
         viewModel.actionSPlash.observe(viewLifecycleOwner) {
-            appNavigation.openSplashToHomeScreen()
+            appNavigation.openSplashToLogInScreen()
         }
     }
 
     override fun bindingStateView() {
         super.bindingStateView()
         viewModel.splashTitle.observe(viewLifecycleOwner) {
-            binding.text.setTextCompute(getString(it))
+
         }
     }
-
 }
