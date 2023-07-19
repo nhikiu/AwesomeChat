@@ -10,6 +10,13 @@
     <!--    log in screen-->
     <string name="login">Đăng nhập</string>
     <string name="password">Mật khẩu</string>
+    <string name="email_required">Vui lòng nhập email</string>
+    <string name="email_error_title">Email sai định dạng</string>
+    <string name="email_error_body">Vui lòng nhập email đúng định dạng</string>
+    <string name="password_error_title">Mật khẩu sai định dạng</string>
+    <string name="password_error_body">Vui lòng nhập lại mật khẩu. Mật khẩu chứa tối thiểu 8 ký tự, chứa ít nhất 1 chữ cái thường (a-z), 1 chữ cái hoa (A-Z) và 1 chữ số (0-9)</string>
+    <string name="password_required">Vui lòng nhập mật khẩu</string>
+
 
     <string name="forgot_password">Quên mật khẩu ?</string>
     <string name="dont_have_account">Chưa có tài khoản?</string>

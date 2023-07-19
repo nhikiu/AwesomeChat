@@ -4,4 +4,8 @@
     <dimen name="text_size_40">40sp</dimen>
     <dimen name="text_size_26">26sp</dimen>
     <dimen name="padding_25">25sp</dimen>
+    <dimen name="corner_15">15dp</dimen>
+    <dimen name="size_icon_60">60dp</dimen>
+
+    <dimen name="margin_item_12">12dp</dimen>
 </resources>

@@ -14,6 +14,12 @@
     <string name="email" translatable="false">Email</string>
     <string name="password">Password</string>
     <string name="email_hint" translatable="false">yourname@rikkeisoft.com</string>
+    <string name="email_required">Email is required</string>
+    <string name="email_error_title">Email is wrong</string>
+    <string name="email_error_body">Please enter correct email</string>
+    <string name="password_required">Password is required</string>
+    <string name="password_error_title">Password is wrong</string>
+    <string name="password_error_body">Password must be at least 8 characters, contain at least 1 lowercase letter (a–z), 1 uppercase letter (A-Z) and 1 number from 0-9</string>
 
     <string name="forgot_password">Forgot password ?</string>
     <string name="dont_have_account">Do not have an account?</string>
@@ -27,5 +33,6 @@
 
     <string name="login_now">Log In</string>
     <string name="already_have_an_account">Already have an account?</string>
+    <string name="confirm" translatable="false">OK</string>
 
 </resources>
