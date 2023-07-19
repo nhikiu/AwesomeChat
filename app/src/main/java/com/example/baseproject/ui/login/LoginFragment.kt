@@ -56,7 +56,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginViewModel>(R.layou
         val email = binding.edtEmail.text.toString()
         val password = binding.edtPassword.text.toString()
 
-        if (email.isNotEmpty() && email != "" && password.isNotEmpty() && password != "") {
+        if (email.isNotEmpty() && password.isNotEmpty()) {
             binding.btnLogin.isClickable = true
             binding.btnLogin.setBackgroundResource(R.drawable.bg_button_enable)
             onClickLogInButton(email, password)

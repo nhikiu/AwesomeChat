@@ -34,4 +34,7 @@ class AppNavigatorImpl @Inject constructor() : BaseNavigatorImpl(),
         openScreen(R.id.action_homeFragment_to_demoViewPager, bundle)
     }
 
+    override fun openSignUpToHomeScreen(bundle: Bundle?) {
+        openScreen(R.id.action_signupFragment_to_homeFragment, bundle)
+    }
 }

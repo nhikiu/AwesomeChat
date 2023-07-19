@@ -7,7 +7,7 @@
     tools:ignore="MissingDefaultResource">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="300dp"
+        android:layout_width="@dimen/size_300"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_item_18"
         android:layout_marginRight="@dimen/margin_item_18"
@@ -45,6 +45,7 @@
                 android:id="@+id/tv_body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:layout_marginLeft="@dimen/margin_item_18"
                 android:layout_marginRight="@dimen/margin_item_18"
                 android:text="@string/password_error_body"
@@ -53,7 +54,7 @@
 
             <Button
                 android:id="@+id/btn_confirm"
-                android:layout_width="150dp"
+                android:layout_width="@dimen/size_150"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/margin_item_18"

@@ -14,6 +14,7 @@
     <string name="email" translatable="false">Email</string>
     <string name="password">Password</string>
     <string name="email_hint" translatable="false">yourname@rikkeisoft.com</string>
+    <string name="name_required">Name is required</string>
     <string name="email_required">Email is required</string>
     <string name="email_error_title">Email is wrong</string>
     <string name="email_error_body">Please enter correct email</string>
@@ -30,9 +31,16 @@
     <string name="sign_up">Sign Up</string>
     <string name="name_hint" translatable="false">rikkeisoft</string>
     <string name="policy">I agree to the policies and terms</string>
+    <string name="sign_up_error">SignUp error!</string>
+    <string name="policy_1">I agree to </string>
+    <string name="policy_2">the policies </string>
+    <string name="policy_3">and </string>
+    <string name="policy_4">terms</string>
 
     <string name="login_now">Log In</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="confirm" translatable="false">OK</string>
+    <string name="password_hint">********</string>
+
 
 </resources>

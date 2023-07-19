@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -9,9 +8,7 @@
         android:background="@color/white"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:padding="@dimen/padding_25"
-        >
-
+        android:padding="@dimen/padding_25">
 
         <ImageView
             android:id="@+id/iv_mail"
@@ -22,7 +19,8 @@
             app:layout_constraintVertical_bias="0.1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/app_name" />
 
         <TextView
             android:id="@+id/tv_start_with_awesome_chat"
@@ -30,7 +28,6 @@
             android:layout_height="wrap_content"
             android:text="@string/start_with_awesome_chat"
             android:textSize="@dimen/text_size_26"
-            android:textFontWeight="300"
             app:layout_constraintTop_toBottomOf="@id/iv_mail"/>
 
         <TextView
@@ -39,7 +36,6 @@
             android:layout_height="wrap_content"
             style="@style/text_bold_32"
             android:text="@string/login"
-            android:textFontWeight="800"
             android:textColor="@color/blue_4356b4"
             app:layout_constraintTop_toBottomOf="@id/tv_start_with_awesome_chat"/>
 
@@ -48,11 +44,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/email"
-            android:textSize="@dimen/text_size_14"
             android:fontFamily="@font/lato"
-            android:textFontWeight="500"
+            android:textSize="@dimen/text_size_14"
             android:textAllCaps="true"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="@dimen/margin_item_100"
             app:layout_constraintTop_toBottomOf="@id/tv_log_in"/>
 
         <EditText
@@ -62,18 +57,17 @@
             android:drawableEnd="@drawable/ic_email"
             android:inputType="textEmailAddress"
             android:textSize="@dimen/text_size_18"
-            android:textFontWeight="500"
             android:hint="@string/email_hint"
             app:layout_constraintTop_toBottomOf="@id/tv_email"
-            />
+            android:autofillHints="" />
 
         <TextView
             android:id="@+id/tv_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/password"
+            android:layout_marginTop="@dimen/margin_item_40"
             android:textSize="@dimen/text_size_14"
-            android:textFontWeight="500"
             android:textAllCaps="true"
             app:layout_constraintTop_toBottomOf="@id/edt_email"/>
 
@@ -83,17 +77,17 @@
             android:layout_height="@dimen/height_edt_login"
             android:drawableEnd="@drawable/ic_key"
             android:inputType="textPassword"
-            android:textFontWeight="500"
+            android:hint="@string/password_hint"
             android:textSize="@dimen/text_size_18"
             app:layout_constraintTop_toBottomOf="@id/tv_password"
-            />
+            android:autofillHints="" />
 
         <TextView
             android:id="@+id/tv_forgot_password"
             android:text="@string/forgot_password"
             android:textColor="@color/blue_4356b4"
             style="@style/text_bold_14"
-            android:textFontWeight="700"
+            android:layout_marginTop="@dimen/margin_item_15"
             android:layout_gravity="end"
             app:layout_constraintTop_toBottomOf="@id/edt_password"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -103,33 +97,30 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:text="@string/login"
-            android:textFontWeight="700"
+            style="@style/text_bold_16"
             android:clickable="false"
             android:textColor="@color/white"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="@dimen/margin_item_40"
             android:background="@drawable/bg_button_disable"
             app:layout_constraintTop_toBottomOf="@id/tv_forgot_password"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="@dimen/margin_item_18"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:gravity="center"
-            >
+            android:gravity="center">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/dont_have_account"
-                android:textFontWeight="500"
                 android:gravity="center"
-                android:layout_marginEnd="@dimen/_1dp"/>
+                android:layout_marginEnd="@dimen/margin_item_3"/>
             <TextView
                 android:id="@+id/tv_go_to_sign_up"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sign_up_now"
-                android:textFontWeight="700"
                 android:textColor="@color/blue_4356b4"
                 style="@style/text_bold_14"/>
         </LinearLayout>

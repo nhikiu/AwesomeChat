@@ -10,6 +10,7 @@
     <!--    log in screen-->
     <string name="login">Đăng nhập</string>
     <string name="password">Mật khẩu</string>
+    <string name="name_required">Vui lòng nhập tên</string>
     <string name="email_required">Vui lòng nhập email</string>
     <string name="email_error_title">Email sai định dạng</string>
     <string name="email_error_body">Vui lòng nhập email đúng định dạng</string>
@@ -26,6 +27,11 @@
     <string name="full_name">Họ và tên</string>
     <string name="sign_up">Đăng ký</string>
     <string name="policy">Tôi đồng ý với các chính sách và điều khoản</string>
+    <string name="sign_up_error">Đăng ký tài khoản lỗi!</string>
+    <string name="policy_1">Tôi đồng ý với các </string>
+    <string name="policy_2">chính sách </string>
+    <string name="policy_3">và </string>
+    <string name="policy_4">điều khoản</string>
 
     <string name="login_now">Đăng nhập ngay</string>
     <string name="already_have_an_account">Bạn đã có tài khoản?</string>

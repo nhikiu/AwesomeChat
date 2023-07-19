@@ -45,6 +45,7 @@ dependencies {
 
     implementation libraries.hilt
     implementation 'com.google.firebase:firebase-firestore-ktx:24.1.1'
+    implementation 'com.google.firebase:firebase-auth-ktx:22.1.0'
     kapt libraries.hiltSupport
     //implementation libraries.hiltViewModel
     //kapt libraries.hiltCompiler

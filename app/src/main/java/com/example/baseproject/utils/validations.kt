@@ -13,6 +13,13 @@ object ValidationUtils{
         this.context = context
     }
 
+    fun validateName(name: String) : String? {
+        if (name.isEmpty()) {
+            return context.getString(R.string.name_required)
+        }
+        return null
+    }
+
     fun validateEmail(email: String) : String?{
         if (email.isEmpty()) {
             return context.getString(R.string.email_required)
