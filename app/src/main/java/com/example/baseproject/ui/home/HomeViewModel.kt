@@ -1,6 +1,5 @@
 package com.example.baseproject.ui.home
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import com.example.core.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

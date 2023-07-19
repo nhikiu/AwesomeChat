@@ -5,7 +5,6 @@ import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentSplashBinding
 import com.example.baseproject.navigation.AppNavigation
 import com.example.core.base.fragment.BaseFragment
-import com.example.core.utils.setTextCompute
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -31,7 +30,6 @@ class SplashFragment :
     override fun bindingStateView() {
         super.bindingStateView()
         viewModel.splashTitle.observe(viewLifecycleOwner) {
-
         }
     }
 }

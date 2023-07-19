@@ -6,4 +6,12 @@ import com.example.core.navigationComponent.BaseNavigator
 interface AppNavigation : BaseNavigator {
 
     fun openSplashToHomeScreen(bundle: Bundle? = null)
+
+    fun openSplashToLogInScreen(bundle: Bundle? = null)
+
+    fun openSignUpToLogInScreen(bundle: Bundle? = null)
+
+    fun openLogInToSignUpScreen(bundle: Bundle? = null)
+
+    fun openLogInToHomeScreen(bundle: Bundle? = null)
 }

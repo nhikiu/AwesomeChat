@@ -90,12 +90,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
     }
 
     override fun onDestroy() {
-        Timber.tag("VietBH").d("A   " + "onDestroy")
+        Timber.tag("HomeFragment").d("A   " + "onDestroy")
         super.onDestroy()
     }
 
     override fun onDetach() {
-        Timber.tag("VietBH").d("A   " + "onCreate")
+        Timber.tag("HomeFragment").d("A   " + "onCreate")
         super.onDetach()
     }
 
