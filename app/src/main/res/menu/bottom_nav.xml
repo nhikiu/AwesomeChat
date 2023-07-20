@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/common"
-        android:icon="@drawable/ic_birthday"
+        android:id="@+id/message"
+        android:icon="@drawable/ic_chat"
         android:contentDescription="@string/home"
-        android:title="@string/home" />
+        android:title="@string/message" />
 
     <item
-        android:id="@+id/favorite"
-        android:icon="@drawable/ic_birthday"
+        android:id="@+id/friend"
+        android:icon="@drawable/ic_friend"
         android:contentDescription="@string/favorite"
-        android:title="@string/favorite" />
+        android:title="@string/friend" />
+
+    <item android:id="@+id/personalPage"
+        android:icon="@drawable/ic_user"
+        android:contentDescription="@string/favorite"
+        android:title="@string/personal" />
 </menu>

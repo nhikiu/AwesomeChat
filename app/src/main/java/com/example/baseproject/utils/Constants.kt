@@ -1,5 +1,6 @@
 package com.example.baseproject.utils
 
-object FirestoreCollection {
-    val USER = "user"
+object Constants {
+    const val USER = "user"
+    const val ISLOGIN = "isLogIn"
 }

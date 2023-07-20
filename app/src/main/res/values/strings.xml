@@ -40,7 +40,15 @@
     <string name="login_now">Log In</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="confirm" translatable="false">OK</string>
-    <string name="password_hint">********</string>
+    <string name="password_hint" translatable="false">********</string>
+
+    <!--    Home Screen-->
+    <string name="message">Message</string>
+    <string name="friend">Friend</string>
+    <string name="personal">Personal</string>
+
+    <!--    Personal Screen-->
+    <string name="log_out">Log out</string>
 
 
 </resources>

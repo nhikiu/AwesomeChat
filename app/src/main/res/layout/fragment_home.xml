@@ -5,22 +5,42 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center">
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/nav_host_container"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            app:defaultNavHost="true"
-            app:navGraph="@navigation/home_tab_navigation" />
+            android:layout_weight="3"
+            android:gravity="center"
+            >
+            <Button
+                android:id="@+id/btn_log_out"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/log_out"/>
+        </LinearLayout>
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_nav"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7"/>
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:menu="@menu/bottom_nav" />
+            android:background="@color/white_F6F6F6">
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/tab_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:elevation="8dp"
+                android:layout_margin="@dimen/margin_item_15"
+                android:background="@drawable/bg_nav_bottom"
+                android:paddingVertical="@dimen/margin_item_15"
+                app:menu="@menu/bottom_nav"/>
+        </FrameLayout>
+
+
     </LinearLayout>
 </layout>

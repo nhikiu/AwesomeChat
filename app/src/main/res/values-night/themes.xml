@@ -3,10 +3,10 @@
     <style name="Theme.BaseProject" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary_color</item>
-        <item name="colorPrimaryVariant">@color/secondary_color</item>
+        <item name="colorPrimaryVariant">@color/primary_color</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/primary_color</item>
+        <item name="colorSecondary">@color/secondary_color</item>
         <item name="colorSecondaryVariant">@color/secondary_color</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->

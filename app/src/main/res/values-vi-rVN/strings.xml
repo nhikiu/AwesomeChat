@@ -36,4 +36,11 @@
     <string name="login_now">Đăng nhập ngay</string>
     <string name="already_have_an_account">Bạn đã có tài khoản?</string>
 
+    <!--    Home Screen-->
+    <string name="message">Tin nhắn</string>
+    <string name="friend">Bạn bè</string>
+    <string name="personal">Trang cá nhân</string>
+
+    <!--    Personal Screen-->
+    <string name="log_out">Đăng xuất</string>
 </resources>

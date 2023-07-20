@@ -1,15 +1,10 @@
 package com.example.baseproject.utils
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.Window
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.TextView
 import com.example.baseproject.R
 
 object ProgressBarView {

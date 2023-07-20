@@ -1,21 +1,36 @@
 package com.example.baseproject.respository
 
 import com.example.baseproject.models.User
-import com.example.baseproject.utils.FirestoreCollection
+import com.example.baseproject.utils.Constants
 import com.example.baseproject.utils.UIState
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.firestore.FirebaseFirestore
 import java.lang.Exception
 
 class AuthRepositoryImpl(
-    val auth : FirebaseAuth,
-    val database : FirebaseFirestore
+    private val auth : FirebaseAuth,
+    private val database : FirebaseFirestore
 ) : AuthRepository {
-    override fun loginUser(user: User, result: (UIState<String>) -> Unit) {
-
+    override fun loginUser(email: String, password: String, result: (UIState<String>) -> Unit) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    result.invoke(
+                        UIState.Success("Log In success")
+                    )
+                }
+                else {
+                    try {
+                        throw it.exception ?: Exception("Invalid authentication")
+                    } catch (e: Exception) {
+                        result.invoke(UIState.Failure(e.message))
+                    }
+                }
+            }
+            .addOnFailureListener {
+                result.invoke(UIState.Failure(it.localizedMessage))
+            }
     }
 
     override fun signupUser(
@@ -59,7 +74,7 @@ class AuthRepositoryImpl(
     }
 
     override fun updateUserInfor(user: User, result: (UIState<String>) -> Unit) {
-        val document = database.collection(FirestoreCollection.USER).document()
+        val document = database.collection(Constants.USER).document()
         user.id = document.id
         document
             .set(user)
@@ -71,5 +86,10 @@ class AuthRepositoryImpl(
                     UIState.Failure(it.localizedMessage)
                 )
             }
+    }
+
+    override fun signoutUser(result: (UIState<String>) -> Unit) {
+        auth.signOut()
+        result.invoke(UIState.Success("Log out success"))
     }
 }

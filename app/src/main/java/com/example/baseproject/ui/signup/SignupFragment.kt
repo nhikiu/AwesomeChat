@@ -1,24 +1,16 @@
 package com.example.baseproject.ui.signup
 
-import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
-import android.text.InputType
 import android.text.TextWatcher
-import android.util.Log
-import android.view.MotionEvent
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentSignupBinding
 import com.example.baseproject.models.User
 import com.example.baseproject.navigation.AppNavigation
-import com.example.baseproject.utils.DialogView
-import com.example.baseproject.utils.ProgressBarView
-import com.example.baseproject.utils.UIState
-import com.example.baseproject.utils.ValidationUtils
+import com.example.baseproject.utils.*
 import com.example.core.base.fragment.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -32,7 +24,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding, SignupViewModel>(R.la
 
     override fun getVM() = viewModel
 
-    val alert = DialogView()
+    private val alert = DialogView()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,35 +48,6 @@ class SignupFragment : BaseFragment<FragmentSignupBinding, SignupViewModel>(R.la
 
         binding.ivBack.setOnClickListener {
             view?.findNavController()?.navigateUp()
-        }
-
-        visiblePassword()
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun visiblePassword() {
-        val passwordEditText = binding.edtPassword
-        val showPasswordIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_key)
-        var passwordVisible = false
-
-
-        binding.edtPassword.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_UP) {
-                val iconWidth = showPasswordIcon?.intrinsicWidth ?: 0
-                if (event.rawX >= passwordEditText.right - iconWidth) {
-                    // Thay đổi loại input của EditText
-                    if (passwordVisible) {
-                        passwordEditText.inputType =
-                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                    } else {
-                        passwordEditText.inputType =
-                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                    }
-                    passwordVisible = !passwordVisible
-                    return@setOnTouchListener true
-                }
-            }
-            false
         }
     }
 
@@ -139,6 +102,10 @@ class SignupFragment : BaseFragment<FragmentSignupBinding, SignupViewModel>(R.la
                 }
                 is UIState.Success -> {
                     appNavigation.openSignUpToHomeScreen()
+                    val sharePref = context?.getSharedPreferences(Constants.ISLOGIN, Context.MODE_PRIVATE)
+                    val editor = sharePref?.edit()
+                    editor?.putBoolean(Constants.ISLOGIN, true)
+                    editor?.apply()
                     ProgressBarView.hideProgressBar()
                 }
             }
