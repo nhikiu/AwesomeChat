@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -11,27 +11,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
-            android:gravity="center"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintDimensionRatio="1:0.6"
+            android:background="@drawable/background_app_common"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             >
-            <Button
-                android:id="@+id/btn_log_out"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/log_out"/>
+
         </LinearLayout>
 
         <FrameLayout
+            android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="7"/>
+            app:layout_constraintBottom_toTopOf="@id/framelayout_bottom_nav"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <FrameLayout
+            android:id="@+id/framelayout_bottom_nav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white_F6F6F6">
+            android:background="@color/white_F6F6F6"
+            app:layout_constraintBottom_toBottomOf="parent">
             <com.google.android.material.bottomnavigation.BottomNavigationView
-                android:id="@+id/tab_bar"
+                android:id="@+id/bottom_nav"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:elevation="8dp"
@@ -42,5 +45,5 @@
         </FrameLayout>
 
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -2,9 +2,7 @@ package com.example.baseproject.ui.splash
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.NavHostFragment
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentSplashBinding
 import com.example.baseproject.navigation.AppNavigation
@@ -27,9 +25,9 @@ class SplashFragment :
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
         val sharePreferences = context?.getSharedPreferences(Constants.ISLOGIN, Context.MODE_PRIVATE)
-        var isLogIn = false
-        if (sharePreferences != null) {
-            isLogIn = sharePreferences.getBoolean(Constants.ISLOGIN, false)
+        var isLogIn: Boolean
+        sharePreferences?.let {
+            isLogIn = it.getBoolean(Constants.ISLOGIN, false)
             if (isLogIn) {
                 appNavigation.openSplashToHomeScreen()
             }

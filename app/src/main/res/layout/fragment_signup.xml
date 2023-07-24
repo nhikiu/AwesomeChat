@@ -15,6 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_arrow_left"
+            android:layout_marginTop="@dimen/margin_item_40"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:tint="@color/primary_color"
@@ -37,7 +38,7 @@
             android:text="@string/full_name"
             android:textSize="@dimen/text_size_14"
             android:textAllCaps="true"
-            android:layout_marginTop="@dimen/margin_item_100"
+            android:layout_marginTop="@dimen/margin_item_60"
             app:layout_constraintTop_toBottomOf="@id/tv_sign_up"/>
 
         <EditText
@@ -100,6 +101,8 @@
             android:id="@+id/linear_policy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:elevation="6dp"
+            android:layout_marginTop="@dimen/margin_item_25"
             app:layout_constraintTop_toBottomOf="@id/edt_password"
             app:layout_constraintStart_toStartOf="parent">
             <CheckBox
@@ -147,7 +150,7 @@
             android:layout_height="0dp"
             android:text="@string/sign_up"
             android:textColor="@color/white"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="@dimen/margin_item_60"
             android:clickable="false"
             style="@style/text_bold"
             android:background="@drawable/bg_button_disable"

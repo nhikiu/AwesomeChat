@@ -47,7 +47,7 @@
             android:fontFamily="@font/lato"
             android:textSize="@dimen/text_size_14"
             android:textAllCaps="true"
-            android:layout_marginTop="@dimen/margin_item_100"
+            android:layout_marginTop="@dimen/margin_item_60"
             app:layout_constraintTop_toBottomOf="@id/tv_log_in"/>
 
         <EditText
@@ -56,6 +56,7 @@
             android:layout_height="@dimen/height_edt_login"
             android:drawableEnd="@drawable/ic_email"
             android:inputType="textEmailAddress"
+            android:padding="0dp"
             android:textSize="@dimen/text_size_18"
             android:hint="@string/email_hint"
             app:layout_constraintTop_toBottomOf="@id/tv_email"
@@ -77,6 +78,7 @@
             android:layout_height="@dimen/height_edt_login"
             android:drawableEnd="@drawable/ic_key"
             android:inputType="textPassword"
+            android:padding="0dp"
             android:hint="@string/password_hint"
             android:textSize="@dimen/text_size_18"
             app:layout_constraintTop_toBottomOf="@id/tv_password"
@@ -100,7 +102,7 @@
             style="@style/text_bold_16"
             android:clickable="false"
             android:textColor="@color/white"
-            android:layout_marginTop="@dimen/margin_item_40"
+            android:layout_marginTop="@dimen/margin_item_50"
             android:background="@drawable/bg_button_disable"
             app:layout_constraintTop_toBottomOf="@id/tv_forgot_password"/>
 

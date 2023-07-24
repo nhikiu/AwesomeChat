@@ -5,15 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentHomeBinding
 import com.example.baseproject.navigation.AppNavigation
-import com.example.baseproject.utils.Constants
-import com.example.baseproject.utils.DialogView
-import com.example.baseproject.utils.ProgressBarView
-import com.example.baseproject.utils.UIState
+import com.example.baseproject.ui.chats.ChatsFragment
+import com.example.baseproject.ui.friends.FriendsFragment
+import com.example.baseproject.ui.profile.ProfileFragment
 import com.example.core.base.fragment.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -29,47 +28,39 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
+        replaceFragment(ChatsFragment())
     }
 
     override fun getVM() = viewModel
 
-    private val alert = DialogView()
-
-    override fun bindingStateView() {
-        super.bindingStateView()
-        observer()
-    }
 
     override fun setOnClick() {
         super.setOnClick()
 
-        binding.btnLogOut.setOnClickListener {
-            viewModel.logoutUser()
+        binding.bottomNav.setOnItemSelectedListener {
+            when(it.itemId) {
+                R.id.chats -> replaceFragment(ChatsFragment())
+                R.id.friends -> replaceFragment(FriendsFragment())
+                R.id.profile -> replaceFragment(ProfileFragment())
+                else -> {
+
+                }
+            }
+            true
         }
     }
 
-    private fun observer() {
-        viewModel.signout.observe(viewLifecycleOwner){state ->
-            when(state) {
-                is UIState.Loading -> {
-                    ProgressBarView.showProgressBar(activity)
-                }
-                is UIState.Failure -> {
-                    alert.showErrorDialog(activity, "Log out error", state.error!!)
-                    ProgressBarView.hideProgressBar()
-                }
-                is UIState.Success -> {
-                    Toast.makeText(context, "Logout success", Toast.LENGTH_LONG).show()
-                    appNavigation.openHomeToLogInScreen()
-                    val sharePref = context?.getSharedPreferences(Constants.ISLOGIN, Context.MODE_PRIVATE)
-                    val editor = sharePref?.edit()
-                    editor?.putBoolean(Constants.ISLOGIN, false)
-                    editor?.apply()
-                    ProgressBarView.hideProgressBar()
-                }
-            }
+    private fun replaceFragment(fragment: Fragment){
+        val activity = activity
+        if (activity != null) {
+            val fragmentManager = activity.supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.fragment_container, fragment)
+            fragmentTransaction.commit()
         }
+
     }
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

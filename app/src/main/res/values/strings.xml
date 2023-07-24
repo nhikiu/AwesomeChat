@@ -10,21 +10,26 @@
     <string name="chat" translatable="false">chat</string>
 
     <!--    log in screen-->
-    <string name="login">Login</string>
+    <string name="login">Log In</string>
     <string name="email" translatable="false">Email</string>
     <string name="password">Password</string>
     <string name="email_hint" translatable="false">yourname@rikkeisoft.com</string>
-    <string name="name_required">Name is required</string>
-    <string name="email_required">Email is required</string>
-    <string name="email_error_title">Email is wrong</string>
-    <string name="email_error_body">Please enter correct email</string>
-    <string name="password_required">Password is required</string>
-    <string name="password_error_title">Password is wrong</string>
-    <string name="password_error_body">Password must be at least 8 characters, contain at least 1 lowercase letter (a–z), 1 uppercase letter (A-Z) and 1 number from 0-9</string>
 
     <string name="forgot_password">Forgot password ?</string>
     <string name="dont_have_account">Do not have an account?</string>
     <string name="sign_up_now">Sign Up</string>
+        <!--   Error-->
+    <string name="error" translatable="false">Opps...</string>
+    <string name="error_name_required">Name is required</string>
+    <string name="error_email_required">Email is required</string>
+    <string name="error_email_invalid">Please enter correct email</string>
+    <string name="error_password_required">Password is required</string>
+    <string name="error_password_invalid">Password must be at least 8 characters, contain at least 1 lowercase letter (a–z), 1 uppercase letter (A-Z) and 1 number from 0-9</string>
+    <string name="error_user_not_found">Not found user. Please sign up.</string>
+    <string name="error_email_password_invalid">Email or password invalid</string>
+    <string name="error_network_not_connection">Please connect to the network to log in</string>
+    <string name="error_unknown">Unknown error. Please try again later</string>
+    <string name="error_user_is_exist">User is exist!</string>
 
     <!--    sign up screen-->
     <string name="full_name">Full Name</string>
@@ -46,6 +51,11 @@
     <string name="message">Message</string>
     <string name="friend">Friend</string>
     <string name="personal">Personal</string>
+
+    <!--    Chats Screen-->
+    <string name="search">Search messages…</string>
+    <string name="avatar" translatable="false">Avatar</string>
+    <string name="is_yesterday">Yesterday</string>
 
     <!--    Personal Screen-->
     <string name="log_out">Log out</string>

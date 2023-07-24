@@ -1,7 +1,6 @@
 package com.example.baseproject.ui.login
 
 import android.content.Context
-import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.fragment.app.viewModels
@@ -23,11 +22,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginViewModel>(R.layou
     override fun getVM() = viewModel
 
     private val alert = DialogView()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        ValidationUtils.init(requireContext())
-    }
 
     override fun bindingStateView() {
         super.bindingStateView()
@@ -83,10 +77,14 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginViewModel>(R.layou
 
             val alert = DialogView()
 
-            if (errorEmail != null) {
-                alert.showErrorDialog(activity, resources.getString(R.string.email_error_title), errorEmail)
-            } else if (errorPassword != null) {
-                alert.showErrorDialog(activity, resources.getString(R.string.password_error_title), errorPassword)
+            if (errorEmail == Constants.EMAIL_REQUIRED) {
+                alert.showErrorDialog(activity, resources.getString(R.string.error), resources.getString(R.string.error_email_required))
+            } else if (errorEmail == Constants.EMAIL_INVALID) {
+                alert.showErrorDialog(activity, resources.getString(R.string.error), resources.getString(R.string.error_email_invalid))
+            } else if (errorPassword == Constants.PASSWORD_REQUIRED) {
+                alert.showErrorDialog(activity, resources.getString(R.string.error), resources.getString(R.string.error_password_required))
+            } else if (errorPassword == Constants.PASSWORD_INVALID) {
+                alert.showErrorDialog(activity, resources.getString(R.string.error), resources.getString(R.string.error_password_invalid))
             } else {
                 viewModel.loginUser(
                     email = email,
@@ -97,27 +95,40 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginViewModel>(R.layou
     }
 
     private fun observer() {
-        var count = 1
         viewModel.login.observe(viewLifecycleOwner){state ->
             when(state) {
                 is UIState.Loading -> {
-                    count = 1
                     ProgressBarView.showProgressBar(activity)
                 }
                 is UIState.Failure -> {
-                    if (count == 1) {
-                        alert.showErrorDialog(activity, "LogIn error", state.error!!)
-                        count++
-                        ProgressBarView.hideProgressBar()
+                    context?.let {
+                        val errorMessage = state.error
+                        val error = it.getString(R.string.error)
+                        when (errorMessage) {
+                            Constants.USER_NOT_FOUND -> {
+                                alert.showErrorDialog(activity, error, it.getString(R.string.error_user_not_found))
+                            }
+                            Constants.EMAIL_PASSWORD_INVALID -> {
+                                alert.showErrorDialog(activity, error, it.getString(R.string.error_email_password_invalid))
+                            }
+                            Constants.NETWORK_NOT_CONNECTION -> {
+                                alert.showErrorDialog(activity, error, it.getString(R.string.error_network_not_connection))
+                            }
+                            else -> {
+                                alert.showErrorDialog(activity, error, it.getString(R.string.error_unknown))
+                            }
+                        }
                     }
-
+                    ProgressBarView.hideProgressBar()
                 }
                 is UIState.Success -> {
                     appNavigation.openLogInToHomeScreen()
-                    val sharePref = context?.getSharedPreferences(Constants.ISLOGIN, Context.MODE_PRIVATE)
-                    val editor = sharePref?.edit()
-                    editor?.putBoolean(Constants.ISLOGIN, true)
-                    editor?.apply()
+                    context?.let {
+                        val sharePref = it.getSharedPreferences(Constants.ISLOGIN, Context.MODE_PRIVATE)
+                        val editor = sharePref.edit()
+                        editor.putBoolean(Constants.ISLOGIN, true)
+                        editor.apply()
+                    }
                     ProgressBarView.hideProgressBar()
                 }
             }

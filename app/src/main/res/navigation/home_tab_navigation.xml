@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_tab_navigation"
-    app:startDestination="@+id/common">
+    app:startDestination="@id/homeFragment">
 
-    <include app:graph="@navigation/tab_common_navigation" />
 
-    <include app:graph="@navigation/tab_favorite_navigation" />
-
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.baseproject.ui.home.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home"/>
+    <fragment
+        android:id="@+id/chatsFragment"
+        android:name="com.example.baseproject.ui.chats.ChatsFragment"
+        android:label="ChatsFragment"
+        tools:layout="@layout/fragment_chats"/>
+    <fragment
+        android:id="@+id/friendsFragment"
+        android:name="com.example.baseproject.ui.friends.FriendsFragment"
+        android:label="FriendsFragment"
+        tools:layout="@layout/fragment_friends"/>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.baseproject.ui.profile.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/fragment_profile"/>
 </navigation>

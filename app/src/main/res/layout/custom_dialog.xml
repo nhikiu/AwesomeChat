@@ -37,7 +37,7 @@
                 android:layout_marginLeft="@dimen/margin_item_18"
                 android:layout_marginTop="@dimen/margin_item_12"
                 android:layout_marginRight="@dimen/margin_item_18"
-                android:text="@string/password_error_title"
+                android:text="@string/error"
                 style="@style/text_bold_18"
                 android:textColor="@color/black"/>
 
@@ -48,7 +48,7 @@
                 android:gravity="center"
                 android:layout_marginLeft="@dimen/margin_item_18"
                 android:layout_marginRight="@dimen/margin_item_18"
-                android:text="@string/password_error_body"
+                android:text="@string/error_password_invalid"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_14"/>
 
@@ -62,6 +62,7 @@
                 android:layout_marginBottom="@dimen/margin_item_18"
                 android:gravity="center"
                 android:text="@string/confirm"
+                android:backgroundTint="@color/primary_color"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_16"/>
         </LinearLayout>

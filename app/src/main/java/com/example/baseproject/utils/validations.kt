@@ -1,30 +1,20 @@
 package com.example.baseproject.utils
 
-import android.annotation.SuppressLint
-import android.content.Context
-import com.example.baseproject.R
 import com.example.core.utils.StringUtils.isEmailValid
 
-@SuppressLint("StaticFieldLeak")
 object ValidationUtils{
-    private lateinit var context : Context
-
-    fun init(context: Context) {
-        this.context = context
-    }
-
-    fun validateName(name: String) : String? {
+    fun validateName(name: String): String? {
         if (name.isEmpty()) {
-            return context.getString(R.string.name_required)
+            return Constants.NAME_REQUIRED
         }
         return null
     }
 
     fun validateEmail(email: String) : String?{
         if (email.isEmpty()) {
-            return context.getString(R.string.email_required)
+            return Constants.EMAIL_REQUIRED
         } else if (!email.isEmailValid()) {
-            return context.getString(R.string.email_error_body)
+            return Constants.EMAIL_INVALID
         }
         return null
     }
@@ -33,9 +23,9 @@ object ValidationUtils{
         val regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).+\$".toRegex()
 
         if (password.isEmpty()) {
-            return context.getString(R.string.password_required)
+            return Constants.PASSWORD_REQUIRED
         } else if (password.length < 8 || !regex.matches(password)) {
-            return context.getString(R.string.password_error_body)
+            return Constants.PASSWORD_INVALID
         }
         return null
     }

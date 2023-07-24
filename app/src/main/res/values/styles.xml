@@ -11,7 +11,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/primary_color</item>
         <item name="android:fontFamily">@font/lato</item>
     </style>
 
@@ -19,4 +19,5 @@
     <style name="SplashTheme" parent="AppTheme">
         <item name="android:windowBackground">@drawable/launcher_screen</item>
     </style>
+
 </resources>

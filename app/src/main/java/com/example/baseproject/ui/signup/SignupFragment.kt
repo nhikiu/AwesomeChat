@@ -1,11 +1,9 @@
 package com.example.baseproject.ui.signup
 
 import android.content.Context
-import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentSignupBinding
 import com.example.baseproject.models.User
@@ -26,12 +24,6 @@ class SignupFragment : BaseFragment<FragmentSignupBinding, SignupViewModel>(R.la
 
     private val alert = DialogView()
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        ValidationUtils.init(requireContext())
-    }
-
     override fun bindingStateView() {
         super.bindingStateView()
         observer()
@@ -43,11 +35,16 @@ class SignupFragment : BaseFragment<FragmentSignupBinding, SignupViewModel>(R.la
         watchToEnableButton()
 
         binding.tvGoToLogIn.setOnClickListener {
-            view?.findNavController()?.navigateUp()
+            appNavigation.navigateUp()
+        }
+
+        binding.linearPolicy.setOnClickListener {
+            val isChecked = binding.cbPolicy.isChecked
+            binding.cbPolicy.isChecked = !isChecked
         }
 
         binding.ivBack.setOnClickListener {
-            view?.findNavController()?.navigateUp()
+            appNavigation.navigateUp()
         }
     }
 
@@ -65,7 +62,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding, SignupViewModel>(R.la
         binding.edtEmail.addTextChangedListener(textWatcher)
         binding.edtPassword.addTextChangedListener(textWatcher)
         binding.edtFullname.addTextChangedListener(textWatcher)
-        binding.cbPolicy.setOnCheckedChangeListener { compoundButton, isChecked ->  checkButtonVisibility()}
+        binding.cbPolicy.setOnCheckedChangeListener { _, _ ->  checkButtonVisibility()}
     }
 
     private fun checkButtonVisibility() {
@@ -86,26 +83,37 @@ class SignupFragment : BaseFragment<FragmentSignupBinding, SignupViewModel>(R.la
     }
 
     private fun observer() {
-        var count = 1
         viewModel.signup.observe(viewLifecycleOwner) { state ->
             when(state) {
                 is UIState.Loading -> {
-                    count = 1
                     ProgressBarView.showProgressBar(activity)
                 }
                 is UIState.Failure -> {
-                    if (count == 1) {
-                        alert.showErrorDialog(activity, title = resources.getString(R.string.sign_up_error), body = state.error!!)
-                        count++
-                        ProgressBarView.hideProgressBar()
+                    context?.let {
+                        val errorMessage = state.error
+                        val error = it.getString(R.string.error)
+                        when (errorMessage) {
+                            Constants.NETWORK_NOT_CONNECTION -> {
+                                alert.showErrorDialog(activity, error, it.getString(R.string.error_network_not_connection))
+                            }
+                            Constants.USER_EXIST -> {
+                                alert.showErrorDialog(activity, error, it.getString(R.string.error_user_is_exist))
+                            }
+                            else -> {
+                                alert.showErrorDialog(activity, error, it.getString(R.string.error_unknown))
+                            }
+                        }
                     }
+                    ProgressBarView.hideProgressBar()
                 }
                 is UIState.Success -> {
                     appNavigation.openSignUpToHomeScreen()
-                    val sharePref = context?.getSharedPreferences(Constants.ISLOGIN, Context.MODE_PRIVATE)
-                    val editor = sharePref?.edit()
-                    editor?.putBoolean(Constants.ISLOGIN, true)
-                    editor?.apply()
+                    context?.let {
+                        val sharePref = it.getSharedPreferences(Constants.ISLOGIN, Context.MODE_PRIVATE)
+                        val editor = sharePref.edit()
+                        editor.putBoolean(Constants.ISLOGIN, true)
+                        editor.apply()
+                    }
                     ProgressBarView.hideProgressBar()
                 }
             }
@@ -128,13 +136,34 @@ class SignupFragment : BaseFragment<FragmentSignupBinding, SignupViewModel>(R.la
             val errorEmail: String? = ValidationUtils.validateEmail(email)
             val errorPassword: String? = ValidationUtils.validatePassword(password)
 
-            if (errorName != null) {
-                alert.showErrorDialog(activity, resources.getString(R.string.name_required), errorName)
-            } else if (errorEmail != null) {
-                alert.showErrorDialog(activity, resources.getString(R.string.email_error_title), errorEmail)
-            } else if (errorPassword != null) {
-                alert.showErrorDialog(activity, resources.getString(R.string.password_error_title), errorPassword)
-            } else {
+            if (errorName == Constants.NAME_REQUIRED) {
+                alert.showErrorDialog(
+                    activity,
+                    resources.getString(R.string.error),
+                    resources.getString(R.string.error_name_required))
+            } else if (errorEmail == Constants.EMAIL_REQUIRED) {
+                alert.showErrorDialog(
+                    activity,
+                    resources.getString(R.string.error),
+                    resources.getString(R.string.error_email_invalid))
+            } else if (errorEmail == Constants.EMAIL_INVALID) {
+                alert.showErrorDialog(
+                    activity,
+                    resources.getString(R.string.error),
+                    resources.getString(R.string.error_email_invalid))
+            }
+            else if (errorPassword == Constants.PASSWORD_REQUIRED) {
+                alert.showErrorDialog(
+                    activity,
+                    resources.getString(R.string.error),
+                    resources.getString(R.string.error_password_required))
+            } else if (errorPassword == Constants.PASSWORD_INVALID) {
+                alert.showErrorDialog(
+                    activity,
+                    resources.getString(R.string.error),
+                    resources.getString(R.string.error_password_invalid))
+            }
+            else {
                 viewModel.signupUser(
                     email = binding.edtEmail.text.toString(),
                     password = binding.edtPassword.text.toString(),

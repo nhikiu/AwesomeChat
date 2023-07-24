@@ -10,18 +10,22 @@
     <!--    log in screen-->
     <string name="login">Đăng nhập</string>
     <string name="password">Mật khẩu</string>
-    <string name="name_required">Vui lòng nhập tên</string>
-    <string name="email_required">Vui lòng nhập email</string>
-    <string name="email_error_title">Email sai định dạng</string>
-    <string name="email_error_body">Vui lòng nhập email đúng định dạng</string>
-    <string name="password_error_title">Mật khẩu sai định dạng</string>
-    <string name="password_error_body">Vui lòng nhập lại mật khẩu. Mật khẩu chứa tối thiểu 8 ký tự, chứa ít nhất 1 chữ cái thường (a-z), 1 chữ cái hoa (A-Z) và 1 chữ số (0-9)</string>
-    <string name="password_required">Vui lòng nhập mật khẩu</string>
-
 
     <string name="forgot_password">Quên mật khẩu ?</string>
     <string name="dont_have_account">Chưa có tài khoản?</string>
     <string name="sign_up_now">Đăng ký ngay</string>
+
+        <!--    Error-->
+    <string name="error_name_required">Vui lòng nhập tên</string>
+    <string name="error_email_required">Vui lòng nhập email</string>
+    <string name="error_email_invalid">Vui lòng nhập email đúng định dạng</string>
+    <string name="error_password_invalid">Vui lòng nhập lại mật khẩu. Mật khẩu chứa tối thiểu 8 ký tự, chứa ít nhất 1 chữ cái thường (a-z), 1 chữ cái hoa (A-Z) và 1 chữ số (0-9)</string>
+    <string name="error_password_required">Vui lòng nhập mật khẩu</string>
+    <string name="error_user_not_found">Không tìm thấy người dùng. Vui lòng đăng ký.</string>
+    <string name="error_email_password_invalid">Tài khoản hoặc mật khẩu không hợp lệ</string>
+    <string name="error_network_not_connection">Vui lòng kết nối mạng để đăng nhập</string>
+    <string name="error_unknown">Lỗi hệ thống. Vui lòng thử lại sau</string>
+    <string name="error_user_is_exist">Người dùng đã tồn tại!</string>
 
     <!--    sign up screen-->
     <string name="full_name">Họ và tên</string>
@@ -40,6 +44,11 @@
     <string name="message">Tin nhắn</string>
     <string name="friend">Bạn bè</string>
     <string name="personal">Trang cá nhân</string>
+
+    <!--    Chats Screen-->
+    <string name="search">Tìm kiếm tin nhắn...</string>
+    <string name="is_yesterday">Hôm qua</string>
+
 
     <!--    Personal Screen-->
     <string name="log_out">Đăng xuất</string>

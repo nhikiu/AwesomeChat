@@ -8,6 +8,10 @@
 
     <dimen name="margin_item_3">3dp</dimen>
     <dimen name="margin_item_12">12dp</dimen>
+    <dimen name="margin_item_13">13dp</dimen>
+    <dimen name="margin_item_20">20dp</dimen>
+    <dimen name="margin_item_22">22dp</dimen>
+    <dimen name="margin_item_25">25dp</dimen>
 
     <dimen name="size_300">300dp</dimen>
     <dimen name="size_150">150dp</dimen>
