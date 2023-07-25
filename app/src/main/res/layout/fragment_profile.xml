@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -9,23 +10,202 @@
         android:gravity="center"
         tools:context=".ui.profile.ProfileFragment">
 
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Profile Screen"
-            style="@style/text_bold_32"/>
+        <ImageView
+            android:id="@+id/iv_avatar_large"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintDimensionRatio="1:1.368"
+            android:background="@drawable/background_app_common"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/preview"
+            android:scaleType="centerCrop"/>
 
-        <Button
-            android:id="@+id/btn_log_out"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/log_out"
-            android:textColor="@color/white"
-            style="@style/text_bold_16"
-            android:padding="@dimen/margin_item_12"
-            android:background="@drawable/custom_btn_large"
-            android:backgroundTint="@color/primary_color"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintVertical_bias="0.4"
+            app:layout_constraintDimensionRatio="1:1.1"
+            android:background="@drawable/bg_white_top_radius"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:gravity="center_vertical"
+                android:layout_margin="@dimen/margin_item_12"
+                android:layout_weight="2">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_avatar"
+                    android:layout_width="69dp"
+                    android:layout_height="69dp"
+                    android:src="@drawable/preview"
+                    android:scaleType="centerCrop"
+                    app:shapeAppearance="@style/circle"
+                    android:padding="@dimen/padding_6"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="@dimen/margin_item_12">
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/name_hint"
+                        style="@style/text_bold_22"
+                        android:textColor="@color/black"/>
+                    
+                    <TextView
+                        android:id="@+id/tv_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/email_hint"
+                        android:textSize="@dimen/text_size_16"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@color/grey_efeeee"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginHorizontal="@dimen/margin_item_12">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_global"/>
+                
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_18"
+                    android:layout_weight="1"
+                    android:text="@string/language"
+                    android:layout_marginStart="@dimen/margin_item_18"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_16"
+                    android:textColor="@color/primary_color"
+                    android:text="@string/language_app" />
+
+                <ImageView
+                    android:id="@+id/iv_change_language"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_right"
+                    android:layout_marginStart="@dimen/margin_item_12"
+                    android:contentDescription="@string/login" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey_d2d2d2"
+                android:layout_marginStart="@dimen/margin_item_54"
+                android:layout_marginEnd="@dimen/margin_item_12"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginHorizontal="@dimen/margin_item_12">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_notification"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_18"
+                    android:layout_weight="1"
+                    android:text="@string/notification"
+                    android:layout_marginStart="@dimen/margin_item_18"
+                    android:textColor="@color/black"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_right"
+                    android:layout_marginStart="@dimen/margin_item_12"
+                    android:contentDescription="@string/login" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey_d2d2d2"
+                android:layout_marginStart="@dimen/margin_item_54"
+                android:layout_marginEnd="@dimen/margin_item_12"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginHorizontal="@dimen/margin_item_12">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_version"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_18"
+                    android:layout_weight="1"
+                    android:text="@string/version"
+                    android:layout_marginStart="@dimen/margin_item_18"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_16"
+                    android:text="@string/version_number"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@color/grey_efeeee"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginHorizontal="@dimen/margin_item_12">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_logout"/>
+
+                <TextView
+                    android:id="@+id/btn_log_out"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_18"
+                    android:layout_weight="1"
+                    android:text="@string/log_out"
+                    android:textColor="@color/red_c92323"
+                    android:layout_marginStart="@dimen/margin_item_18"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_item_12"
+        android:layout_marginVertical="@dimen/margin_item_8"
+        android:gravity="center">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="@dimen/size_35"
+            android:layout_height="@dimen/size_35"
+            app:shapeAppearance="@style/circle"
+            android:src="@drawable/ic_avatar_default"/>
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textFontWeight="800"
+            android:textSize="@dimen/text_size_16"
+            android:textColor="@color/black"
+            android:text="@string/name_hint"
+            android:layout_marginStart="@dimen/margin_item_12"/>
+
+        <Button
+            android:layout_width="@dimen/size_73"
+            android:layout_height="@dimen/size_27"
+            android:background="@drawable/custom_btn_small"
+            android:text="@string/confirm_friend"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/primary_color"
+            android:textFontWeight="500"
+            android:textSize="@dimen/text_size_14"/>
+
+    </LinearLayout>
+</layout>

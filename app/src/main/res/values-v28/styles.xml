@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="text_weight_800">
+        <item name="android:textFontWeight">800</item>
+        <item name="fontFamily">@font/lato_regular</item>
+    </style>
+
+</resources>

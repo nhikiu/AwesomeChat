@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentHomeBinding
+import com.example.baseproject.models.FragmentData
 import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.ui.chats.ChatsFragment
 import com.example.baseproject.ui.friends.FriendsFragment
@@ -28,39 +30,50 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
-        replaceFragment(ChatsFragment())
     }
 
     override fun getVM() = viewModel
 
+    override fun bindingStateView() {
+        super.bindingStateView()
+
+    }
 
     override fun setOnClick() {
         super.setOnClick()
 
-        binding.bottomNav.setOnItemSelectedListener {
-            when(it.itemId) {
-                R.id.chats -> replaceFragment(ChatsFragment())
-                R.id.friends -> replaceFragment(FriendsFragment())
-                R.id.profile -> replaceFragment(ProfileFragment())
-                else -> {
+        onClickViewPager()
 
+
+    }
+
+    private fun onClickViewPager() {
+        context?.let {
+            val fragmentList: List<FragmentData> = listOf(
+                FragmentData(ChatsFragment(), R.drawable.ic_chat, it.getString(R.string.message)),
+                FragmentData(FriendsFragment(), R.drawable.ic_friend, it.getString(R.string.friend)),
+                FragmentData(ProfileFragment(), R.drawable.ic_user_circle, it.getString(R.string.profile)),
+            )
+            binding.viewPager.adapter = activity?.let { PagerAdapter(childFragmentManager, lifecycle, fragmentList) }
+
+            binding.viewPager.offscreenPageLimit = 1
+
+            binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    binding.bottomNav.menu.getItem(position).isChecked = true
                 }
+            })
+
+            binding.bottomNav.setOnItemSelectedListener { item ->
+                when(item.itemId) {
+                    R.id.itChats -> binding.viewPager.currentItem = 0
+                    R.id.itFriends -> binding.viewPager.currentItem = 1
+                    R.id.itProfile -> binding.viewPager.currentItem = 2
+                }
+                true
             }
-            true
         }
     }
-
-    private fun replaceFragment(fragment: Fragment){
-        val activity = activity
-        if (activity != null) {
-            val fragmentManager = activity.supportFragmentManager
-            val fragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.fragment_container, fragment)
-            fragmentTransaction.commit()
-        }
-
-    }
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

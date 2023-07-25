@@ -3,7 +3,7 @@ package com.example.baseproject.di
 import com.example.baseproject.respository.AuthRepository
 import com.example.baseproject.respository.AuthRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.database.FirebaseDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +16,7 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(database: FirebaseFirestore, auth: FirebaseAuth) : AuthRepository {
+    fun provideAuthRepository(database: FirebaseDatabase, auth: FirebaseAuth) : AuthRepository {
         return AuthRepositoryImpl(auth, database)
     }
 

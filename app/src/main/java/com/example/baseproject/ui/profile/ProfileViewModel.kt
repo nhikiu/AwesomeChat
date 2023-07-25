@@ -9,7 +9,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(private val repository: AuthRepository) : BaseViewModel(){
+class ProfileViewModel @Inject constructor(
+    private val repository: AuthRepository
+    ) : BaseViewModel(){
     private val _signout = MutableLiveData<UIState<String>>()
     val signout: LiveData<UIState<String>> get() = _signout
     fun logoutUser() {

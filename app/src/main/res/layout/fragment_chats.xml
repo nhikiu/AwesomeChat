@@ -32,12 +32,12 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="@dimen/margin_item_12"
-            android:layout_marginTop="@dimen/margin_item_50"/>
+            android:layout_marginTop="@dimen/margin_item_54"/>
 
         <ImageView
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:src="@drawable/create_new_message"
+            android:src="@drawable/ic_create_new_message"
             android:layout_marginTop="@dimen/margin_item_50"
             android:layout_marginEnd="@dimen/margin_item_12"
             app:layout_constraintEnd_toEndOf="parent"
@@ -47,7 +47,7 @@
             android:id="@+id/search_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:queryHint="@string/search"
+            app:queryHint="@string/search_message"
             app:iconifiedByDefault="false"
             android:focusable="false"
             app:searchHintIcon="@null"
@@ -58,7 +58,7 @@
             android:background="@drawable/custom_btn_large"
             android:backgroundTint="@color/white"
             app:queryBackground="@android:color/transparent"
-            android:layout_marginTop="114dp"
+            android:layout_marginTop="@dimen/margin_item_114"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <FrameLayout
@@ -75,7 +75,9 @@
                 android:layout_height="match_parent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_chat"
-                android:layout_marginTop="@dimen/margin_item_13"
+                android:clipToPadding="false"
+                android:layout_margin="@dimen/margin_item_3"
+                android:paddingTop="@dimen/margin_item_18"
                 android:layout_marginHorizontal="@dimen/margin_item_12"/>
         </FrameLayout>
 

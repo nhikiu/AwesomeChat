@@ -18,7 +18,7 @@
     <string name="forgot_password">Forgot password ?</string>
     <string name="dont_have_account">Do not have an account?</string>
     <string name="sign_up_now">Sign Up</string>
-        <!--   Error-->
+    <!--   Error-->
     <string name="error" translatable="false">Opps...</string>
     <string name="error_name_required">Name is required</string>
     <string name="error_email_required">Email is required</string>
@@ -50,15 +50,29 @@
     <!--    Home Screen-->
     <string name="message">Message</string>
     <string name="friend">Friend</string>
-    <string name="personal">Personal</string>
+    <string name="profile">Profile</string>
 
     <!--    Chats Screen-->
-    <string name="search">Search messages…</string>
+    <string name="search_message">Search messages…</string>
     <string name="avatar" translatable="false">Avatar</string>
     <string name="is_yesterday">Yesterday</string>
+    <string name="search_friend">Search friend...</string>
 
-    <!--    Personal Screen-->
+    <!--    Friend Screen-->
+    <string name="all_friend">All</string>
+    <string name="pending_friend">Request</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm_friend">Confirm</string>
+    <string name="add_friend">Add</string>
+
+
+    <!--    Profile Screen-->
     <string name="log_out">Log out</string>
-
-
+    <string name="language">Language</string>
+    <string name="language_app">English</string>
+    <string name="notification">Notification</string>
+    <string name="version">Version</string>
+    <string name="version_number" translatable="false">1.0.0</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

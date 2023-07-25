@@ -12,5 +12,7 @@
     <color name="primary_color">#4356B4</color>
     <color name="secondary_color">#3DCFCF</color>
 
-
+    <color name="grey_efeeee">#EFEEEE</color>
+    <color name="grey_d2d2d2">#D2D2D2</color>
+    <color name="grey_999999">#999999</color>
 </resources>

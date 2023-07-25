@@ -125,8 +125,9 @@ class SignupFragment : BaseFragment<FragmentSignupBinding, SignupViewModel>(R.la
             id = "",
             name = binding.edtFullname.text.toString(),
             email = binding.edtEmail.text.toString(),
-            password = binding.edtPassword.text.toString(),
-            avatar = ""
+            avatar = "",
+            phoneNumber = "",
+            dateOfBirth = null,
         )
     }
 

@@ -20,4 +20,18 @@
         <item name="android:windowBackground">@drawable/launcher_screen</item>
     </style>
 
+    <style name="circle">
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="text_bold_22">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_size_18</item>
+    </style>
+
+    <style name="text_weight_800">
+        <item name="android:textFontWeight">800</item>
+    </style>
+
+
 </resources>

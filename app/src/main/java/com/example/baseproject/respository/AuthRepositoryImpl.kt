@@ -9,11 +9,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.database.FirebaseDatabase
+import javax.inject.Inject
 
-class AuthRepositoryImpl(
+
+class AuthRepositoryImpl @Inject constructor(
     private val auth : FirebaseAuth,
-    private val database : FirebaseFirestore
+    private val database : FirebaseDatabase
 ) : AuthRepository {
     override fun loginUser(email: String, password: String, result: (UIState<String>) -> Unit) {
         auth.signInWithEmailAndPassword(email, password)
@@ -42,7 +44,18 @@ class AuthRepositoryImpl(
     ) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                result.invoke(UIState.Success(Constants.SUCCESS))
+                user.id = auth.currentUser!!.uid
+                updateUserInfor(user) { state ->
+                    when(state){
+                        is UIState.Success -> {
+                            result.invoke(UIState.Success(Constants.SUCCESS))
+                        }
+                        is UIState.Failure -> {
+                            result.invoke(UIState.Failure(state.error))
+                        }
+                        else -> {}
+                    }
+                }
             }
             .addOnFailureListener { exception ->
                 val errorMessage = when(exception) {
@@ -55,10 +68,10 @@ class AuthRepositoryImpl(
     }
 
     override fun updateUserInfor(user: User, result: (UIState<String>) -> Unit) {
-        val document = database.collection(Constants.USER).document()
-        user.id = document.id
-        document
-            .set(user)
+        val userRef = database.reference.child(Constants.USER).child(user.id)
+
+        userRef.child(Constants.PROFILE)
+            .setValue(user)
             .addOnSuccessListener {
                 result.invoke(UIState.Success(Constants.SUCCESS))
             }

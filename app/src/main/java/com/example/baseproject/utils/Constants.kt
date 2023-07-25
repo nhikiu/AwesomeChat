@@ -1,7 +1,10 @@
 package com.example.baseproject.utils
 
 object Constants {
-    const val USER = "user"
+    // database realtime
+    const val USER = "users"
+    const val PROFILE = "profile"
+
     const val ISLOGIN = "isLogIn"
 
     const val SUCCESS = "success"
@@ -19,4 +22,9 @@ object Constants {
     const val USER_EXIST = "user_is_exist"
 
     const val IS_YESTERDAY = "is_yesterday"
+
+    const val STATE_UNFRIEND = "unfriend"
+    const val STATE_FRIEND = "friend"
+    const val STATE_SEND = "send_friend"
+    const val STATE_RECEIVE = "receive_friend"
 }

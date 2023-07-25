@@ -5,57 +5,59 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_item_12">
-
-        <ImageView
-            android:id="@+id/iv_avatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_avatar_default"
-            android:contentDescription="@string/avatar" />
-
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_item_20"
-            android:layout_weight="1">
-            <TextView
-                android:id="@+id/tv_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_item_12">
+
+            <ImageView
+                android:id="@+id/iv_avatar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="User Name"
-                style="@style/text_bold_16"
-                android:textColor="@color/black"/>
+                android:src="@drawable/ic_avatar_default"
+                android:contentDescription="@string/avatar" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginStart="@dimen/margin_item_20"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/tv_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="User Name"
+                    style="@style/text_bold_16"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/tv_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/message"
+                    style="@style/text_bold_14"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="@dimen/margin_item_5"/>
+
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_message"
+                android:id="@+id/tv_sendtime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/message"
-                style="@style/text_bold_14"
-                android:textColor="@color/black"
-                android:layout_marginTop="@dimen/margin_item_5"/>
-
+                android:text="11:00"
+                style="@style/text_bold_12"
+                android:layout_marginEnd="@dimen/margin_item_12"/>
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_sendtime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="11:00"
-            style="@style/text_bold_12"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1"
+            android:background="@color/grey_d2d2d2"
+            android:layout_marginStart="@dimen/margin_item_89"
             android:layout_marginEnd="@dimen/margin_item_12"/>
-
-
-    </LinearLayout>
-<com.google.android.material.divider.MaterialDivider
-    android:layout_width="match_parent"
-    android:layout_height="2dp"
-    app:dividerColor="@color/gray"/>
     </LinearLayout>
 </layout>
