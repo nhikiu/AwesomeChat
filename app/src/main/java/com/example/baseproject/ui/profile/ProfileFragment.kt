@@ -1,6 +1,7 @@
 package com.example.baseproject.ui.profile
 
 import android.content.Context
+import android.util.Log
 import androidx.fragment.app.viewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentProfileBinding
@@ -26,6 +27,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>(R
     override fun bindingStateView() {
         super.bindingStateView()
         observer()
+        viewModel.getCurrentUser()
     }
 
     override fun setOnClick() {
@@ -34,7 +36,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>(R
         binding.btnLogOut.setOnClickListener {
             viewModel.logoutUser()
         }
-
     }
 
     private fun observer() {
@@ -58,6 +59,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>(R
                     ProgressBarView.hideProgressBar()
                 }
             }
+        }
+
+        viewModel.currentUser.observe(viewLifecycleOwner){user ->
+            binding.tvName.text = user.name
+            binding.tvEmail.text = user.email
         }
     }
 }
