@@ -26,6 +26,7 @@
             android:layout_marginStart="@dimen/margin_item_12"/>
 
         <Button
+            android:id="@+id/btn_cancel"
             android:layout_width="@dimen/size_73"
             android:layout_height="@dimen/size_27"
             android:background="@drawable/custom_btn_small"

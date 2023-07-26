@@ -11,6 +11,7 @@ import com.example.baseproject.databinding.ItemFriendPendingSendBinding
 import com.example.baseproject.databinding.ItemFriendRealBinding
 import com.example.baseproject.databinding.ItemFriendUnfriendBinding
 import com.example.baseproject.models.Friend
+import com.example.baseproject.utils.Constants
 
 class AllFriendAdapter : ListAdapter<Friend, RecyclerView.ViewHolder>(AllFriendCallback()){
 
@@ -19,7 +20,6 @@ class AllFriendAdapter : ListAdapter<Friend, RecyclerView.ViewHolder>(AllFriendC
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflate = LayoutInflater.from(parent.context)
-        Log.e("viewtype", "onCreateViewHolder: $viewType", )
         return when(viewType){
             0 -> UnfriendFriendViewHolder(ItemFriendUnfriendBinding.inflate(inflate, parent, false))
             1 -> PendingReceiveFriendViewHolder(ItemFriendPendingReceiveBinding.inflate(inflate, parent, false))
@@ -54,10 +54,10 @@ class AllFriendAdapter : ListAdapter<Friend, RecyclerView.ViewHolder>(AllFriendC
 
     override fun getItemViewType(position: Int): Int {
         return when(getItem(position).status) {
-            "UNFRIEND" -> 0
-            "RECEIVE" -> 1
-            "SENDING" -> 2
-            "FRIEND" -> 3
+            Constants.STATE_UNFRIEND -> 0
+            Constants.STATE_RECEIVE -> 1
+            Constants.STATE_SEND -> 2
+            Constants.STATE_FRIEND -> 3
             else -> 0
         }
     }
@@ -69,7 +69,7 @@ class AllFriendAdapter : ListAdapter<Friend, RecyclerView.ViewHolder>(AllFriendC
     interface OnClickListener {
         fun onClickToMessage(friend: Friend)
 
-        fun onClickChange(friend: Friend, statusFriend: String)
+        fun onClickChange(friend: Friend)
     }
 
     inner class UnfriendFriendViewHolder(private val binding: ItemFriendUnfriendBinding)
@@ -77,24 +77,28 @@ class AllFriendAdapter : ListAdapter<Friend, RecyclerView.ViewHolder>(AllFriendC
             fun bindData(friend: Friend) {
                 binding.tvName.text = friend.name
                 binding.btnAdd.setOnClickListener {
-                    Log.d("database", "bindData:")
-                    onClickListener?.onClickChange(friend, "UNFRIEND")
-                    Log.d("database", "bindData: ")
+                    onClickListener?.onClickChange(friend)
                 }
             }
         }
 
-    class PendingReceiveFriendViewHolder(private val binding: ItemFriendPendingReceiveBinding)
+    inner class PendingReceiveFriendViewHolder(private val binding: ItemFriendPendingReceiveBinding)
         : RecyclerView.ViewHolder(binding.root) {
             fun bindData(friend: Friend) {
                 binding.tvName.text = friend.name
+                binding.btnConfirm.setOnClickListener {
+                    onClickListener?.onClickChange(friend)
+                }
             }
         }
 
-    class PendingSendFriendViewHolder(private val binding: ItemFriendPendingSendBinding)
+    inner class PendingSendFriendViewHolder(private val binding: ItemFriendPendingSendBinding)
         : RecyclerView.ViewHolder(binding.root) {
             fun bindData(friend: Friend) {
                 binding.tvName.text = friend.name
+                binding.btnCancel.setOnClickListener {
+                    onClickListener?.onClickChange(friend)
+                }
             }
         }
 

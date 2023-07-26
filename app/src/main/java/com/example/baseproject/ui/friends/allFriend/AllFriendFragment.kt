@@ -1,6 +1,7 @@
 package com.example.baseproject.ui.friends.allFriend
 
 import android.os.Bundle
+import android.provider.SyncStateContract.Constants
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -42,10 +43,17 @@ class AllFriendFragment : BaseFragment<FragmentAllFriendBinding, AllFriendViewMo
 
                 }
 
-                override fun onClickChange(friend: Friend, statusFriend: String) {
+                override fun onClickChange(friend: Friend) {
                     Log.e("database", "Click to button", )
                     count2++
-                    friend.status = "SENDING"
+                    if (friend.status == com.example.baseproject.utils.Constants.STATE_SEND) {
+                        friend.status = com.example.baseproject.utils.Constants.STATE_UNFRIEND
+                    } else if (friend.status == com.example.baseproject.utils.Constants.STATE_UNFRIEND) {
+                        friend.status = com.example.baseproject.utils.Constants.STATE_SEND
+                    } else if (friend.status == com.example.baseproject.utils.Constants.STATE_RECEIVE) {
+                        friend.status = com.example.baseproject.utils.Constants.STATE_FRIEND
+                    }
+                    Log.e("database", "onClickChange: $friend", )
                     viewModel.updateFriendState(friend)
                 }
 

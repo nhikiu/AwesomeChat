@@ -155,13 +155,6 @@ class AuthRepositoryImpl @Inject constructor(
         val friendRef = database.getReference(Constants.USER).child(auth.currentUser!!.uid)
             .child("friend")
 
-        val map = mapOf(
-            "id" to friend.id,
-            "name" to friend.name,
-            "avatar" to friend.avatar,
-            "status" to friend.status,
-        )
-
         friendRef.child(friend.id)
             .setValue(friend)
             .addOnSuccessListener {
@@ -177,12 +170,10 @@ class AuthRepositoryImpl @Inject constructor(
 
         myRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                Log.e("firebase", "onDataChange: $snapshot", )
                 val friendList: MutableList<Friend> = mutableListOf()
 
                 for (dataSnapshot in snapshot.children) {
                     val userHashMap: HashMap<String, User>? = dataSnapshot.getValue() as? HashMap<String, User>
-                    Log.e("firebase", "hash map: $userHashMap", )
                     userHashMap?.let {
                         val friend = Friend(
                             name = userHashMap["name"] as? String ?: "",
@@ -191,8 +182,6 @@ class AuthRepositoryImpl @Inject constructor(
                             status = userHashMap["status"] as? String ?: ""
                         )
                         friendList.add(friend)
-
-                        Log.e("firebase", "Friend $friend")
                     }
                 }
 
