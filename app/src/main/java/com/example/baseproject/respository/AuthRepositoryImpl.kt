@@ -17,9 +17,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
-import com.google.firebase.database.ktx.values
 import javax.inject.Inject
-import kotlinx.coroutines.*
 
 
 
@@ -97,83 +95,6 @@ class AuthRepositoryImpl @Inject constructor(
         result.invoke(UIState.Success(Constants.SUCCESS))
     }
 
-    fun getUser(list: MutableList<Friend>, callback: (List<Friend>) -> Unit) : MutableList<Friend>{
-        val myRef = database.getReference(Constants.USER)
-
-        myRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val friendList: MutableList<Friend> = mutableListOf()
-                for (dataSnapshot in snapshot.children) {
-                    val userHashMap: HashMap<String, User>? = dataSnapshot.child(Constants.PROFILE).value as? HashMap<String, User>
-                    userHashMap?.let {
-                        val friend = Friend(
-                            name = userHashMap["name"] as? String ?: "",
-                            avatar = userHashMap["avatar"] as? String ?: "",
-                            id = userHashMap["id"] as? String ?: "",
-                            status = Constants.STATE_UNFRIEND
-                        )
-                        if (friend.id != auth.currentUser!!.uid) {
-                            friendList.add(friend)
-                        }
-                    }
-                }
-
-                val newList = getFriend(friendList)
-                list.addAll(newList)
-                callback(list)
-                Log.e("firebase", "size friend: ${list.size}", )
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("database", "onCancelled: Fail ${error.toException()}", )
-            }
-
-        })
-        Log.e("firebase", "getUser: ${list.size}", )
-        return list
-    }
-
-
-    override fun getAllUser(liveData: MutableLiveData<List<Friend>>) {
-        val userList = mutableListOf<Friend>()
-
-        getUser(userList){
-            updateList ->
-                Log.e("firebase", "getAllUser: ${userList.size}", )
-        }
-
-
-        val myRef = database.getReference(Constants.USER)
-        myRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val friendList: MutableList<Friend> = mutableListOf()
-                for (dataSnapshot in snapshot.children) {
-                    val userHashMap: HashMap<String, User>? = dataSnapshot.child(Constants.PROFILE).value as? HashMap<String, User>
-                    userHashMap?.let {
-                        val friend = Friend(
-                            name = userHashMap["name"] as? String ?: "",
-                            avatar = userHashMap["avatar"] as? String ?: "",
-                            id = userHashMap["id"] as? String ?: "",
-                            status = Constants.STATE_UNFRIEND
-                        )
-                        if (friend.id != auth.currentUser!!.uid) {
-                            friendList.add(friend)
-                        }
-                    }
-                }
-
-                val newList = getFriend(friendList)
-
-                liveData.postValue(newList)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("database", "onCancelled: Fail ${error.toException()}", )
-            }
-
-        })
-    }
-
     override fun getUserById(id: String, liveData: MutableLiveData<User>) {
         val userRef = database.getReference(Constants.USER).child(id).child("profile")
 
@@ -195,57 +116,6 @@ class AuthRepositoryImpl @Inject constructor(
             override fun onCancelled(error: DatabaseError) {
             }
         })
-    }
-
-    override fun updateFriendState(friend: Friend) {
-        val friendRef = database.getReference(Constants.USER).child(auth.currentUser!!.uid)
-            .child(Constants.FRIEND)
-
-        friendRef.child(friend.id)
-            .setValue(friend)
-            .addOnSuccessListener {
-            }
-            .addOnFailureListener {
-
-            }
-
-    }
-
-    fun getFriend(friendList: MutableList<Friend>) : List<Friend> {
-        val friendRef = database.getReference(Constants.USER).child(auth.currentUser!!.uid).child(Constants.FRIEND)
-
-        friendRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-
-                for (dataSnapshot in snapshot.children) {
-                    val userHashMap: HashMap<String, User>? = dataSnapshot.value as? HashMap<String, User>
-                    userHashMap?.let {
-                        val id = userHashMap["id"] as? String ?: ""
-                        val status = userHashMap["status"] as? String ?: Constants.STATE_UNFRIEND
-
-                        friendList.any { friend ->
-                            if (friend.id == id) {
-                                friend.status = status
-                                true
-                            } else {
-                                false
-                            }
-
-                        }
-
-                        for (i in friendList) {
-                            Log.d("database", "After friend list: $i")
-                        }
-                    }
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("database", "onCancelled: Fail ${error.toException()}", )
-            }
-
-        })
-        return friendList
     }
 
     override fun getRealFriend(liveData: MutableLiveData<List<Friend>>) {

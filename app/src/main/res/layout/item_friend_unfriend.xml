@@ -12,6 +12,7 @@
             android:layout_width="@dimen/size_35"
             android:layout_height="@dimen/size_35"
             app:shapeAppearance="@style/circle"
+            app:strokeColor="@null"
             android:src="@drawable/ic_avatar_default"/>
 
         <TextView
@@ -19,7 +20,6 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:textFontWeight="800"
             android:textSize="@dimen/text_size_16"
             android:textColor="@color/black"
             android:text="@string/name_hint"
@@ -34,7 +34,6 @@
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:backgroundTint="@color/primary_color"
-            android:textFontWeight="500"
             android:textSize="@dimen/text_size_14"/>
 
     </LinearLayout>

@@ -12,11 +12,9 @@ interface AuthRepository {
 
     fun signoutUser(result: (UIState<String>) -> Unit)
 
-    fun getAllUser(liveData: MutableLiveData<List<Friend>>)
 
     fun getUserById(id: String, liveData: MutableLiveData<User>)
 
-    fun updateFriendState(newFriend: Friend)
 
     fun getAllFriend(liveData: MutableLiveData<List<Friend>>)
 

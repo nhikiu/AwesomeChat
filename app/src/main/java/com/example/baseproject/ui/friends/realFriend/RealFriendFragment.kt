@@ -1,5 +1,7 @@
 package com.example.baseproject.ui.friends.realFriend
 
+import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.viewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentRealFriendBinding
@@ -16,5 +18,19 @@ class RealFriendFragment : BaseFragment<FragmentRealFriendBinding, RealFriendVie
     private val viewModel: RealFriendViewModel by viewModels()
 
     override fun getVM() = viewModel
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val realFriendAdapter: RealFriendAdapter = RealFriendAdapter()
+
+        binding.recyclerViewRealFriend.adapter = realFriendAdapter
+
+        viewModel.getAllRealFriend()
+
+        viewModel.realFriendListLiveData.observe(viewLifecycleOwner){
+            realFriendAdapter.submitList(it.toMutableList())
+        }
+    }
 
 }

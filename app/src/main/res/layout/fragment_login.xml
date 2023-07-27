@@ -88,6 +88,8 @@
             android:id="@+id/tv_forgot_password"
             android:text="@string/forgot_password"
             android:textColor="@color/blue_4356b4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             style="@style/text_bold_14"
             android:layout_marginTop="@dimen/margin_item_15"
             android:layout_gravity="end"
