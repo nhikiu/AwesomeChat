@@ -24,8 +24,8 @@ class AllFriendFragment : BaseFragment<FragmentAllFriendBinding, AllFriendViewMo
         super.onViewCreated(view, savedInstanceState)
         allFriendAdapter = AllFriendAdapter()
         binding.recyclerviewAllFriend.adapter = allFriendAdapter
-        //viewModel.getAllUser()
-        viewModel.getAllFriend()
+        viewModel.getAllUser()
+//        viewModel.getAllFriend()
         viewModel.getUserById()
         viewModel.friendListLiveData.observe(viewLifecycleOwner) {
             allFriendAdapter?.submitList(it.toMutableList())

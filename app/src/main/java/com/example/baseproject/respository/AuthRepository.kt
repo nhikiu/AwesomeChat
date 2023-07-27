@@ -19,4 +19,6 @@ interface AuthRepository {
     fun updateFriendState(newFriend: Friend)
 
     fun getAllFriend(liveData: MutableLiveData<List<Friend>>)
+
+    fun getRealFriend(liveData: MutableLiveData<List<Friend>>)
 }

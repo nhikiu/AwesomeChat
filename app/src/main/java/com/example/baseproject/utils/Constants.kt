@@ -4,6 +4,7 @@ object Constants {
     // database realtime
     const val USER = "users"
     const val PROFILE = "profile"
+    const val FRIEND = "friend"
 
     const val ISLOGIN = "isLogIn"
 
