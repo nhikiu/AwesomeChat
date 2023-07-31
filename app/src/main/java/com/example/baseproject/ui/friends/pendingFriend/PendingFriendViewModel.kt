@@ -67,4 +67,79 @@ class PendingFriendViewModel @Inject constructor(
 
         })
     }
+
+    fun getReceiveRealFriend() {
+        val friendRef = database.getReference(Constants.USER).child(auth.currentUser!!.uid).child(
+            Constants.FRIEND)
+
+        friendRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                for (dataSnapshot in snapshot.children) {
+                    val userHashMap: HashMap<String, User>? = dataSnapshot.value as? HashMap<String, User>
+                    userHashMap?.let {
+                        val status = userHashMap["status"] as? String ?: ""
+                        val friend = Friend(
+                            name = userHashMap["name"] as? String ?: "",
+                            avatar = userHashMap["avatar"] as? String ?: "",
+                            id = userHashMap["id"] as? String ?: "",
+                            status = status
+                        )
+
+                        if (status == Constants.STATE_RECEIVE) {
+                            mReceiveFriendList.add(friend)
+                        }
+                    }
+                }
+                _receiveFriendListLiveData.postValue(mReceiveFriendList.toMutableList())
+                mReceiveFriendList.clear()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("database", "onCancelled: Fail ${error.toException()}", )
+            }
+
+        })
+    }
+
+    fun updateFriendState(friend: Friend) {
+        val userRef = database.getReference(Constants.USER)
+        val currentId = auth.currentUser!!.uid
+        //update friend in current user
+        userRef.child(currentId)
+            .child(Constants.FRIEND).child(friend.id)
+            .setValue(friend)
+            .addOnSuccessListener {
+            }
+            .addOnFailureListener {
+
+            }
+
+        //update friend in other user
+
+        var status = Constants.STATE_RECEIVE
+
+        when (friend.status) {
+            Constants.STATE_FRIEND -> status = Constants.FRIEND
+            Constants.STATE_RECEIVE -> status = Constants.STATE_SEND
+            Constants.STATE_SEND -> status = Constants.STATE_RECEIVE
+            Constants.STATE_UNFRIEND -> status = Constants.STATE_UNFRIEND
+        }
+
+        val currentFriend = Friend(
+            id = currentId,
+            name = auth.currentUser!!.email.toString(),
+            status = status,
+            avatar = ""
+        )
+
+        userRef.child(friend.id)
+            .child(Constants.FRIEND).child(currentId)
+            .setValue(currentFriend)
+            .addOnSuccessListener {
+            }
+            .addOnFailureListener {
+
+            }
+    }
 }

@@ -42,9 +42,4 @@ class SplashFragment :
         }
     }
 
-    override fun bindingStateView() {
-        super.bindingStateView()
-        viewModel.splashTitle.observe(viewLifecycleOwner) {
-        }
-    }
 }

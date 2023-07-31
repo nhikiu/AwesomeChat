@@ -6,6 +6,6 @@
             android:id="@+id/recyclerview_all_friend"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/item_friend_unfriend"
+            tools:listitem="@layout/item_friend"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 </layout>

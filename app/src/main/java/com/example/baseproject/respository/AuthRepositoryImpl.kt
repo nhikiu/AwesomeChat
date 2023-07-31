@@ -8,10 +8,7 @@ import com.example.baseproject.utils.Constants
 import com.example.baseproject.utils.UIState
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.FirebaseTooManyRequestsException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.*
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -53,6 +50,7 @@ class AuthRepositoryImpl @Inject constructor(
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener {
                 user.id = auth.currentUser!!.uid
+
                 updateUserInfor(user) { state ->
                     when(state){
                         is UIState.Success -> {

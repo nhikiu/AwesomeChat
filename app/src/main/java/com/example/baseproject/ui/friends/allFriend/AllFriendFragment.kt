@@ -2,7 +2,9 @@ package com.example.baseproject.ui.friends.allFriend
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentAllFriendBinding
@@ -24,6 +26,7 @@ class AllFriendFragment : BaseFragment<FragmentAllFriendBinding, AllFriendViewMo
         super.initView(savedInstanceState)
 
         allFriendAdapter = AllFriendAdapter()
+
         binding.recyclerviewAllFriend.adapter = allFriendAdapter
     }
 
@@ -36,18 +39,18 @@ class AllFriendFragment : BaseFragment<FragmentAllFriendBinding, AllFriendViewMo
 
                 }
 
-                override fun onClickChange(friend: Friend) {
-                    when (friend.status) {
-                        Constants.STATE_SEND -> {
-                            friend.status = Constants.STATE_UNFRIEND
-                        }
-                        Constants.STATE_UNFRIEND -> {
-                            friend.status = Constants.STATE_SEND
-                        }
-                        Constants.STATE_RECEIVE -> {
-                            friend.status = Constants.STATE_FRIEND
-                        }
-                    }
+                override fun onClickUnfriendToSending(friend: Friend) {
+                    friend.status = Constants.STATE_SEND
+                    viewModel.updateFriendState(friend)
+                }
+
+                override fun onClickReceiveToConfirm(friend: Friend) {
+                    friend.status = Constants.STATE_FRIEND
+                    viewModel.updateFriendState(friend)
+                }
+
+                override fun onClickSendingToCancel(friend: Friend) {
+                    friend.status = Constants.STATE_UNFRIEND
                     viewModel.updateFriendState(friend)
                 }
             }
