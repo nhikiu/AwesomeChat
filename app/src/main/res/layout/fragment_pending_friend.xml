@@ -11,31 +11,41 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Loi moi ket ban"
-            style="@style/text_bold_18"
-            android:layout_marginHorizontal="@dimen/margin_item_25"/>
+            android:text="@string/sending_friend"
+            style="@style/text_bold_14"
+            android:textAllCaps="true"
+            android:layout_marginHorizontal="@dimen/margin_item_12"
+            android:layout_marginVertical="@dimen/margin_item_22"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_receive_friend"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            tools:listitem="@layout/item_friend_real"
+            tools:listitem="@layout/item_friend"
+            android:layout_marginBottom="@dimen/margin_item_12"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sixe_5"
+            android:background="@color/grey_efeeee"/>
+        
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Da gui ket ban"
-            android:layout_marginHorizontal="@dimen/margin_item_25"
-            style="@style/text_bold_18"/>
+            android:text="@string/receive_friend"
+            android:layout_marginHorizontal="@dimen/margin_item_12"
+            android:layout_marginVertical="@dimen/margin_item_22"
+            android:textAllCaps="true"
+            style="@style/text_bold_14"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_send_friend"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            tools:listitem="@layout/item_friend_real"
+            tools:listitem="@layout/item_friend"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
     </LinearLayout>

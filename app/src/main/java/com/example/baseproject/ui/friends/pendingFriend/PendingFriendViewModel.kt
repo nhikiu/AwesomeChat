@@ -1,10 +1,8 @@
 package com.example.baseproject.ui.friends.pendingFriend
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.baseproject.models.Friend
-import com.example.baseproject.models.User
 import com.example.baseproject.utils.Constants
 import com.example.core.base.BaseViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -12,6 +10,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.getValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -42,8 +41,8 @@ class PendingFriendViewModel @Inject constructor(
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 for (dataSnapshot in snapshot.children) {
-                    val userHashMap: HashMap<String, User>? = dataSnapshot.value as? HashMap<String, User>
-                    userHashMap?.let {
+                    val userHashMap: HashMap<*, *> = dataSnapshot.value as HashMap<*, *>
+                    userHashMap.let {
                         val status = userHashMap["status"] as? String ?: ""
                         val friend = Friend(
                             name = userHashMap["name"] as? String ?: "",
@@ -62,7 +61,6 @@ class PendingFriendViewModel @Inject constructor(
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("database", "onCancelled: Fail ${error.toException()}", )
             }
 
         })
@@ -76,8 +74,8 @@ class PendingFriendViewModel @Inject constructor(
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 for (dataSnapshot in snapshot.children) {
-                    val userHashMap: HashMap<String, User>? = dataSnapshot.value as? HashMap<String, User>
-                    userHashMap?.let {
+                    val userHashMap: HashMap<*, *> = dataSnapshot.value as HashMap<*, *>
+                    userHashMap.let {
                         val status = userHashMap["status"] as? String ?: ""
                         val friend = Friend(
                             name = userHashMap["name"] as? String ?: "",
@@ -96,7 +94,6 @@ class PendingFriendViewModel @Inject constructor(
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("database", "onCancelled: Fail ${error.toException()}", )
             }
 
         })
@@ -119,27 +116,41 @@ class PendingFriendViewModel @Inject constructor(
 
         var status = Constants.STATE_RECEIVE
 
-        when (friend.status) {
+        when(friend.status) {
             Constants.STATE_FRIEND -> status = Constants.FRIEND
             Constants.STATE_RECEIVE -> status = Constants.STATE_SEND
             Constants.STATE_SEND -> status = Constants.STATE_RECEIVE
             Constants.STATE_UNFRIEND -> status = Constants.STATE_UNFRIEND
         }
 
-        val currentFriend = Friend(
-            id = currentId,
-            name = auth.currentUser!!.email.toString(),
-            status = status,
-            avatar = ""
-        )
+        userRef.child(currentId).child(Constants.PROFILE).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    val name = snapshot.child("name").getValue<String?>() ?: ""
 
-        userRef.child(friend.id)
-            .child(Constants.FRIEND).child(currentId)
-            .setValue(currentFriend)
-            .addOnSuccessListener {
-            }
-            .addOnFailureListener {
+                    val currentFriend = Friend(
+                        id = currentId,
+                        name = name,
+                        status = status,
+                        avatar = ""
+                    )
 
+
+
+                    userRef.child(friend.id)
+                        .child(Constants.FRIEND).child(currentId)
+                        .setValue(currentFriend)
+                        .addOnSuccessListener {
+                        }
+                        .addOnFailureListener {
+
+                        }
+                }
             }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+
     }
 }

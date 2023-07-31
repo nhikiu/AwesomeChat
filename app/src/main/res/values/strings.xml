@@ -64,7 +64,8 @@
     <string name="cancel">Cancel</string>
     <string name="confirm_friend">Confirm</string>
     <string name="add_friend">Add</string>
-
+    <string name="sending_friend">Friend request</string>
+    <string name="receive_friend">Sent friend</string>
 
     <!--    Profile Screen-->
     <string name="log_out">Log out</string>
@@ -75,4 +76,5 @@
     <string name="version_number" translatable="false">1.0.0</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

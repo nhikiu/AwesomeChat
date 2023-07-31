@@ -56,7 +56,8 @@
     <string name="cancel">Huỷ</string>ỉm
     <string name="confirm_friend">Đồng ý</string>
     <string name="add_friend">Kết bạn</string>
-
+    <string name="sending_friend">Lời mời kết bạn</string>
+    <string name="receive_friend">Đã gửi kết bạn</string>
 
     <!--    Personal Screen-->
     <string name="log_out">Đăng xuất</string>

@@ -1,21 +1,16 @@
 package com.example.baseproject.ui.friends.allFriend
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.baseproject.models.Friend
-import com.example.baseproject.models.User
-import com.example.baseproject.respository.AuthRepository
 import com.example.baseproject.utils.Constants
 import com.example.core.base.BaseViewModel
-import com.google.android.play.integrity.internal.f
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
-import com.google.firebase.database.ktx.values
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -36,56 +31,54 @@ class AllFriendViewModel @Inject constructor(
         getAllUser()
     }
 
-    fun getAllUser() {
+    private fun getAllUser() {
         val myRef = database.getReference(Constants.USER)
         myRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-
+                mFriendList.clear()
                 for (dataSnapshot in snapshot.children) {
+
                     val profileRef = dataSnapshot.child(Constants.PROFILE)
 
                     val id = profileRef.child("id").getValue(String::class.java)
                     val name = profileRef.child("name").getValue(String::class.java)
                     val avatar = profileRef.child("avatar").getValue(String::class.java)
-
                     if (id != auth.currentUser!!.uid && id != null && name != null) {
                         mFriendList.add(Friend(id, name, avatar, Constants.STATE_UNFRIEND))
                     }
                 }
-
-                myRef.child(auth.currentUser!!.uid).child(Constants.FRIEND)
-                    .addValueEventListener(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            for (dataSnapshot in snapshot.children) {
-
-                                var friend = dataSnapshot.value as HashMap<*, *>
-
-                                val id = friend["id"] as String
-                                val status = friend["status"] as String
-
-                                for (i in mFriendList) {
-                                    if (id == i.id) {
-                                        i.status = status
-                                    }
-                                }
-
-                            }
-                            _friendListLiveData.postValue(mFriendList)
-
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-                            Log.e("database", "onCancelled: Fail ${error.toException()}")
-                        }
-
-                    })
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("database", "onCancelled: Fail ${error.toException()}")
             }
 
         })
+
+        myRef.child(auth.currentUser!!.uid).child(Constants.FRIEND)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (dataSnapshot in snapshot.children) {
+
+                        val friend = dataSnapshot.value as HashMap<*, *>
+
+                        val id = friend["id"] as String
+                        val status = friend["status"] as String
+
+                        for (i in mFriendList) {
+                            if (id == i.id) {
+                                i.status = status
+                            }
+                        }
+
+                    }
+                    _friendListLiveData.postValue(mFriendList.toMutableList())
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+            })
     }
 
     fun updateFriendState(friend: Friend) {
@@ -112,13 +105,10 @@ class AllFriendViewModel @Inject constructor(
             Constants.STATE_UNFRIEND -> status = Constants.STATE_UNFRIEND
         }
 
-        Log.e("abc", "updateFriendState: ${userRef.child(currentId).child(Constants.PROFILE).child("name").values<String>()}")
-
-        var name = ""
         userRef.child(currentId).child(Constants.PROFILE).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    name = snapshot.child("name").getValue<String?>() ?: ""
+                    val name = snapshot.child("name").getValue<String?>() ?: ""
 
                     val currentFriend = Friend(
                         id = currentId,
@@ -143,8 +133,6 @@ class AllFriendViewModel @Inject constructor(
             override fun onCancelled(error: DatabaseError) {
             }
         })
-        Log.e("abc", "onDataChange: Name $name", )
-
 
     }
 }

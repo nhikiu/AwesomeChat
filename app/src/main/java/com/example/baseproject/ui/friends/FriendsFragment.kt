@@ -14,6 +14,7 @@ import com.example.baseproject.ui.friends.allFriend.AllFriendFragment
 import com.example.baseproject.ui.friends.pendingFriend.PendingFriendFragment
 import com.example.baseproject.ui.friends.realFriend.RealFriendFragment
 import com.example.core.base.fragment.BaseFragment
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -54,18 +55,29 @@ class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R
                 }
                 title.text = fragmentList[position].title
                 tab.customView = customView
-                binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-                    override fun onPageSelected(position: Int) {
-                        super.onPageSelected(position)
-                        val tabView = binding.tabLayout.getTabAt(position)?.customView
-                        if (tabView != null) {
-                            val tabTitleTextView = tabView.findViewById<TextView>(R.id.tv_tab_title)
-                            // Đổi màu cho tab đang chọn
-                            tabTitleTextView.setTextColor(resources.getColor(R.color.primary_color))
-                        }
-                    }
-                })
+
             }
         }.attach()
+
+        binding.tabLayout
+            .addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    val tabTextView = tab?.customView?.findViewById<TextView>(R.id.tv_tab_title)
+                        tabTextView?.setTextColor(resources.getColor(R.color.primary_color)) // Set the color for selected tab
+                }
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) {
+                    val tabTextView = tab?.customView?.findViewById<TextView>(R.id.tv_tab_title)
+                    tabTextView?.setTextColor(resources.getColor(R.color.grey_999999)) // Set the color for selected tab
+                }
+
+                override fun onTabReselected(tab: TabLayout.Tab?) {
+                }
+
+            })
+
+        val initialSelectedTab = binding.tabLayout.getTabAt(0)
+        initialSelectedTab?.let { it.customView?.findViewById<TextView>(R.id.tv_tab_title)
+            ?.setTextColor(resources.getColor(R.color.primary_color)) }
     }
 }
