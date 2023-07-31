@@ -74,7 +74,12 @@
     <string name="notification">Notification</string>
     <string name="version">Version</string>
     <string name="version_number" translatable="false">1.0.0</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="save">Save</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="phone_number">Số điện thoại</string>
+    <string name="date_of_birth">Ngày sinh</string>
+
 
 </resources>

@@ -65,5 +65,7 @@
     <string name="language_app">Tiếng Việt</string>
     <string name="notification">Thông báo</string>
     <string name="version">Phiên bản ứng dụng</string>
+    <string name="edit_profile">Chỉnh sửa thông tin</string>
+    <string name="save">Lưu</string>
 
 </resources>

@@ -2,6 +2,7 @@ package com.example.baseproject.ui.home
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.ui.chats.ChatsFragment
 import com.example.baseproject.ui.friends.FriendsFragment
 import com.example.baseproject.ui.profile.ProfileFragment
+import com.example.baseproject.utils.Constants
 import com.example.core.base.fragment.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -30,6 +32,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
+        val sharePreferences = context?.getSharedPreferences(Constants.ISLOGIN, Context.MODE_PRIVATE)
+        var isLogIn: Boolean
+        sharePreferences?.let {
+            isLogIn = it.getBoolean(Constants.ISLOGIN, false)
+            if (isLogIn) {
+                Log.e("abc", "initView: ${isLogIn}", )
+            }
+        }
     }
 
     override fun getVM() = viewModel

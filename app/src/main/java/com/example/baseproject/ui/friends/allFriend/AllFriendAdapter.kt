@@ -14,6 +14,10 @@ class AllFriendAdapter : ListAdapter<Friend, AllFriendAdapter.FriendViewHolder>(
 
     private var onClickListener: OnClickListener? = null
 
+    override fun submitList(list: MutableList<Friend>?) {
+        super.submitList(list?.map { it.copy() })
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllFriendAdapter.FriendViewHolder {
         val inflate = LayoutInflater.from(parent.context)
         return FriendViewHolder(ItemFriendBinding.inflate(inflate, parent, false))

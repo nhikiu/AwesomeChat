@@ -28,8 +28,8 @@ class PendingFriendViewModel @Inject constructor(
     val receiveFriendListLiveData: LiveData<List<Friend>> get() = _receiveFriendListLiveData
 
     init {
-        _sendFriendListLiveData.postValue(mSendFriendList)
-        _receiveFriendListLiveData.postValue(mReceiveFriendList)
+        _sendFriendListLiveData.value = mSendFriendList
+        _receiveFriendListLiveData.value = mReceiveFriendList
     }
 
 
@@ -56,7 +56,7 @@ class PendingFriendViewModel @Inject constructor(
                         }
                     }
                 }
-                _sendFriendListLiveData.postValue(mSendFriendList.toMutableList())
+                _sendFriendListLiveData.value = mSendFriendList.toMutableList()
                 mSendFriendList.clear()
             }
 
@@ -89,7 +89,7 @@ class PendingFriendViewModel @Inject constructor(
                         }
                     }
                 }
-                _receiveFriendListLiveData.postValue(mReceiveFriendList.toMutableList())
+                _receiveFriendListLiveData.value = mReceiveFriendList.toMutableList()
                 mReceiveFriendList.clear()
             }
 

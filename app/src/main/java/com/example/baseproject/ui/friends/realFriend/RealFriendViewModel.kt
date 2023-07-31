@@ -26,7 +26,7 @@ class RealFriendViewModel @Inject constructor(
     val realFriendListLiveData: LiveData<List<Friend>> get() = _realFriendListLiveData
 
     init {
-        _realFriendListLiveData.postValue(mRealFriendList)
+        _realFriendListLiveData.value = mRealFriendList
     }
 
 
@@ -53,7 +53,7 @@ class RealFriendViewModel @Inject constructor(
                         }
                     }
                 }
-                _realFriendListLiveData.postValue(mRealFriendList.toMutableList())
+                _realFriendListLiveData.value = mRealFriendList.toMutableList()
                 mRealFriendList.clear()
             }
 

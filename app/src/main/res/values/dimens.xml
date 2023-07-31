@@ -5,6 +5,7 @@
     <dimen name="text_size_22">22sp</dimen>
     <dimen name="padding_25">25sp</dimen>
     <dimen name="padding_6">6dp</dimen>
+    <dimen name="padding_20">20dp</dimen>
     <dimen name="corner_15">15dp</dimen>
     <dimen name="size_icon_60">60dp</dimen>
     <dimen name="sixe_5">5dp</dimen>
@@ -25,4 +26,5 @@
     <dimen name="size_300">300dp</dimen>
     <dimen name="size_150">150dp</dimen>
     <dimen name="size_1">1dp</dimen>
+    <dimen name="size_156">156dp</dimen>
 </resources>
