@@ -67,5 +67,9 @@
     <string name="version">Phiên bản ứng dụng</string>
     <string name="edit_profile">Chỉnh sửa thông tin</string>
     <string name="save">Lưu</string>
+    <string name="phone_number">Số điện thoại</string>
+    <string name="date_of_birth">Ngày sinh</string>
+    <string name="error_phone_number">Số điện thoại gồm 10 chữ số và bắt đầu bằng số 0</string>
+
 
 </resources>

@@ -71,15 +71,20 @@
     <string name="log_out">Log out</string>
     <string name="language">Language</string>
     <string name="language_app">English</string>
+    <string name="language_vi" translatable="false">Tiếng Việt</string>
+    <string name="language_en" translatable="false">English</string>
     <string name="notification">Notification</string>
     <string name="version">Version</string>
     <string name="version_number" translatable="false">1.0.0</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="save">Save</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="date_of_birth">Date of birth</string>
+    <string name="error_phone_number">PhoneNumber must be 10 numbers, start by 0</string>
+    <string name="format_date_ddMMyyyy" translatable="false">dd-MM-yyyy</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="phone_number">Số điện thoại</string>
-    <string name="date_of_birth">Ngày sinh</string>
+
 
 
 </resources>
