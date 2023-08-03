@@ -29,4 +29,13 @@ object ValidationUtils{
         }
         return null
     }
+
+    fun validatePhoneNumber(phoneNumber: String) : String?{
+        val regex = "^0\\d{9}$".toRegex()
+
+        if (phoneNumber.isNotEmpty() && !regex.matches(phoneNumber)) {
+            return Constants.PHONE_NUMBER_INVALID
+        }
+        return null
+    }
 }
