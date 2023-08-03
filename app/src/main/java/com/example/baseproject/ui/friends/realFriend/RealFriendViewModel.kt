@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.baseproject.models.Friend
-import com.example.baseproject.models.User
 import com.example.baseproject.utils.Constants
 import com.example.core.base.BaseViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -29,22 +28,20 @@ class RealFriendViewModel @Inject constructor(
         _realFriendListLiveData.value = mRealFriendList
     }
 
-
     fun getAllRealFriend() {
-        val friendRef = database.getReference(Constants.USER).child(auth.currentUser!!.uid).child(
-            Constants.FRIEND)
+        val friendRef = database.getReference(Constants.USER).child(auth.currentUser!!.uid).child(Constants.FRIEND)
 
         friendRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 for (dataSnapshot in snapshot.children) {
-                    val userHashMap: HashMap<String, User>? = dataSnapshot.value as? HashMap<String, User>
-                    userHashMap?.let {
-                        val status = userHashMap["status"] as? String ?: ""
+                    val userHashMap: HashMap<*, *> = dataSnapshot.value as HashMap<*, *>
+                    userHashMap.let {
+                        val status = userHashMap[Constants.USER_STATUS] as? String ?: ""
                         val friend = Friend(
-                            name = userHashMap["name"] as? String ?: "",
-                            avatar = userHashMap["avatar"] as? String ?: "",
-                            id = userHashMap["id"] as? String ?: "",
+                            name = userHashMap[Constants.USER_NAME] as? String ?: "",
+                            avatar = userHashMap[Constants.USER_AVATAR] as? String ?: "",
+                            id = userHashMap[Constants.USER_ID] as? String ?: "",
                             status = status
                         )
 
@@ -60,7 +57,6 @@ class RealFriendViewModel @Inject constructor(
             override fun onCancelled(error: DatabaseError) {
                 Log.e("database", "onCancelled: Fail ${error.toException()}", )
             }
-
         })
     }
 }

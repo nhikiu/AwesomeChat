@@ -3,13 +3,13 @@ package com.example.baseproject.ui.friends.realFriend
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.baseproject.databinding.ItemFriendBinding
 import com.example.baseproject.models.Friend
+import com.example.baseproject.ui.friends.FriendCallback
 
-class RealFriendAdapter : ListAdapter<Friend, RealFriendAdapter.RealFriendViewHolder>(RealFriendCallback()){
+class RealFriendAdapter : ListAdapter<Friend, RealFriendAdapter.RealFriendViewHolder>(FriendCallback()){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RealFriendViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -28,16 +28,5 @@ class RealFriendAdapter : ListAdapter<Friend, RealFriendAdapter.RealFriendViewHo
                 binding.btnReceiveToConfirm.visibility = View.GONE
                 binding.btnSendingToCancel.visibility = View.GONE
         }
-    }
-
-    class RealFriendCallback : DiffUtil.ItemCallback<Friend>() {
-        override fun areItemsTheSame(oldItem: Friend, newItem: Friend): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Friend, newItem: Friend): Boolean {
-            return oldItem == newItem
-        }
-
     }
 }

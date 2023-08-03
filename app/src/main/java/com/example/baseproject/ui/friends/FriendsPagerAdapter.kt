@@ -15,6 +15,4 @@ class FriendsPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle
     override fun createFragment(position: Int): Fragment {
         return fragmentList[position].fragment
     }
-
-
 }

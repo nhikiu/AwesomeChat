@@ -36,18 +36,18 @@ class AllFriendFragment : BaseFragment<FragmentAllFriendBinding, AllFriendViewMo
                 }
 
                 override fun onClickUnfriendToSending(friend: Friend) {
-                    friend.status = Constants.STATE_SEND
-                    viewModel.updateFriendState(friend)
+                    val newFriend = Friend(friend.id, friend.name, friend.avatar, Constants.STATE_SEND)
+                    viewModel.updateFriendState(newFriend)
                 }
 
                 override fun onClickReceiveToConfirm(friend: Friend) {
-                    friend.status = Constants.STATE_FRIEND
-                    viewModel.updateFriendState(friend)
+                    val newFriend = Friend(friend.id, friend.name, friend.avatar, Constants.STATE_FRIEND)
+                    viewModel.updateFriendState(newFriend)
                 }
 
                 override fun onClickSendingToCancel(friend: Friend) {
-                    friend.status = Constants.STATE_UNFRIEND
-                    viewModel.updateFriendState(friend)
+                    val newFriend = Friend(friend.id, friend.name, friend.avatar, Constants.STATE_UNFRIEND)
+                    viewModel.updateFriendState(newFriend)
                 }
             }
         )

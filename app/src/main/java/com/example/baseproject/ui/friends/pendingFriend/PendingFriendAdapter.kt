@@ -3,14 +3,16 @@ package com.example.baseproject.ui.friends.pendingFriend
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.baseproject.databinding.ItemFriendBinding
 import com.example.baseproject.models.Friend
+import com.example.baseproject.ui.friends.FriendCallback
 import com.example.baseproject.utils.Constants
 
-class PendingFriendAdapter : ListAdapter<Friend, PendingFriendAdapter.PendingFriendViewHolder>(PendingFriendCallback()){
+class PendingFriendAdapter : ListAdapter<Friend, PendingFriendAdapter.PendingFriendViewHolder>(
+    FriendCallback()
+){
 
     private var onClickListener: OnClickListener? = null
 
@@ -72,17 +74,4 @@ class PendingFriendAdapter : ListAdapter<Friend, PendingFriendAdapter.PendingFri
             }
         }
     }
-
-    class PendingFriendCallback : DiffUtil.ItemCallback<Friend>() {
-        override fun areItemsTheSame(oldItem: Friend, newItem: Friend): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Friend, newItem: Friend): Boolean {
-            return oldItem == newItem
-        }
-
-    }
-
-
 }

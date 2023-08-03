@@ -3,20 +3,16 @@ package com.example.baseproject.ui.friends.allFriend
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.baseproject.databinding.ItemFriendBinding
 import com.example.baseproject.models.Friend
+import com.example.baseproject.ui.friends.FriendCallback
 import com.example.baseproject.utils.Constants
 
-class AllFriendAdapter : ListAdapter<Friend, AllFriendAdapter.FriendViewHolder>(AllFriendCallback()){
+class AllFriendAdapter : ListAdapter<Friend, AllFriendAdapter.FriendViewHolder>(FriendCallback()){
 
     private var onClickListener: OnClickListener? = null
-
-    override fun submitList(list: MutableList<Friend>?) {
-        super.submitList(list?.map { it.copy() })
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllFriendAdapter.FriendViewHolder {
         val inflate = LayoutInflater.from(parent.context)
@@ -80,17 +76,5 @@ class AllFriendAdapter : ListAdapter<Friend, AllFriendAdapter.FriendViewHolder>(
                 }
             }
         }
-
-    class AllFriendCallback : DiffUtil.ItemCallback<Friend>() {
-        override fun areItemsTheSame(oldItem: Friend, newItem: Friend): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Friend, newItem: Friend): Boolean {
-            return oldItem == newItem
-        }
-
-    }
-
 }
 

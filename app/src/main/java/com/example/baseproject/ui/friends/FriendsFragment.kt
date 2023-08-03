@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.viewModels
-import androidx.viewpager2.widget.ViewPager2
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentFriendsBinding
 import com.example.baseproject.models.FragmentData
@@ -61,6 +60,7 @@ class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R
 
         binding.tabLayout
             .addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                @SuppressLint("SuspiciousIndentation")
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     val tabTextView = tab?.customView?.findViewById<TextView>(R.id.tv_tab_title)
                         tabTextView?.setTextColor(resources.getColor(R.color.primary_color)) // Set the color for selected tab
