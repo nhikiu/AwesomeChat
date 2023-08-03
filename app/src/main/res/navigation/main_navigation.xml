@@ -26,22 +26,18 @@
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_homeFragment_to_demoViewPager"
-            app:destination="@id/demoViewPager" />
-        <action
             android:id="@+id/action_homeFragment_to_loginFragment"
             app:destination="@id/loginFragment"
             app:enterAnim="@anim/slide_in_left"
             app:exitAnim="@anim/slide_out_left"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_homeFragment_to_profileDetailFragment"
+            app:destination="@id/profileDetailFragment" />
 
     </fragment>
 
-    <fragment
-        android:id="@+id/demoViewPager"
-        android:name="com.example.setting.ui.viewPager.DemoViewPager"
-        android:label="DemoViewPager" />
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.baseproject.ui.login.LoginFragment"
@@ -66,5 +62,10 @@
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out" />
     </fragment>
+    <fragment
+        android:id="@+id/profileDetailFragment"
+        android:name="com.example.baseproject.ui.profileDetail.ProfileDetailFragment"
+        android:label="ProfileDetailFragment"
+        tools:layout="@layout/fragment_profile_detail"/>
 
 </navigation>

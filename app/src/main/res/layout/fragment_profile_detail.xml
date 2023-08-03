@@ -29,11 +29,11 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             android:orientation="horizontal"
-            android:layout_marginTop="@dimen/margin_item_40"
+            android:layout_marginTop="@dimen/margin_item_64"
             android:layout_marginHorizontal="@dimen/margin_item_12"
             android:gravity="center">
             <ImageView
-                android:id="@+id/iv_back"
+                android:id="@+id/btn_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_arrow_left"
@@ -50,6 +50,7 @@
                 android:textColor="@color/white"/>
 
             <TextView
+                android:id="@+id/btn_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -79,6 +80,7 @@
             app:shapeAppearance="@style/circle"
             android:src="@drawable/ic_avatar_default"
             android:padding="@dimen/padding_13"
+            android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/frame_background"/>
@@ -102,15 +104,13 @@
             android:layout_margin="@dimen/margin_item_25"
             android:textSize="@dimen/text_size_12"/>
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_fullname"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_edt_login"
             android:drawableEnd="@drawable/ic_user"
-            android:inputType="textEmailAddress"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_18"
-            android:hint="@string/name_hint"
             android:layout_marginHorizontal="@dimen/margin_item_25"
             app:layout_constraintTop_toBottomOf="@id/tv_name"
             android:autofillHints="" />
@@ -125,14 +125,14 @@
             android:layout_margin="@dimen/margin_item_25"
             android:textSize="@dimen/text_size_12"/>
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_phone_number"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_edt_login"
             android:drawableEnd="@drawable/ic_call"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_18"
-            android:hint="091 234 5678"
+            android:inputType="number"
             app:layout_constraintTop_toBottomOf="@id/tv_phone_number"
             android:layout_marginHorizontal="@dimen/margin_item_25"
             android:autofillHints="" />
@@ -147,62 +147,78 @@
             android:layout_margin="@dimen/margin_item_25"
             android:textSize="@dimen/text_size_12"/>
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_date_of_birth"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_edt_login"
             android:drawableEnd="@drawable/ic_birthday"
             android:textColor="@color/black"
+            android:editable="false"
             android:textSize="@dimen/text_size_18"
-            android:hint="08/04/1992"
             app:layout_constraintTop_toBottomOf="@id/tv_date_of_birth"
             android:layout_marginHorizontal="@dimen/margin_item_25"
-            android:autofillHints="" />
+            android:autofillHints=""
+            tools:ignore="Deprecated" />
 
         <ImageView
-            android:layout_width="23dp"
-            android:layout_height="23dp"
+            android:layout_width="@dimen/size_23"
+            android:layout_height="@dimen/size_23"
             android:src="@drawable/ic_bubble"
-            android:layout_marginTop="161dp"
-            android:layout_marginStart="74dp"
+            android:layout_marginTop="@dimen/margin_item_161"
+            android:layout_marginStart="@dimen/margin_item_74"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/app_name" />
 
         <ImageView
-            android:layout_width="11dp"
-            android:layout_height="11dp"
+            android:layout_width="@dimen/size_11"
+            android:layout_height="@dimen/size_11"
             android:src="@drawable/ic_bubble"
-            android:layout_marginTop="204dp"
-            android:layout_marginStart="25dp"
+            android:layout_marginTop="@dimen/margin_item_204"
+            android:layout_marginStart="@dimen/margin_item_25"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/app_name" />
 
         <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="@dimen/size_16"
+            android:layout_height="@dimen/size_16"
             android:src="@drawable/ic_bubble"
-            android:layout_marginTop="237dp"
-            android:layout_marginStart="75dp"
+            android:layout_marginTop="@dimen/margin_item_237"
+            android:layout_marginStart="@dimen/margin_item_75"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/app_name" />
 
         <ImageView
-            android:layout_width="13dp"
-            android:layout_height="13dp"
+            android:layout_width="@dimen/size_13"
+            android:layout_height="@dimen/size_13"
             android:src="@drawable/ic_bubble"
-            android:layout_marginTop="268dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginTop="@dimen/margin_item_268"
+            android:layout_marginStart="@dimen/margin_item_16"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/app_name" />
 
         <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="@dimen/size_18"
+            android:layout_height="@dimen/size_18"
             android:src="@drawable/ic_bubble"
-            android:layout_marginTop="164dp"
+            android:layout_marginTop="@dimen/margin_item_164"
             android:layout_marginEnd="@dimen/margin_item_50"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="@string/app_name" />
+
+        <ImageView
+            android:layout_width="@dimen/size_19"
+            android:layout_height="@dimen/size_19"
+            android:src="@drawable/ic_bubble"
+            android:layout_marginTop="@dimen/margin_item_253"
+            android:layout_marginEnd="@dimen/margin_item_25"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="@string/app_name" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

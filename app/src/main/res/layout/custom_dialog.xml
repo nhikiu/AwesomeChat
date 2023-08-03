@@ -1,70 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:ignore="MissingDefaultResource">
+<layout>
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="MissingDefaultResource">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="@dimen/size_300"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_item_18"
-        android:layout_marginRight="@dimen/margin_item_18"
-        app:cardCornerRadius="@dimen/corner_15"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        <androidx.cardview.widget.CardView
+            android:layout_width="@dimen/size_300"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/corner_15"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="@dimen/size_icon_60"
-                android:layout_height="@dimen/size_icon_60"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/margin_item_18"
-                android:src="@drawable/ic_cancel"/>
-
-            <TextView
-                android:id="@+id/tv_title"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginLeft="@dimen/margin_item_18"
-                android:layout_marginTop="@dimen/margin_item_12"
-                android:layout_marginRight="@dimen/margin_item_18"
-                android:text="@string/error"
-                style="@style/text_bold_18"
-                android:textColor="@color/black"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_body"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginLeft="@dimen/margin_item_18"
-                android:layout_marginRight="@dimen/margin_item_18"
-                android:text="@string/error_password_invalid"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_14"/>
+                <ImageView
+                    android:layout_width="@dimen/size_icon_60"
+                    android:layout_height="@dimen/size_icon_60"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/margin_item_18"
+                    android:src="@drawable/ic_cancel"/>
 
-            <Button
-                android:id="@+id/btn_confirm"
-                android:layout_width="@dimen/size_150"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/margin_item_18"
-                android:background="@drawable/custom_btn_large"
-                android:layout_marginBottom="@dimen/margin_item_18"
-                android:gravity="center"
-                android:text="@string/confirm"
-                android:backgroundTint="@color/primary_color"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_16"/>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginLeft="@dimen/margin_item_18"
+                    android:layout_marginTop="@dimen/margin_item_12"
+                    android:layout_marginRight="@dimen/margin_item_18"
+                    android:text="@string/error"
+                    style="@style/text_bold_18"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/tv_body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginLeft="@dimen/margin_item_18"
+                    android:layout_marginRight="@dimen/margin_item_18"
+                    android:text="@string/error_password_invalid"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14"/>
+
+                <Button
+                    android:id="@+id/btn_confirm"
+                    android:layout_width="@dimen/size_150"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/margin_item_18"
+                    android:background="@drawable/custom_btn_large"
+                    android:layout_marginBottom="@dimen/margin_item_18"
+                    android:gravity="center"
+                    android:text="@string/confirm"
+                    android:backgroundTint="@color/primary_color"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_16"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
