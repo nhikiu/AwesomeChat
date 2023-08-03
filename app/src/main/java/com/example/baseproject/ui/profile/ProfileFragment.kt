@@ -1,7 +1,7 @@
 package com.example.baseproject.ui.profile
 
+import android.app.AlertDialog
 import android.content.Context
-import android.util.Log
 import androidx.fragment.app.viewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentProfileBinding
@@ -11,6 +11,7 @@ import com.example.baseproject.utils.DialogView
 import com.example.baseproject.utils.ProgressBarView
 import com.example.baseproject.utils.UIState
 import com.example.core.base.fragment.BaseFragment
+import com.example.core.utils.setLanguage
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -36,6 +37,33 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>(R
         binding.btnLogOut.setOnClickListener {
             viewModel.logoutUser()
         }
+
+        binding.btnEdit.setOnClickListener {
+            appNavigation.openHomeToProfileDetail()
+        }
+
+        binding.ivChangeLanguage.setOnClickListener {
+            val listItems = arrayOf(resources.getString(R.string.language_en), resources.getString(R.string.language_vi))
+            val mBuilder = AlertDialog.Builder(requireContext())
+            mBuilder.setSingleChoiceItems(listItems, -1) { dialogInterface, i ->
+                binding.tvLanguage.text = listItems[i]
+                dialogInterface.dismiss()
+            }
+
+            val mDialog = mBuilder.create()
+            mDialog.show()
+            val language = binding.tvLanguage.text
+            if (language == resources.getString(R.string.language_vi)) {
+                changeLanguage("vi")
+            } else {
+                changeLanguage("en")
+            }
+        }
+    }
+
+    private fun changeLanguage(language: String) {
+        requireContext().setLanguage(language)
+        viewModel.setLanguage(language)
     }
 
     private fun observer() {

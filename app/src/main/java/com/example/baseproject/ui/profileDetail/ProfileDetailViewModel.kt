@@ -1,47 +1,37 @@
-package com.example.baseproject.ui.profile
+package com.example.baseproject.ui.profileDetail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.example.baseproject.models.User
-import com.example.baseproject.respository.AuthRepository
 import com.example.baseproject.utils.Constants
 import com.example.baseproject.utils.UIState
 import com.example.core.base.BaseViewModel
-import com.example.core.pref.RxPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(
-    private val repository: AuthRepository,
+class ProfileDetailViewModel @Inject constructor(
     private val database: FirebaseDatabase,
     private val auth: FirebaseAuth,
-    private val rxPreferences: RxPreferences
-    ) : BaseViewModel(){
-    private val _signout = MutableLiveData<UIState<String>>()
-    val signout: LiveData<UIState<String>> get() = _signout
-
+    private val storage: FirebaseStorage
+) : BaseViewModel() {
     private val _currentUser: MutableLiveData<User> = MutableLiveData()
     val currentUser: LiveData<User> get() = _currentUser
 
-    fun logoutUser() {
-        _signout.value = UIState.Loading
+    private val _isSuccess = MutableLiveData<UIState<String>>()
 
-        repository.signoutUser{
-            _signout.value = it
-        }
+    init {
+        getCurrentUser()
     }
 
-    fun getCurrentUser(){
+    private fun getCurrentUser(){
         val id = auth.currentUser!!.uid
         val userRef = database.getReference(Constants.USER).child(id).child(Constants.PROFILE)
 
@@ -65,7 +55,22 @@ class ProfileViewModel @Inject constructor(
         })
     }
 
-    fun setLanguage(language: String) = viewModelScope.launch(Dispatchers.IO) {
-        rxPreferences.setLanguage(language)
+    fun updateUserInfor(user: User, result: (UIState<String>) -> Unit) {
+        val id = auth.currentUser!!.uid
+        val userRef = database.getReference(Constants.USER).child(id).child(Constants.PROFILE)
+
+        _isSuccess.value = UIState.Loading
+
+        userRef
+            .setValue(user)
+            .addOnSuccessListener {
+                result.invoke(UIState.Success(Constants.SUCCESS))
+
+            }
+            .addOnFailureListener {
+                result.invoke(
+                    UIState.Failure(it.localizedMessage)
+                )
+            }
     }
 }
