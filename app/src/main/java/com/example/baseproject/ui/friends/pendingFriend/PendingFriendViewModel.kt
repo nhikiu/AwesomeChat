@@ -1,9 +1,11 @@
 package com.example.baseproject.ui.friends.pendingFriend
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.baseproject.models.Friend
 import com.example.baseproject.utils.Constants
+import com.example.baseproject.utils.UIState
 import com.example.core.base.BaseViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -33,69 +35,106 @@ class PendingFriendViewModel @Inject constructor(
     }
 
 
-    fun getSendRealFriend() {
-        val friendRef = database.getReference(Constants.USER).child(auth.currentUser!!.uid).child(
-            Constants.FRIEND)
+    fun getSendRealFriend(result: (UIState<String>) -> Unit) {
+        val myRef = database.getReference(Constants.USER)
 
-        friendRef.addValueEventListener(object : ValueEventListener {
+        result.invoke(UIState.Loading)
+
+        myRef.addValueEventListener(object : ValueEventListener {
+            @SuppressLint("SuspiciousIndentation")
             override fun onDataChange(snapshot: DataSnapshot) {
-
+                mSendFriendList.clear()
                 for (dataSnapshot in snapshot.children) {
-                    val userHashMap: HashMap<*, *> = dataSnapshot.value as HashMap<*, *>
-                    userHashMap.let {
-                        val status = userHashMap["status"] as? String ?: ""
-                        val friend = Friend(
-                            name = userHashMap["name"] as? String ?: "",
-                            avatar = userHashMap["avatar"] as? String ?: "",
-                            id = userHashMap["id"] as? String ?: "",
-                            status = status
-                        )
+                    val profileRef = dataSnapshot.child(Constants.PROFILE)
 
-                        if (status == Constants.STATE_SEND) {
-                            mSendFriendList.add(friend)
-                        }
+                    val id = profileRef.child(Constants.USER_ID).getValue(String::class.java)
+                    val name = profileRef.child(Constants.USER_NAME).getValue(String::class.java)
+                    val avatar =
+                        profileRef.child(Constants.USER_AVATAR).getValue(String::class.java)
+
+                    if (id != auth.currentUser!!.uid && id != null && name != null) {
+                        mSendFriendList.add(Friend(id, name, avatar, Constants.STATE_UNFRIEND))
                     }
                 }
-                _sendFriendListLiveData.value = mSendFriendList.toMutableList()
-                mSendFriendList.clear()
+
+                val friendRef = myRef.child(auth.currentUser!!.uid).child(Constants.FRIEND)
+
+                friendRef
+                    .get()
+                    .addOnSuccessListener {
+                        if (it.value != null) {
+                            val friends = it.value as HashMap<*, *>
+                            for (i in friends.values) {
+                                val friend = i as HashMap<*, *>
+                                val id = friend[Constants.USER_ID] as String
+                                val status = friend[Constants.USER_STATUS] as String
+                                for (mFriend in mSendFriendList) {
+                                    if (id == mFriend.id) {
+                                        mFriend.status = status
+                                    }
+                                }
+                            }
+                        }
+                        _sendFriendListLiveData.value = mSendFriendList.filter { sendFriend -> sendFriend.status == Constants.STATE_SEND }
+                        result.invoke(UIState.Success(Constants.FRIEND))
+                    }
             }
 
             override fun onCancelled(error: DatabaseError) {
+                result.invoke(UIState .Failure(error.message))
             }
 
         })
     }
 
-    fun getReceiveRealFriend() {
-        val friendRef = database.getReference(Constants.USER).child(auth.currentUser!!.uid).child(
-            Constants.FRIEND)
+    fun getReceiveRealFriend(result: (UIState<String>) -> Unit) {
+        val myRef = database.getReference(Constants.USER)
 
-        friendRef.addValueEventListener(object : ValueEventListener {
+        result.invoke(UIState.Loading)
+
+        myRef.addValueEventListener(object : ValueEventListener {
+            @SuppressLint("SuspiciousIndentation")
             override fun onDataChange(snapshot: DataSnapshot) {
-
+                mReceiveFriendList.clear()
                 for (dataSnapshot in snapshot.children) {
-                    val userHashMap: HashMap<*, *> = dataSnapshot.value as HashMap<*, *>
-                    userHashMap.let {
-                        val status = userHashMap["status"] as? String ?: ""
-                        val friend = Friend(
-                            name = userHashMap["name"] as? String ?: "",
-                            avatar = userHashMap["avatar"] as? String ?: "",
-                            id = userHashMap["id"] as? String ?: "",
-                            status = status
-                        )
+                    val profileRef = dataSnapshot.child(Constants.PROFILE)
 
-                        if (status == Constants.STATE_RECEIVE) {
-                            mReceiveFriendList.add(friend)
-                        }
+                    val id = profileRef.child(Constants.USER_ID).getValue(String::class.java)
+                    val name = profileRef.child(Constants.USER_NAME).getValue(String::class.java)
+                    val avatar =
+                        profileRef.child(Constants.USER_AVATAR).getValue(String::class.java)
+
+                    if (id != auth.currentUser!!.uid && id != null && name != null) {
+                        mReceiveFriendList.add(Friend(id, name, avatar, Constants.STATE_UNFRIEND))
                     }
                 }
-                _receiveFriendListLiveData.value = mReceiveFriendList.toMutableList()
-                mReceiveFriendList.clear()
+
+                val friendRef = myRef.child(auth.currentUser!!.uid).child(Constants.FRIEND)
+
+                friendRef
+                    .get()
+                    .addOnSuccessListener {
+                        if (it.value != null) {
+                            val friends = it.value as HashMap<*, *>
+                            for (i in friends.values) {
+                                val friend = i as HashMap<*, *>
+                                val id = friend[Constants.USER_ID] as String
+                                val status = friend[Constants.USER_STATUS] as String
+                                for (mFriend in mReceiveFriendList) {
+                                    if (id == mFriend.id) {
+                                        mFriend.status = status
+                                    }
+                                }
+                            }
+                        }
+                        _receiveFriendListLiveData.value = mReceiveFriendList.filter { receiveFriend -> receiveFriend.status == Constants.STATE_RECEIVE }
+                        result.invoke(UIState.Success(Constants.FRIEND))
+                    }
             }
 
             override fun onCancelled(error: DatabaseError) {
+                result.invoke(UIState.Failure(error.message))
             }
-
         })
     }
 
@@ -126,7 +165,7 @@ class PendingFriendViewModel @Inject constructor(
         userRef.child(currentId).child(Constants.PROFILE).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    val name = snapshot.child("name").getValue<String?>() ?: ""
+                    val name = snapshot.child(Constants.USER_NAME).getValue<String?>() ?: ""
 
                     val currentFriend = Friend(
                         id = currentId,
@@ -134,8 +173,6 @@ class PendingFriendViewModel @Inject constructor(
                         status = status,
                         avatar = ""
                     )
-
-
 
                     userRef.child(friend.id)
                         .child(Constants.FRIEND).child(currentId)

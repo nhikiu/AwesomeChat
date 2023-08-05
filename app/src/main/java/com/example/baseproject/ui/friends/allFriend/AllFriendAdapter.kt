@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.baseproject.R
 import com.example.baseproject.databinding.ItemFriendBinding
 import com.example.baseproject.models.Friend
 import com.example.baseproject.ui.friends.FriendCallback
@@ -43,6 +45,13 @@ class AllFriendAdapter : ListAdapter<Friend, AllFriendAdapter.FriendViewHolder>(
         : RecyclerView.ViewHolder(binding.root) {
             fun bindData(friend: Friend) {
                 binding.tvName.text = friend.name
+                if (friend.avatar != null && friend.avatar.isNotEmpty()){
+                    Glide.with(binding.root).load(friend.avatar)
+                        .error(R.drawable.ic_error)
+                        .placeholder(R.drawable.ic_avatar_default)
+                        .into(binding.ivAvatar)
+                }
+
                 when (friend.status) {
                     Constants.STATE_UNFRIEND -> {
                         binding.btnUnfriendToSending.visibility = View.VISIBLE

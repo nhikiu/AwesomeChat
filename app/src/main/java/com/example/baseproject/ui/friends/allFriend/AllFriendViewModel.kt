@@ -75,7 +75,6 @@ class AllFriendViewModel @Inject constructor(
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("database", "onCancelled: Fail ${error.toException()}")
             }
 
         })
@@ -111,12 +110,12 @@ class AllFriendViewModel @Inject constructor(
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
                         val name = snapshot.child(Constants.USER_NAME).getValue<String?>() ?: ""
-
+                        val avatar = snapshot.child(Constants.USER_AVATAR).getValue<String?>() ?: ""
                         val currentFriend = Friend(
                             id = currentId,
                             name = name,
                             status = status,
-                            avatar = ""
+                            avatar = avatar
                         )
                         userRef.child(friend.id)
                             .child(Constants.FRIEND).child(currentId)
