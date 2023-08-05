@@ -50,20 +50,40 @@
                     android:text="@string/error_password_invalid"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_14"/>
-
-                <Button
-                    android:id="@+id/btn_confirm"
-                    android:layout_width="@dimen/size_150"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/margin_item_18"
-                    android:background="@drawable/custom_btn_large"
-                    android:layout_marginBottom="@dimen/margin_item_18"
-                    android:gravity="center"
-                    android:text="@string/confirm"
-                    android:backgroundTint="@color/primary_color"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_16"/>
+                    android:gravity="center">
+                    <Button
+                        android:id="@+id/btn_cancel"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/margin_item_18"
+                        android:background="@drawable/custom_btn_large"
+                        android:layout_marginBottom="@dimen/margin_item_18"
+                        android:layout_marginEnd="@dimen/margin_item_25"
+                        android:gravity="center"
+                        android:text="@string/cancel"
+                        android:backgroundTint="@color/grey_999999"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_16"/>
+
+                    <Button
+                        android:id="@+id/btn_confirm"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/margin_item_18"
+                        android:background="@drawable/custom_btn_large"
+                        android:layout_marginBottom="@dimen/margin_item_18"
+                        android:gravity="center"
+                        android:text="@string/confirm"
+                        android:backgroundTint="@color/primary_color"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_16"/>
+                </LinearLayout>
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,9 +8,12 @@ import com.example.baseproject.models.Friend
 import com.example.core.base.fragment.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.baseproject.utils.Constants
+import com.example.baseproject.utils.DialogView
+import com.example.baseproject.utils.UIState
 
 @AndroidEntryPoint
-class AllFriendFragment : BaseFragment<FragmentAllFriendBinding, AllFriendViewModel>(R.layout.fragment_all_friend) {
+class AllFriendFragment :
+    BaseFragment<FragmentAllFriendBinding, AllFriendViewModel>(R.layout.fragment_all_friend) {
 
     private val viewModel: AllFriendViewModel by viewModels()
 
@@ -30,24 +33,69 @@ class AllFriendFragment : BaseFragment<FragmentAllFriendBinding, AllFriendViewMo
         super.setOnClick()
 
         allFriendAdapter?.setOnClickListener(
-            object : AllFriendAdapter.OnClickListener{
+            object : AllFriendAdapter.OnClickListener {
                 override fun onClickToMessage(friend: Friend) {
 
                 }
 
                 override fun onClickUnfriendToSending(friend: Friend) {
-                    val newFriend = Friend(friend.id, friend.name, friend.avatar, Constants.STATE_SEND)
-                    viewModel.updateFriendState(newFriend)
+                    val newFriend =
+                        Friend(friend.id, friend.name, friend.avatar, Constants.STATE_SEND)
+                    viewModel.updateFriendState(newFriend) { state ->
+                        when (state) {
+                            is UIState.Loading -> {}
+                            is UIState.Success -> {}
+                            is UIState.Failure -> {
+                                DialogView().showErrorDialog(
+                                    activity,
+                                    resources.getString(R.string.error),
+                                    resources.getString(R.string.error_update)
+                                )
+                            }
+                        }
+                    }
                 }
 
                 override fun onClickReceiveToConfirm(friend: Friend) {
-                    val newFriend = Friend(friend.id, friend.name, friend.avatar, Constants.STATE_FRIEND)
-                    viewModel.updateFriendState(newFriend)
+                    val newFriend =
+                        Friend(friend.id, friend.name, friend.avatar, Constants.STATE_FRIEND)
+                    viewModel.updateFriendState(newFriend) { state ->
+                        when (state) {
+                            is UIState.Loading -> {}
+                            is UIState.Success -> {}
+                            is UIState.Failure -> {
+                                DialogView().showErrorDialog(
+                                    activity,
+                                    resources.getString(R.string.error),
+                                    resources.getString(R.string.error_update)
+                                )
+                            }
+                        }
+                    }
                 }
 
                 override fun onClickSendingToCancel(friend: Friend) {
-                    val newFriend = Friend(friend.id, friend.name, friend.avatar, Constants.STATE_UNFRIEND)
-                    viewModel.updateFriendState(newFriend)
+                    DialogView().showConfirmDialog(
+                        activity,
+                        resources.getString(R.string.change_title),
+                        resources.getString(R.string.change_body)
+                    ) {
+                        val newFriend =
+                            Friend(friend.id, friend.name, friend.avatar, Constants.STATE_UNFRIEND)
+                        viewModel.updateFriendState(newFriend) { state ->
+                            when (state) {
+                                is UIState.Loading -> {}
+                                is UIState.Success -> {}
+                                is UIState.Failure -> {
+                                    DialogView().showErrorDialog(
+                                        activity,
+                                        resources.getString(R.string.error),
+                                        resources.getString(R.string.error_update),
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             }
         )

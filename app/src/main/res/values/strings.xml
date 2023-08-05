@@ -30,6 +30,7 @@
     <string name="error_network_not_connection">Please connect to the network to log in</string>
     <string name="error_unknown">Unknown error. Please try again later</string>
     <string name="error_user_is_exist">User is exist!</string>
+    <string name="error_update">Update error! Please try again</string>
 
     <!--    sign up screen-->
     <string name="full_name">Full Name</string>
@@ -66,6 +67,8 @@
     <string name="add_friend">Add</string>
     <string name="sending_friend">Friend request</string>
     <string name="receive_friend">Sent friend</string>
+    <string name="change_title">Change</string>
+    <string name="change_body">Do you want to unsend this friend request?</string>
 
     <!--    Profile Screen-->
     <string name="log_out">Log out</string>

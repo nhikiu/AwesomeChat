@@ -8,12 +8,14 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.provider.MediaStore
 import android.view.Window
 import android.widget.ImageView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentProfileDetailBinding
@@ -27,7 +29,8 @@ import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ProfileDetailFragment : BaseFragment<FragmentProfileDetailBinding, ProfileDetailViewModel>(R.layout.fragment_profile_detail) {
+class ProfileDetailFragment :
+    BaseFragment<FragmentProfileDetailBinding, ProfileDetailViewModel>(R.layout.fragment_profile_detail) {
     @Inject
     lateinit var appNavigation: AppNavigation
 
@@ -35,31 +38,43 @@ class ProfileDetailFragment : BaseFragment<FragmentProfileDetailBinding, Profile
 
     override fun getVM() = viewModel
 
-    lateinit var userProfile: User
+    private lateinit var userProfile: User
+    private var selectedImageUri: Uri? = null
 
-    private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            result: ActivityResult ->
-        if (result.resultCode == RESULT_OK) {
-            val selectedImageBitmap = result.data?.extras?.get("data") as? Bitmap
-            var selectedImageUri = result.data?.data
+    private val startForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == RESULT_OK) {
+                val selectedImageBitmap = result.data?.extras?.get("data") as? Bitmap
+                selectedImageUri = result.data?.data
 
-            if (selectedImageBitmap != null) {
-                selectedImageUri = ImageUtils.saveBitmapToGallery(requireContext(), selectedImageBitmap)
-            }
-            if (selectedImageUri != null) {
-                binding.ivAvatar.setImageURI(selectedImageUri)
+                if (selectedImageBitmap != null) {
+                    selectedImageUri =
+                        ImageUtils.saveBitmapToGallery(requireContext(), selectedImageBitmap)
+                }
+
+                if (selectedImageUri != null) {
+                    Glide.with(this).load(selectedImageUri)
+                        .error(R.drawable.ic_error)
+                        .placeholder(R.drawable.ic_avatar_default)
+                        .into(binding.ivAvatar)
+                }
             }
         }
-    }
+
     override fun bindingStateView() {
         super.bindingStateView()
-        viewModel.currentUser.observe(viewLifecycleOwner){ user ->
+        viewModel.currentUser.observe(viewLifecycleOwner) { user ->
             userProfile = user
             binding.edtFullname.setText(user.name)
             binding.edtPhoneNumber.setText(user.phoneNumber)
             binding.edtDateOfBirth.setText(user.dateOfBirth)
+            Glide.with(this).load(user.avatar)
+                .error(R.drawable.ic_error)
+                .placeholder(R.drawable.ic_avatar_default)
+                .into(binding.ivAvatar)
         }
     }
+
 
     override fun setOnClick() {
         super.setOnClick()
@@ -91,7 +106,8 @@ class ProfileDetailFragment : BaseFragment<FragmentProfileDetailBinding, Profile
             val btnImage = dialog.findViewById<ImageView>(R.id.iv_image)
             btnImage.setOnClickListener {
                 dialog.hide()
-                val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                val galleryIntent =
+                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                 galleryIntent.type = "image/*"
                 startForResult.launch(galleryIntent)
             }
@@ -107,7 +123,6 @@ class ProfileDetailFragment : BaseFragment<FragmentProfileDetailBinding, Profile
     }
 
 
-
     private fun onClickSaveButton() {
         binding.btnSave.setOnClickListener {
             val name: String = binding.edtFullname.text.toString().trim()
@@ -117,9 +132,17 @@ class ProfileDetailFragment : BaseFragment<FragmentProfileDetailBinding, Profile
             val errorPhoneNumber = ValidationUtils.validatePhoneNumber(phoneNumber)
 
             if (errorName == Constants.NAME_REQUIRED) {
-                DialogView().showErrorDialog(activity, resources.getString(R.string.error), resources.getString(R.string.error_name_required))
+                DialogView().showErrorDialog(
+                    activity,
+                    resources.getString(R.string.error),
+                    resources.getString(R.string.error_name_required)
+                )
             } else if (errorPhoneNumber == Constants.PHONE_NUMBER_INVALID) {
-                DialogView().showErrorDialog(activity, resources.getString(R.string.error), resources.getString(R.string.error_phone_number))
+                DialogView().showErrorDialog(
+                    activity,
+                    resources.getString(R.string.error),
+                    resources.getString(R.string.error_phone_number)
+                )
             } else {
                 val userUpdate = User(
                     id = userProfile.id,
@@ -130,20 +153,32 @@ class ProfileDetailFragment : BaseFragment<FragmentProfileDetailBinding, Profile
                     avatar = null
                 )
 
-                viewModel.updateUserInfor(userUpdate){ state ->
-                    ProgressBarView.showProgressBar(activity)
-                    when(state) {
-                        is UIState.Success -> {
-                            ProgressBarView.hideProgressBar()
-                            appNavigation.navigateUp()
+                if (selectedImageUri != null) {
+                    viewModel.uploadImageToStorage(userUpdate, selectedImageUri!!) { state ->
+                        when (state) {
+                            is UIState.Loading -> ProgressBarView.showProgressBar(activity)
+                            is UIState.Success -> {
+                                ProgressBarView.hideProgressBar()
+//                                appNavigation.navigateUp()
+                                view?.findNavController()?.navigateUp()
+                            }
+                            is UIState.Failure -> {
+                                ProgressBarView.hideProgressBar()
+                            }
                         }
-                        is UIState.Loading -> {
-                            ProgressBarView.showProgressBar(activity)
-                        }
-
-                        else -> {
-                            Glide.with(requireContext()).load(userProfile.avatar).into(binding.ivAvatar)
-                            DialogView().showErrorDialog(activity, resources.getString(R.string.error), resources.getString(R.string.error_unknown))
+                    }
+                } else {
+                    viewModel.updateUserInfor(userUpdate) { state ->
+                        when (state) {
+                            is UIState.Loading -> ProgressBarView.showProgressBar(activity)
+                            is UIState.Success -> {
+                                ProgressBarView.hideProgressBar()
+//                                appNavigation.navigateUp()
+                                view?.findNavController()?.navigateUp()
+                            }
+                            is UIState.Failure -> {
+                                ProgressBarView.hideProgressBar()
+                            }
                         }
                     }
                 }
@@ -154,7 +189,7 @@ class ProfileDetailFragment : BaseFragment<FragmentProfileDetailBinding, Profile
     private fun onClickChooseDate() {
         binding.edtDateOfBirth.setOnClickListener {
             val calendar = Calendar.getInstance()
-            val datePicker = DatePickerDialog.OnDateSetListener{view, year, month, dayOfMonth ->
+            val datePicker = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
                 calendar.set(Calendar.YEAR, year)
                 calendar.set(Calendar.MONTH, month)
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -163,12 +198,20 @@ class ProfileDetailFragment : BaseFragment<FragmentProfileDetailBinding, Profile
 
                 binding.edtDateOfBirth.setText(sdf.format(calendar.time))
             }
-            DatePickerDialog(
+            val datePickerDialog = DatePickerDialog(
                 requireContext(),
                 datePicker,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)).show()
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
+            datePickerDialog.datePicker.maxDate = calendar.timeInMillis
+            datePickerDialog.show()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        selectedImageUri = null
     }
 }
