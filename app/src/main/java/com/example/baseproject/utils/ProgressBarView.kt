@@ -11,13 +11,15 @@ object ProgressBarView {
     private lateinit var progressBar : Dialog
 
     fun showProgressBar(activity: Activity?) {
-        progressBar = Dialog(activity!!)
-        progressBar.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        progressBar.setCancelable(false)
-        progressBar.setContentView(R.layout.layout_loading)
-        progressBar.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        if (activity != null) {
+            progressBar = Dialog(activity)
+            progressBar.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            progressBar.setCancelable(false)
+            progressBar.setContentView(R.layout.layout_loading)
+            progressBar.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        progressBar.show()
+            progressBar.show()
+        }
     }
 
     fun hideProgressBar() {

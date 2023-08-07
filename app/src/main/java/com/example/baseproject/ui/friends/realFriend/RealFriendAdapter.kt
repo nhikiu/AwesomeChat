@@ -7,20 +7,43 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.baseproject.R
+import com.example.baseproject.databinding.ItemCharactorBinding
 import com.example.baseproject.databinding.ItemFriendBinding
 import com.example.baseproject.models.Friend
-import com.example.baseproject.ui.friends.FriendCallback
+import com.example.baseproject.ui.friends.ItemCallback
 
-class RealFriendAdapter : ListAdapter<Friend, RealFriendAdapter.RealFriendViewHolder>(FriendCallback()){
+class RealFriendAdapter : ListAdapter<Any, RecyclerView.ViewHolder>(ItemCallback()){
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RealFriendViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        return RealFriendViewHolder(ItemFriendBinding.inflate(inflater, parent, false))
+    override fun getItemViewType(position: Int): Int {
+        if (getItem(position) is String) return 0
+        return 1
     }
 
-    override fun onBindViewHolder(holder: RealFriendViewHolder, position: Int) {
-        val currentFriend = getItem(position)
-        holder.bindData(currentFriend)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        if (viewType == 1) {
+            return RealFriendViewHolder(ItemFriendBinding.inflate(inflater, parent, false))
+        }
+        return CharacterViewHolder(ItemCharactorBinding.inflate(inflater, parent, false))
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val currentItem = getItem(position)
+        holder.apply {
+            when(holder) {
+                is CharacterViewHolder -> holder.bindData(currentItem.toString())
+                is RealFriendViewHolder -> {
+                    holder.bindData(currentItem as Friend)
+                }
+            }
+        }
+    }
+
+    class CharacterViewHolder(private val binding: ItemCharactorBinding)
+        : RecyclerView.ViewHolder(binding.root) {
+        fun bindData(character : String) {
+            binding.tvCharactor.text = character
+        }
     }
 
     inner class RealFriendViewHolder(private val binding: ItemFriendBinding) : RecyclerView.ViewHolder(binding.root) {

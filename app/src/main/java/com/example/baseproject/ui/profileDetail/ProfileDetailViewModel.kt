@@ -26,15 +26,13 @@ class ProfileDetailViewModel @Inject constructor(
     private val _currentUser: MutableLiveData<User> = MutableLiveData()
     val currentUser: LiveData<User> get() = _currentUser
 
-    init {
-        getCurrentUser()
-    }
+    fun getCurrentUser(result: (UIState<String>) -> Unit) {
+        val id = auth.currentUser?.uid
+        val userRef = id?.let { database.getReference(Constants.USER).child(it).child(Constants.PROFILE) }
 
-    private fun getCurrentUser() {
-        val id = auth.currentUser!!.uid
-        val userRef = database.getReference(Constants.USER).child(id).child(Constants.PROFILE)
+        result.invoke(UIState.Loading)
 
-        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        userRef?.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     val user = User(
@@ -48,30 +46,29 @@ class ProfileDetailViewModel @Inject constructor(
                         avatar = snapshot.child(Constants.USER_AVATAR).getValue<String>() ?: ""
                     )
                     _currentUser.postValue(user)
+                    result.invoke(UIState.Success(Constants.SUCCESS))
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
+                result.invoke(UIState.Failure(error.message))
             }
         })
     }
 
     fun updateUserInfor(user: User, result: (UIState<String>) -> Unit) {
-        val id = auth.currentUser!!.uid
-        val userRef = database.getReference(Constants.USER).child(id).child(Constants.PROFILE)
+        val id = auth.currentUser?.uid
+        val userRef = id?.let { database.getReference(Constants.USER).child(it).child(Constants.PROFILE) }
 
         result.invoke(UIState.Loading)
 
-        userRef
-            .setValue(user)
-            .addOnSuccessListener {
-                result.invoke(UIState.Success(Constants.SUCCESS))
-            }
-            .addOnFailureListener {
-                result.invoke(
-                    UIState.Failure(it.localizedMessage)
-                )
-            }
+        userRef?.setValue(user)?.addOnSuccessListener {
+            result.invoke(UIState.Success(Constants.SUCCESS))
+        }?.addOnFailureListener {
+            result.invoke(
+                UIState.Failure(it.localizedMessage)
+            )
+        }
     }
 
     fun uploadImageToStorage(user: User, uri: Uri, result: (UIState<String>) -> Unit) {

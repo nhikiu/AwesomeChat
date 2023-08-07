@@ -1,17 +1,21 @@
 package com.example.baseproject.ui.friends
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.baseproject.R
+import com.example.baseproject.container.MainViewModel
 import com.example.baseproject.databinding.FragmentFriendsBinding
 import com.example.baseproject.models.FragmentData
 import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.ui.friends.allFriend.AllFriendFragment
 import com.example.baseproject.ui.friends.pendingFriend.PendingFriendFragment
 import com.example.baseproject.ui.friends.realFriend.RealFriendFragment
+import com.example.baseproject.utils.Constants
 import com.example.core.base.fragment.BaseFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -27,6 +31,13 @@ class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R
 
     override fun getVM() = viewModel
 
+    private val share: MainViewModel by activityViewModels()
+
+    override fun initView(savedInstanceState: Bundle?) {
+        super.initView(savedInstanceState)
+        viewModel.getAllUser()
+    }
+
     @SuppressLint("MissingInflatedId")
     override fun bindingStateView() {
         super.bindingStateView()
@@ -39,7 +50,7 @@ class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R
             activity?.let { FriendsPagerAdapter(childFragmentManager, lifecycle, fragmentList) }
 
         binding.viewPager.offscreenPageLimit = 1
-        binding.viewPager.isUserInputEnabled = true
+        binding.viewPager.isUserInputEnabled = false
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) {
                 tab, position ->
@@ -47,11 +58,20 @@ class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R
                 val customView = LayoutInflater.from(tab.parent!!.context).inflate(R.layout.item_tab_layout, null)
                 val title = customView.findViewById<TextView>(R.id.tv_tab_title)
                 val countNum = customView.findViewById<TextView>(R.id.tv_tab_count)
-                val count = 0
-                if (position == 2) {
-                    countNum.text = "$count"
-                    countNum.visibility = View.VISIBLE
+                var count: Int
+
+                viewModel.friendListLiveData.observe(viewLifecycleOwner){
+                    count = it.filter { friend -> friend.status == Constants.STATE_RECEIVE }.size
+                    if (position == 2 && count > 0) {
+                        if (count > 9) {
+                            countNum.text = "9+"
+                        } else {
+                            countNum.text = "$count"
+                        }
+                        countNum.visibility = View.VISIBLE
+                    }
                 }
+
                 title.text = fragmentList[position].title
                 tab.customView = customView
 

@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.os.Bundle
 import android.provider.MediaStore
 import android.view.Window
 import android.widget.ImageView
@@ -61,6 +62,21 @@ class ProfileDetailFragment :
             }
         }
 
+    override fun initView(savedInstanceState: Bundle?) {
+        super.initView(savedInstanceState)
+        viewModel.getCurrentUser { state ->
+            when (state) {
+                is UIState.Loading -> ProgressBarView.showProgressBar(activity)
+                is UIState.Success -> {
+                    ProgressBarView.hideProgressBar()
+                }
+                is UIState.Failure -> {
+                    ProgressBarView.hideProgressBar()
+                }
+            }
+        }
+    }
+
     override fun bindingStateView() {
         super.bindingStateView()
         viewModel.currentUser.observe(viewLifecycleOwner) { user ->
@@ -68,10 +84,12 @@ class ProfileDetailFragment :
             binding.edtFullname.setText(user.name)
             binding.edtPhoneNumber.setText(user.phoneNumber)
             binding.edtDateOfBirth.setText(user.dateOfBirth)
-            Glide.with(this).load(user.avatar)
-                .error(R.drawable.ic_error)
-                .placeholder(R.drawable.ic_avatar_default)
-                .into(binding.ivAvatar)
+            if(user.avatar != null && user.avatar.isNotEmpty()) {
+                Glide.with(this).load(user.avatar)
+                    .error(R.drawable.ic_error)
+                    .placeholder(R.drawable.ic_avatar_default)
+                    .into(binding.ivAvatar)
+            }
         }
     }
 

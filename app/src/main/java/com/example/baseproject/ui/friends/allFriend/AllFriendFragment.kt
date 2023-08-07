@@ -5,19 +5,21 @@ import androidx.fragment.app.viewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentAllFriendBinding
 import com.example.baseproject.models.Friend
-import com.example.core.base.fragment.BaseFragment
-import dagger.hilt.android.AndroidEntryPoint
+import com.example.baseproject.ui.friends.FriendsViewModel
 import com.example.baseproject.utils.Constants
 import com.example.baseproject.utils.DialogView
+import com.example.baseproject.utils.ListUtils
 import com.example.baseproject.utils.UIState
+import com.example.core.base.fragment.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AllFriendFragment :
-    BaseFragment<FragmentAllFriendBinding, AllFriendViewModel>(R.layout.fragment_all_friend) {
+    BaseFragment<FragmentAllFriendBinding, FriendsViewModel>(R.layout.fragment_all_friend) {
 
-    private val viewModel: AllFriendViewModel by viewModels()
+    private val shareViewModel: FriendsViewModel by viewModels()
 
-    override fun getVM() = viewModel
+    override fun getVM() = shareViewModel
 
     private var allFriendAdapter: AllFriendAdapter? = null
 
@@ -27,6 +29,8 @@ class AllFriendFragment :
         allFriendAdapter = AllFriendAdapter()
 
         binding.recyclerviewAllFriend.adapter = allFriendAdapter
+
+        shareViewModel.getAllUser()
     }
 
     override fun setOnClick() {
@@ -41,7 +45,7 @@ class AllFriendFragment :
                 override fun onClickUnfriendToSending(friend: Friend) {
                     val newFriend =
                         Friend(friend.id, friend.name, friend.avatar, Constants.STATE_SEND)
-                    viewModel.updateFriendState(newFriend) { state ->
+                    shareViewModel.updateFriendState(newFriend) { state ->
                         when (state) {
                             is UIState.Loading -> {}
                             is UIState.Success -> {}
@@ -59,7 +63,7 @@ class AllFriendFragment :
                 override fun onClickReceiveToConfirm(friend: Friend) {
                     val newFriend =
                         Friend(friend.id, friend.name, friend.avatar, Constants.STATE_FRIEND)
-                    viewModel.updateFriendState(newFriend) { state ->
+                    shareViewModel.updateFriendState(newFriend) { state ->
                         when (state) {
                             is UIState.Loading -> {}
                             is UIState.Success -> {}
@@ -82,7 +86,7 @@ class AllFriendFragment :
                     ) {
                         val newFriend =
                             Friend(friend.id, friend.name, friend.avatar, Constants.STATE_UNFRIEND)
-                        viewModel.updateFriendState(newFriend) { state ->
+                        shareViewModel.updateFriendState(newFriend) { state ->
                             when (state) {
                                 is UIState.Loading -> {}
                                 is UIState.Success -> {}
@@ -104,8 +108,8 @@ class AllFriendFragment :
     override fun bindingStateView() {
         super.bindingStateView()
 
-        viewModel.friendListLiveData.observe(viewLifecycleOwner) {
-            allFriendAdapter?.submitList(it.toMutableList())
+        shareViewModel.friendListLiveData.observe(viewLifecycleOwner) {
+            allFriendAdapter?.submitList(ListUtils.getListSortByName(it.toMutableList()))
         }
     }
 }

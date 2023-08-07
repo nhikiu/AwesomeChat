@@ -8,7 +8,10 @@ import com.example.baseproject.utils.Constants
 import com.example.baseproject.utils.UIState
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.FirebaseTooManyRequestsException
-import com.google.firebase.auth.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -49,19 +52,23 @@ class AuthRepositoryImpl @Inject constructor(
     ) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                user.id = auth.currentUser!!.uid
+                val currentUser = auth.currentUser
+                if (currentUser != null) {
+                    user.id = currentUser.uid
 
-                updateUserInfor(user) { state ->
-                    when(state){
-                        is UIState.Success -> {
-                            result.invoke(UIState.Success(Constants.SUCCESS))
+                    updateUserInfor(user) { state ->
+                        when(state){
+                            is UIState.Success -> {
+                                result.invoke(UIState.Success(Constants.SUCCESS))
+                            }
+                            is UIState.Failure -> {
+                                result.invoke(UIState.Failure(state.error))
+                            }
+                            else -> {}
                         }
-                        is UIState.Failure -> {
-                            result.invoke(UIState.Failure(state.error))
-                        }
-                        else -> {}
                     }
                 }
+
             }
             .addOnFailureListener { exception ->
                 val errorMessage = when(exception) {
@@ -120,14 +127,16 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun getAllFriend(liveData: MutableLiveData<List<Friend>>) {
-        val myRef = database.getReference(Constants.USER).child(auth.currentUser!!.uid).child(Constants.FRIEND)
 
-        myRef.addValueEventListener(object : ValueEventListener {
+        auth.currentUser?.uid?.let {
+            database.getReference(Constants.USER).child(it).child(Constants.FRIEND)
+        }?.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val friendList: MutableList<Friend> = mutableListOf()
 
                 for (dataSnapshot in snapshot.children) {
-                    val userHashMap: HashMap<String, User>? = dataSnapshot.value as? HashMap<String, User>
+                    val userHashMap: HashMap<String, User>? =
+                        dataSnapshot.value as? HashMap<String, User>
                     userHashMap?.let {
                         val friend = Friend(
                             name = userHashMap[Constants.USER_NAME] as? String ?: "",
@@ -144,7 +153,7 @@ class AuthRepositoryImpl @Inject constructor(
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("database", "onCancelled: Fail ${error.toException()}", )
+                Log.e("database", "onCancelled: Fail ${error.toException()}",)
             }
 
         })

@@ -30,7 +30,6 @@ class ProfileFragment :
     override fun bindingStateView() {
         super.bindingStateView()
         observer()
-        viewModel.getCurrentUser()
     }
 
     override fun setOnClick() {

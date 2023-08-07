@@ -33,6 +33,10 @@ class ProfileViewModel @Inject constructor(
     private val _currentUser: MutableLiveData<User> = MutableLiveData()
     val currentUser: LiveData<User> get() = _currentUser
 
+    init {
+        getCurrentUser()
+    }
+
     fun logoutUser() {
         _signout.value = UIState.Loading
 
@@ -42,10 +46,10 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun getCurrentUser(){
-        val id = auth.currentUser!!.uid
-        val userRef = database.getReference(Constants.USER).child(id).child(Constants.PROFILE)
+        val id = auth.currentUser?.uid
+        val userRef = id?.let { database.getReference(Constants.USER).child(it).child(Constants.PROFILE) }
 
-        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        userRef?.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     val user = User(
@@ -56,6 +60,7 @@ class ProfileViewModel @Inject constructor(
                         dateOfBirth = snapshot.child(Constants.USER_DATE_OF_BIRTH).getValue<String>() ?: "",
                         avatar = snapshot.child(Constants.USER_AVATAR).getValue<String>() ?: ""
                     )
+
                     _currentUser.postValue(user)
                 }
             }
