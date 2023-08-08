@@ -1,7 +1,10 @@
 package com.example.baseproject.ui.friends.pendingFriend
 
 import android.os.Bundle
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentPendingFriendBinding
 import com.example.baseproject.models.Friend
@@ -48,10 +51,13 @@ class PendingFriendFragment : BaseFragment<FragmentPendingFriendBinding, Friends
     override fun setOnClick() {
         super.setOnClick()
 
-        receiveFriendAdapter.setOnClickListener(object : PendingFriendAdapter.OnClickListener{
-            override fun onClickToMessage(friend: Friend) {
+        onClickReceiveFriend()
 
-            }
+        onClickSendingFriend()
+    }
+
+    private fun onClickReceiveFriend() {
+        receiveFriendAdapter.setOnClickListener(object : PendingFriendAdapter.OnClickListener{
 
             override fun onClickUnfriendToSending(friend: Friend) {
                 friend.status = Constants.STATE_SEND
@@ -68,6 +74,13 @@ class PendingFriendFragment : BaseFragment<FragmentPendingFriendBinding, Friends
             }
 
             override fun onClickSendingToCancel(friend: Friend) {
+                friend.status = Constants.STATE_UNFRIEND
+                shareViewModel.updateFriendState(friend){
+
+                }
+            }
+
+            override fun onClickReceiveToUnfriend(friend: Friend) {
                 friend.status = Constants.STATE_UNFRIEND
                 shareViewModel.updateFriendState(friend){
 
@@ -75,10 +88,30 @@ class PendingFriendFragment : BaseFragment<FragmentPendingFriendBinding, Friends
             }
         })
 
-        sendFriendAdapter.setOnClickListener(object : PendingFriendAdapter.OnClickListener{
-            override fun onClickToMessage(friend: Friend) {
-
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
+            0, ItemTouchHelper.LEFT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
             }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val itemViewHolder = viewHolder as PendingFriendAdapter.PendingFriendViewHolder
+                itemViewHolder.btnDecline.isVisible = true
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerViewReceiveFriend)
+
+    }
+
+    private fun onClickSendingFriend() {
+        sendFriendAdapter.setOnClickListener(object : PendingFriendAdapter.OnClickListener{
 
             override fun onClickUnfriendToSending(friend: Friend) {
                 friend.status = Constants.STATE_SEND
@@ -99,8 +132,11 @@ class PendingFriendFragment : BaseFragment<FragmentPendingFriendBinding, Friends
                 shareViewModel.updateFriendState(friend){
 
                 }
+            }
+
+            override fun onClickReceiveToUnfriend(friend: Friend) {
+
             }
         })
     }
-
 }

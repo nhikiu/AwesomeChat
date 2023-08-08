@@ -5,12 +5,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import androidx.fragment.app.viewModels
 import com.example.baseproject.R
+import com.example.baseproject.databinding.FragmentLoginBinding
 import com.example.baseproject.navigation.AppNavigation
+import com.example.baseproject.utils.*
 import com.example.core.base.fragment.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import com.example.baseproject.databinding.FragmentLoginBinding
-import com.example.baseproject.utils.*
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding, LoginViewModel>(R.layout.fragment_login) {
@@ -35,7 +35,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginViewModel>(R.layou
         binding.tvGoToSignUp.setOnClickListener {
             appNavigation.openLogInToSignUpScreen()
         }
-
     }
 
     private fun watchToEnableButton() {

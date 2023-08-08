@@ -45,7 +45,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun getCurrentUser(){
+    private fun getCurrentUser(){
         val id = auth.currentUser?.uid
         val userRef = id?.let { database.getReference(Constants.USER).child(it).child(Constants.PROFILE) }
 

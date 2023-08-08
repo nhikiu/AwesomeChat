@@ -44,7 +44,9 @@
                 app:itemIconTint="@color/color_item_bottom_nav"
                 android:paddingVertical="@dimen/margin_item_15"
                 app:menu="@menu/bottom_nav"/>
+
         </FrameLayout>
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

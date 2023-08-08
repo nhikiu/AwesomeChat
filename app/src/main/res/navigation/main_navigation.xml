@@ -35,6 +35,12 @@
         <action
             android:id="@+id/action_homeFragment_to_profileDetailFragment"
             app:destination="@id/profileDetailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_messagesFragment"
+            app:destination="@id/messagesFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popExitAnim="@android:anim/fade_out" />
 
     </fragment>
 
@@ -67,5 +73,10 @@
         android:name="com.example.baseproject.ui.profileDetail.ProfileDetailFragment"
         android:label="ProfileDetailFragment"
         tools:layout="@layout/fragment_profile_detail"/>
+    <fragment
+        android:id="@+id/messagesFragment"
+        android:name="com.example.baseproject.ui.messages.MessagesFragment"
+        android:label="MessagesFragment"
+        tools:layout="@layout/fragment_messages"/>
 
 </navigation>

@@ -5,6 +5,7 @@ import androidx.fragment.app.viewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentAllFriendBinding
 import com.example.baseproject.models.Friend
+import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.ui.friends.FriendsViewModel
 import com.example.baseproject.utils.Constants
 import com.example.baseproject.utils.DialogView
@@ -12,10 +13,13 @@ import com.example.baseproject.utils.ListUtils
 import com.example.baseproject.utils.UIState
 import com.example.core.base.fragment.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AllFriendFragment :
     BaseFragment<FragmentAllFriendBinding, FriendsViewModel>(R.layout.fragment_all_friend) {
+    @Inject
+    lateinit var appNavigation: AppNavigation
 
     private val shareViewModel: FriendsViewModel by viewModels()
 
@@ -39,7 +43,11 @@ class AllFriendFragment :
         allFriendAdapter?.setOnClickListener(
             object : AllFriendAdapter.OnClickListener {
                 override fun onClickToMessage(friend: Friend) {
-
+                    if (friend.status == Constants.STATE_FRIEND) {
+                        val bundle = Bundle()
+                        bundle.putString(Constants.USER_ID, friend.id)
+                        appNavigation.openHomeToMessageScreen(bundle)
+                    }
                 }
 
                 override fun onClickUnfriendToSending(friend: Friend) {

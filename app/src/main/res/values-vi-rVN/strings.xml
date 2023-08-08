@@ -61,6 +61,11 @@
     <string name="receive_friend">Đã gửi kết bạn</string>
     <string name="change_title">Thay đổi</string>
     <string name="change_body">Bạn muốn huỷ yêu cầu kết bạn này?</string>
+    <string name="decline">Từ chối</string>
+
+    <!--    Message Screen-->
+    <string name="hint_message">Nhập tin nhắn...</string>
+
 
     <!--    Personal Screen-->
     <string name="log_out">Đăng xuất</string>

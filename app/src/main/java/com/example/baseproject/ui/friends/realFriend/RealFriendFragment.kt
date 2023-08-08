@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.viewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentRealFriendBinding
+import com.example.baseproject.models.Friend
 import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.ui.friends.FriendsViewModel
 import com.example.baseproject.utils.Constants
@@ -38,5 +39,16 @@ class RealFriendFragment : BaseFragment<FragmentRealFriendBinding, FriendsViewMo
             val friendList = ListUtils.getListSortByName(it.toMutableList().filter { friend -> (friend.status == Constants.STATE_FRIEND)})
             realFriendAdapter.submitList(friendList)
         }
+    }
+
+    override fun setOnClick() {
+        super.setOnClick()
+        realFriendAdapter.setOnClickListener(object : RealFriendAdapter.OnClickListener{
+            override fun onClickToMessage(friend: Friend) {
+                val bundle = Bundle()
+                bundle.putString(Constants.USER_ID, friend.id)
+                appNavigation.openHomeToMessageScreen(bundle)
+            }
+        })
     }
 }

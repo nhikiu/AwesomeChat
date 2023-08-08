@@ -68,6 +68,7 @@ class AllFriendAdapter : ListAdapter<Any, RecyclerView.ViewHolder>(ItemCallback(
         : RecyclerView.ViewHolder(binding.root) {
             fun bindData(friend: Friend) {
                 binding.tvName.text = friend.name
+                binding.btnDecline.visibility = View.GONE
                 if (friend.avatar != null && friend.avatar.isNotEmpty()){
                     Glide.with(binding.root).load(friend.avatar)
                         .error(R.drawable.ic_error)

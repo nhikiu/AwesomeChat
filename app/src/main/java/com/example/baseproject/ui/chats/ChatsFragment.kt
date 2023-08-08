@@ -22,12 +22,12 @@ class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layou
 
     override fun getVM() = viewModel
 
-    private var chatAdapter: ChatAdapter? = null
+    private var chatAdapter: ChatsAdapter? = null
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        chatAdapter = ChatAdapter()
+        chatAdapter = ChatsAdapter()
         binding.recyclerviewChats.adapter = chatAdapter
         viewModel.chatListLiveData.observe(viewLifecycleOwner) {
             chatAdapter?.submitList(it.toMutableList())

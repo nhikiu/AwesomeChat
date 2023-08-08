@@ -12,7 +12,7 @@ import com.example.baseproject.models.Chat
 import com.example.baseproject.utils.Constants
 import com.example.baseproject.utils.DateTimeUtils
 
-class ChatAdapter : ListAdapter<Chat, ChatAdapter.ChatViewHolder>(ChatDiffCallback()) {
+class ChatsAdapter : ListAdapter<Chat, ChatsAdapter.ChatViewHolder>(ChatDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
         val inflate = LayoutInflater.from(parent.context)
@@ -30,7 +30,7 @@ class ChatAdapter : ListAdapter<Chat, ChatAdapter.ChatViewHolder>(ChatDiffCallba
             val messages = chat.messages
             if (messages != null) {
                 binding.tvMessage.text = messages[messages.size - 1].content
-                val time = DateTimeUtils.convertTimestampToDateTime(messages[messages.size - 1].sendAt)
+                val time = DateTimeUtils.convertTimestampToDateTime(messages[messages.size - 1].sendAt.toLong())
                 if (time == Constants.IS_YESTERDAY) {
                     binding.tvSendtime.text = context.getText(R.string.is_yesterday)
                 } else {

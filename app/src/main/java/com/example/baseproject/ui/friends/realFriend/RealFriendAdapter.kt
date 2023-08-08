@@ -13,6 +13,7 @@ import com.example.baseproject.models.Friend
 import com.example.baseproject.ui.friends.ItemCallback
 
 class RealFriendAdapter : ListAdapter<Any, RecyclerView.ViewHolder>(ItemCallback()){
+    private var onClickListener: OnClickListener? = null
 
     override fun getItemViewType(position: Int): Int {
         if (getItem(position) is String) return 0
@@ -34,6 +35,9 @@ class RealFriendAdapter : ListAdapter<Any, RecyclerView.ViewHolder>(ItemCallback
                 is CharacterViewHolder -> holder.bindData(currentItem.toString())
                 is RealFriendViewHolder -> {
                     holder.bindData(currentItem as Friend)
+                    holder.itemView.setOnClickListener {
+                        onClickListener?.onClickToMessage(friend = currentItem)
+                    }
                 }
             }
         }
@@ -52,6 +56,7 @@ class RealFriendAdapter : ListAdapter<Any, RecyclerView.ViewHolder>(ItemCallback
             binding.btnUnfriendToSending.visibility = View.GONE
             binding.btnReceiveToConfirm.visibility = View.GONE
             binding.btnSendingToCancel.visibility = View.GONE
+            binding.btnDecline.visibility = View.GONE
             if (friend.avatar != null && friend.avatar.isNotEmpty()){
                 Glide.with(binding.root).load(friend.avatar)
                     .error(R.drawable.ic_error)
@@ -59,5 +64,13 @@ class RealFriendAdapter : ListAdapter<Any, RecyclerView.ViewHolder>(ItemCallback
                     .into(binding.ivAvatar)
             }
         }
+    }
+
+    interface OnClickListener {
+        fun onClickToMessage(friend: Friend)
+    }
+
+    fun setOnClickListener(onClickListener: OnClickListener) {
+        this.onClickListener = onClickListener
     }
 }

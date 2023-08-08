@@ -15,41 +15,20 @@ import javax.inject.Inject
 class ChatsViewModel @Inject constructor() : BaseViewModel(){
     private var chatList = arrayListOf<Chat>(
         Chat("1", arrayListOf<Message>(
-            Message("1", "1", "2", System.currentTimeMillis(), "text", "xin chao")
+            Message("1", "1", "2", System.currentTimeMillis().toString(), "text", "xin chao")
         )),
         Chat("2", arrayListOf<Message>(
-            Message("2", "1", "2", System.currentTimeMillis() - 24 * 60 * 60 * 1000, "text", "xin chao")
+            Message("2", "1", "2", (System.currentTimeMillis() - 24 * 60 * 60 * 1000).toString(), "text", "xin chao")
         )),
         Chat("3", arrayListOf<Message>(
-            Message("1", "1", "2", System.currentTimeMillis() - 24 * 2 * 60 * 60 * 1000, "text", "xin chao")
+            Message("1", "1", "2", (System.currentTimeMillis() - 24 * 2 * 60 * 60 * 1000).toString(), "text", "xin chao")
         )),
         Chat("4", arrayListOf<Message>(
-            Message("1", "1", "2", System.currentTimeMillis() - 86400000 * 3, "text", "xin chao")
+            Message("1", "1", "2", (System.currentTimeMillis() - 86400000 * 3).toString(), "text", "xin chao")
         )),
         Chat("5", arrayListOf<Message>(
-            Message("1", "1", "2", System.currentTimeMillis() - 86400000 * 4, "text", "xin chao")
+            Message("1", "1", "2", (System.currentTimeMillis() - 86400000 * 4).toString(), "text", "xin chao")
         )),
-        Chat("6", arrayListOf<Message>(
-            Message("1", "1", "2", System.currentTimeMillis() - 86400000 * 5, "text", "xin chao")
-        )),
-        Chat("7", arrayListOf<Message>(
-            Message("1", "1", "2", System.currentTimeMillis()  - 86400000 * 6, "text", "xin chao")
-        )),
-        Chat("8", arrayListOf<Message>(
-            Message("1", "1", "2", System.currentTimeMillis()  - 86400000 * 7, "text", "xin chao")
-        )),
-        Chat("9", arrayListOf<Message>(
-            Message("1", "1", "2", System.currentTimeMillis() - 86400000 * 8, "text", "xin chao")
-        )),
-        Chat("10", arrayListOf<Message>(
-            Message("1", "1", "2", System.currentTimeMillis() - 86400000 * 9, "text", "xin chao")
-        )),
-        Chat("11", arrayListOf<Message>(
-            Message("1", "1", "2", System.currentTimeMillis() - 86400000 * 10, "text", "xin chao")
-        )),
-        Chat("12", arrayListOf<Message>(
-            Message("1", "1", "2", System.currentTimeMillis() - 86400000 * 11, "text", "xin chao")
-        ))
     )
 
 

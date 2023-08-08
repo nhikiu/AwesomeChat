@@ -32,8 +32,18 @@ object Constants {
 
     const val IS_YESTERDAY = "is_yesterday"
 
+    // friend state
     const val STATE_UNFRIEND = "unfriend"
     const val STATE_FRIEND = "friend"
     const val STATE_SEND = "send_friend"
     const val STATE_RECEIVE = "receive_friend"
+
+    // chat
+    const val CHATS = "chats"
+    const val MESSAGE_ID = "id"
+    const val MESSAGE_SEND_AT = "sendAt"
+    const val MESSAGE_SEND_ID = "sendId"
+    const val MESSAGE_TO_ID = "toId"
+    const val MESSAGE_TYPE = "type"
+    const val MESSAGE_CONTENT = "content"
 }

@@ -69,6 +69,8 @@ class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R
                             countNum.text = "$count"
                         }
                         countNum.visibility = View.VISIBLE
+                    } else {
+                        countNum.visibility = View.GONE
                     }
                 }
 

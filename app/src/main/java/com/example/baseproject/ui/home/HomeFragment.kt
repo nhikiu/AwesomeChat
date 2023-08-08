@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.*
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
@@ -20,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
 
+
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.fragment_home) {
 
@@ -27,6 +29,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
     lateinit var appNavigation: AppNavigation
 
     private val viewModel: HomeViewModel by viewModels()
+
+    fun dpToPx(context: Context, dp: Int): Int {
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), resources.displayMetrics))
+    }
 
     @SuppressLint("MissingInflatedId")
     override fun initView(savedInstanceState: Bundle?) {
@@ -39,6 +45,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
                 Log.e("abc", "Is Login: ${isLogIn}", )
             }
         }
+
+//        val badge = binding.bottomNav.getOrCreateBadge(R.id.itFriends)
+//        badge.isVisible = true
+//        badge.verticalOffset = dpToPx(requireContext(), 3)
+//        badge.badgeTextColor = resources.getColor(R.color.white)
+//        badge.number = 12
+//        badge.backgroundColor = resources.getColor(R.color.red)
     }
 
     override fun getVM() = viewModel

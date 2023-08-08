@@ -62,8 +62,19 @@
                 android:textColor="@color/white"
                 android:backgroundTint="@color/primary_color"
                 android:textSize="@dimen/text_size_14"/>
-        </FrameLayout>
 
+
+        </FrameLayout>
+        <Button
+            android:id="@+id/btn_decline"
+            android:layout_width="@dimen/size_73"
+            android:layout_height="@dimen/size_27"
+            android:background="@color/red_c92323"
+            android:text="@string/decline"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            android:textAllCaps="false"
+            android:layout_marginStart="@dimen/margin_item_8"/>
 
 
     </LinearLayout>
