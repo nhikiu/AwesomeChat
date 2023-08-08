@@ -1,11 +1,11 @@
 package com.example.baseproject.ui.friends.realFriend
 
-import android.util.Log
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.baseproject.models.Friend
-import com.example.baseproject.models.User
 import com.example.baseproject.utils.Constants
+import com.example.baseproject.utils.UIState
 import com.example.core.base.BaseViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -29,38 +29,54 @@ class RealFriendViewModel @Inject constructor(
         _realFriendListLiveData.value = mRealFriendList
     }
 
+    fun getAllRealFriend(result: (UIState<String>) -> Unit) {
+        val userRef = database.getReference(Constants.USER)
+        
+        result.invoke(UIState.Loading)
 
-    fun getAllRealFriend() {
-        val friendRef = database.getReference(Constants.USER).child(auth.currentUser!!.uid).child(
-            Constants.FRIEND)
-
-        friendRef.addValueEventListener(object : ValueEventListener {
+        userRef.addValueEventListener(object : ValueEventListener {
+            @SuppressLint("SuspiciousIndentation")
             override fun onDataChange(snapshot: DataSnapshot) {
-
+                mRealFriendList.clear()
                 for (dataSnapshot in snapshot.children) {
-                    val userHashMap: HashMap<String, User>? = dataSnapshot.value as? HashMap<String, User>
-                    userHashMap?.let {
-                        val status = userHashMap["status"] as? String ?: ""
-                        val friend = Friend(
-                            name = userHashMap["name"] as? String ?: "",
-                            avatar = userHashMap["avatar"] as? String ?: "",
-                            id = userHashMap["id"] as? String ?: "",
-                            status = status
-                        )
+                    val profileRef = dataSnapshot.child(Constants.PROFILE)
 
-                        if (status == Constants.STATE_FRIEND) {
-                            mRealFriendList.add(friend)
-                        }
+                    val id = profileRef.child(Constants.USER_ID).getValue(String::class.java)
+                    val name = profileRef.child(Constants.USER_NAME).getValue(String::class.java)
+                    val avatar =
+                        profileRef.child(Constants.USER_AVATAR).getValue(String::class.java)
+
+                    if (id != auth.currentUser!!.uid && id != null && name != null) {
+                        mRealFriendList.add(Friend(id, name, avatar, Constants.STATE_UNFRIEND))
                     }
                 }
-                _realFriendListLiveData.value = mRealFriendList.toMutableList()
-                mRealFriendList.clear()
+
+                val friendRef = userRef.child(auth.currentUser!!.uid).child(Constants.FRIEND)
+
+                friendRef
+                    .get()
+                    .addOnSuccessListener {
+                        if (it.value != null) {
+                            val friends = it.value as HashMap<*, *>
+                            for (i in friends.values) {
+                                val friend = i as HashMap<*, *>
+                                val id = friend[Constants.USER_ID] as String
+                                val status = friend[Constants.USER_STATUS] as String
+                                for (mFriend in mRealFriendList) {
+                                    if (id == mFriend.id) {
+                                        mFriend.status = status
+                                    }
+                                }
+                            }
+                        }
+                        _realFriendListLiveData.value = mRealFriendList.filter { realFriend -> realFriend.status == Constants.STATE_FRIEND  }
+                        result.invoke(UIState.Success(Constants.FRIEND))
+                    }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("database", "onCancelled: Fail ${error.toException()}", )
+                result.invoke(UIState.Failure(error.message))
             }
-
         })
     }
 }

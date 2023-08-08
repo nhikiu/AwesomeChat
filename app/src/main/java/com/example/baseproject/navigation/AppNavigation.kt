@@ -19,4 +19,6 @@ interface AppNavigation : BaseNavigator {
 
     fun openHomeToLogInScreen(bundle: Bundle? = null)
 
+    fun openHomeToProfileDetail(bundle: Bundle? = null)
+
 }

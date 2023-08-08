@@ -1,6 +1,7 @@
 package com.example.baseproject.container
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.example.baseproject.R
@@ -33,6 +34,8 @@ class MainActivity : BaseActivityNotRequireViewModel<ActivityMainBinding>(), Con
     lateinit var rxPreferences: RxPreferences
 
     override val layoutId = R.layout.activity_main
+
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

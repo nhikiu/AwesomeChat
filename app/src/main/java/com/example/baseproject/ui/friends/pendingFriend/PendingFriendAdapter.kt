@@ -3,14 +3,18 @@ package com.example.baseproject.ui.friends.pendingFriend
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.baseproject.R
 import com.example.baseproject.databinding.ItemFriendBinding
 import com.example.baseproject.models.Friend
+import com.example.baseproject.ui.friends.FriendCallback
 import com.example.baseproject.utils.Constants
 
-class PendingFriendAdapter : ListAdapter<Friend, PendingFriendAdapter.PendingFriendViewHolder>(PendingFriendCallback()){
+class PendingFriendAdapter : ListAdapter<Friend, PendingFriendAdapter.PendingFriendViewHolder>(
+    FriendCallback()
+){
 
     private var onClickListener: OnClickListener? = null
 
@@ -39,6 +43,12 @@ class PendingFriendAdapter : ListAdapter<Friend, PendingFriendAdapter.PendingFri
     inner class PendingFriendViewHolder(private val binding: ItemFriendBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bindData(friend: Friend) {
             binding.tvName.text = friend.name
+            if (friend.avatar != null && friend.avatar.isNotEmpty()){
+                Glide.with(binding.root).load(friend.avatar)
+                    .error(R.drawable.ic_error)
+                    .placeholder(R.drawable.ic_avatar_default)
+                    .into(binding.ivAvatar)
+            }
             when (friend.status) {
                 Constants.STATE_UNFRIEND -> {
                     binding.btnUnfriendToSending.visibility = View.VISIBLE
@@ -72,17 +82,4 @@ class PendingFriendAdapter : ListAdapter<Friend, PendingFriendAdapter.PendingFri
             }
         }
     }
-
-    class PendingFriendCallback : DiffUtil.ItemCallback<Friend>() {
-        override fun areItemsTheSame(oldItem: Friend, newItem: Friend): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Friend, newItem: Friend): Boolean {
-            return oldItem == newItem
-        }
-
-    }
-
-
 }

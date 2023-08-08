@@ -31,6 +31,8 @@ class AppNavigatorImpl @Inject constructor() : BaseNavigatorImpl(),
         openScreen(R.id.action_homeFragment_to_loginFragment)
     }
 
+
+
     override fun openLogInToSignUpScreen(bundle: Bundle?) {
         openScreen(R.id.action_loginFragment_to_signupFragment)
     }
@@ -40,8 +42,9 @@ class AppNavigatorImpl @Inject constructor() : BaseNavigatorImpl(),
     }
 
     override fun openDemoViewPager(bundle: Bundle?) {
-        openScreen(R.id.action_homeFragment_to_demoViewPager, bundle)
     }
 
-
+    override fun openHomeToProfileDetail(bundle: Bundle?) {
+        openScreen(R.id.action_homeFragment_to_profileDetailFragment)
+    }
 }

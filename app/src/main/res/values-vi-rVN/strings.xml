@@ -26,6 +26,7 @@
     <string name="error_network_not_connection">Vui lòng kết nối mạng để đăng nhập</string>
     <string name="error_unknown">Lỗi hệ thống. Vui lòng thử lại sau</string>
     <string name="error_user_is_exist">Người dùng đã tồn tại!</string>
+    <string name="error_update">Cập nhật lỗi! Vui lòng thử lại</string>
 
     <!--    sign up screen-->
     <string name="full_name">Họ và tên</string>
@@ -58,6 +59,8 @@
     <string name="add_friend">Kết bạn</string>
     <string name="sending_friend">Lời mời kết bạn</string>
     <string name="receive_friend">Đã gửi kết bạn</string>
+    <string name="change_title">Thay đổi</string>
+    <string name="change_body">Bạn muốn huỷ yêu cầu kết bạn này?</string>
 
     <!--    Personal Screen-->
     <string name="log_out">Đăng xuất</string>
@@ -67,5 +70,9 @@
     <string name="version">Phiên bản ứng dụng</string>
     <string name="edit_profile">Chỉnh sửa thông tin</string>
     <string name="save">Lưu</string>
+    <string name="phone_number">Số điện thoại</string>
+    <string name="date_of_birth">Ngày sinh</string>
+    <string name="error_phone_number">Số điện thoại gồm 10 chữ số và bắt đầu bằng số 0</string>
+
 
 </resources>

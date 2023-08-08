@@ -19,7 +19,8 @@
             android:background="@drawable/background_app_common"
             app:layout_constraintTop_toTopOf="parent"
             android:src="@drawable/preview"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,7 +42,7 @@
                     android:id="@+id/iv_avatar"
                     android:layout_width="69dp"
                     android:layout_height="69dp"
-                    android:src="@drawable/preview"
+                    android:src="@drawable/ic_avatar_default"
                     android:scaleType="centerCrop"
                     app:shapeAppearance="@style/circle"
                     android:padding="@dimen/padding_6"/>
@@ -50,6 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:layout_weight="1"
                     android:layout_marginStart="@dimen/margin_item_12">
                     <TextView
                         android:id="@+id/tv_name"
@@ -66,11 +68,18 @@
                         android:text="@string/email_hint"
                         android:textSize="@dimen/text_size_16"/>
                 </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/btn_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_pencil"
+                    android:contentDescription="@string/edit_profile" />
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="5dp"
+                android:layout_height="@dimen/size_5"
                 android:background="@color/grey_efeeee"/>
 
             <LinearLayout
@@ -94,6 +103,7 @@
                     android:textColor="@color/black"/>
 
                 <TextView
+                    android:id="@+id/tv_language"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_size_16"

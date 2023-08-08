@@ -9,6 +9,7 @@
     <dimen name="margin_item_50">50dp</dimen>
     <dimen name="margin_item_54">54dp</dimen>
     <dimen name="margin_item_60">60dp</dimen>
+    <dimen name="margin_item_64">64dp</dimen>
     <dimen name="margin_item_100">100dp</dimen>
     <dimen name="height_toolbar_common">55dp</dimen>
 

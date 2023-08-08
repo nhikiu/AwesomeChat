@@ -1,14 +1,217 @@
 package com.example.baseproject.ui.profileDetail
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
+import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
+import android.app.DatePickerDialog
+import android.app.Dialog
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.net.Uri
+import android.provider.MediaStore
+import android.view.Window
+import android.widget.ImageView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
+import com.bumptech.glide.Glide
 import com.example.baseproject.R
-import org.checkerframework.checker.units.qual.A
+import com.example.baseproject.databinding.FragmentProfileDetailBinding
+import com.example.baseproject.models.User
+import com.example.baseproject.navigation.AppNavigation
+import com.example.baseproject.utils.*
+import com.example.core.base.fragment.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
+import javax.inject.Inject
 
-class ProfileDetailFragment : Fragment() {
+@AndroidEntryPoint
+class ProfileDetailFragment :
+    BaseFragment<FragmentProfileDetailBinding, ProfileDetailViewModel>(R.layout.fragment_profile_detail) {
+    @Inject
+    lateinit var appNavigation: AppNavigation
 
+    private val viewModel: ProfileDetailViewModel by viewModels()
+
+    override fun getVM() = viewModel
+
+    private lateinit var userProfile: User
+    private var selectedImageUri: Uri? = null
+
+    private val startForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == RESULT_OK) {
+                val selectedImageBitmap = result.data?.extras?.get("data") as? Bitmap
+                selectedImageUri = result.data?.data
+
+                if (selectedImageBitmap != null) {
+                    selectedImageUri =
+                        ImageUtils.saveBitmapToGallery(requireContext(), selectedImageBitmap)
+                }
+
+                if (selectedImageUri != null) {
+                    Glide.with(this).load(selectedImageUri)
+                        .error(R.drawable.ic_error)
+                        .placeholder(R.drawable.ic_avatar_default)
+                        .into(binding.ivAvatar)
+                }
+            }
+        }
+
+    override fun bindingStateView() {
+        super.bindingStateView()
+        viewModel.currentUser.observe(viewLifecycleOwner) { user ->
+            userProfile = user
+            binding.edtFullname.setText(user.name)
+            binding.edtPhoneNumber.setText(user.phoneNumber)
+            binding.edtDateOfBirth.setText(user.dateOfBirth)
+            Glide.with(this).load(user.avatar)
+                .error(R.drawable.ic_error)
+                .placeholder(R.drawable.ic_avatar_default)
+                .into(binding.ivAvatar)
+        }
+    }
+
+
+    override fun setOnClick() {
+        super.setOnClick()
+        binding.btnBack.setOnClickListener {
+            appNavigation.navigateUp()
+        }
+
+        onClickSaveButton()
+
+        onClickChooseDate()
+
+        binding.ivEditAvatar.setOnClickListener {
+            showDialogImagePicker()
+        }
+    }
+
+    @SuppressLint("IntentReset")
+    private fun showDialogImagePicker() {
+        if (activity != null) {
+            val dialog = Dialog(requireContext())
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setCancelable(false)
+            dialog.setContentView(R.layout.bottom_sheet_image_picker)
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.setCanceledOnTouchOutside(true)
+
+            dialog.show()
+
+            val btnImage = dialog.findViewById<ImageView>(R.id.iv_image)
+            btnImage.setOnClickListener {
+                dialog.hide()
+                val galleryIntent =
+                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                galleryIntent.type = "image/*"
+                startForResult.launch(galleryIntent)
+            }
+
+            val btnCamera = dialog.findViewById<ImageView>(R.id.iv_camera)
+
+            btnCamera.setOnClickListener {
+                dialog.hide()
+                val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                startForResult.launch(cameraIntent)
+            }
+        }
+    }
+
+
+    private fun onClickSaveButton() {
+        binding.btnSave.setOnClickListener {
+            val name: String = binding.edtFullname.text.toString().trim()
+            val phoneNumber: String = binding.edtPhoneNumber.text.toString().trim()
+
+            val errorName = ValidationUtils.validateName(name)
+            val errorPhoneNumber = ValidationUtils.validatePhoneNumber(phoneNumber)
+
+            if (errorName == Constants.NAME_REQUIRED) {
+                DialogView().showErrorDialog(
+                    activity,
+                    resources.getString(R.string.error),
+                    resources.getString(R.string.error_name_required)
+                )
+            } else if (errorPhoneNumber == Constants.PHONE_NUMBER_INVALID) {
+                DialogView().showErrorDialog(
+                    activity,
+                    resources.getString(R.string.error),
+                    resources.getString(R.string.error_phone_number)
+                )
+            } else {
+                val userUpdate = User(
+                    id = userProfile.id,
+                    name = name,
+                    email = userProfile.email,
+                    phoneNumber = phoneNumber,
+                    dateOfBirth = binding.edtDateOfBirth.text.toString(),
+                    avatar = null
+                )
+
+                if (selectedImageUri != null) {
+                    viewModel.uploadImageToStorage(userUpdate, selectedImageUri!!) { state ->
+                        when (state) {
+                            is UIState.Loading -> ProgressBarView.showProgressBar(activity)
+                            is UIState.Success -> {
+                                ProgressBarView.hideProgressBar()
+//                                appNavigation.navigateUp()
+                                view?.findNavController()?.navigateUp()
+                            }
+                            is UIState.Failure -> {
+                                ProgressBarView.hideProgressBar()
+                            }
+                        }
+                    }
+                } else {
+                    viewModel.updateUserInfor(userUpdate) { state ->
+                        when (state) {
+                            is UIState.Loading -> ProgressBarView.showProgressBar(activity)
+                            is UIState.Success -> {
+                                ProgressBarView.hideProgressBar()
+//                                appNavigation.navigateUp()
+                                view?.findNavController()?.navigateUp()
+                            }
+                            is UIState.Failure -> {
+                                ProgressBarView.hideProgressBar()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun onClickChooseDate() {
+        binding.edtDateOfBirth.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val datePicker = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                calendar.set(Calendar.YEAR, year)
+                calendar.set(Calendar.MONTH, month)
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                val format = resources.getString(R.string.format_date_ddMMyyyy)
+                val sdf = SimpleDateFormat(format, Locale.CHINESE)
+
+                binding.edtDateOfBirth.setText(sdf.format(calendar.time))
+            }
+            val datePickerDialog = DatePickerDialog(
+                requireContext(),
+                datePicker,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
+            datePickerDialog.datePicker.maxDate = calendar.timeInMillis
+            datePickerDialog.show()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        selectedImageUri = null
+    }
 }

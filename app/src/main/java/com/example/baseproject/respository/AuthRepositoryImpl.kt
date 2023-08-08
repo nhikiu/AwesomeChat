@@ -101,11 +101,11 @@ class AuthRepositoryImpl @Inject constructor(
                 if (snapshot.exists()) {
                     val user = User(
                         id = id,
-                        name = snapshot.child("name").getValue<String?>() ?: "",
-                        email = snapshot.child("email").getValue<String?>() ?: "",
-                        phoneNumber = snapshot.child("phoneNumber").getValue<String?>() ?: "",
-                        dateOfBirth = null,
-                        avatar = null
+                        name = snapshot.child(Constants.USER_NAME).getValue<String?>() ?: "",
+                        email = snapshot.child(Constants.USER_EMAIL).getValue<String?>() ?: "",
+                        phoneNumber = snapshot.child(Constants.USER_PHONENUMBER).getValue<String?>() ?: "",
+                        dateOfBirth = snapshot.child(Constants.USER_DATE_OF_BIRTH).getValue<String?>() ?: "",
+                        avatar = snapshot.child(Constants.USER_AVATAR).getValue<String>() ?: ""
                     )
                     liveData.postValue(user)
                 }
@@ -130,10 +130,10 @@ class AuthRepositoryImpl @Inject constructor(
                     val userHashMap: HashMap<String, User>? = dataSnapshot.value as? HashMap<String, User>
                     userHashMap?.let {
                         val friend = Friend(
-                            name = userHashMap["name"] as? String ?: "",
-                            avatar = userHashMap["avatar"] as? String ?: "",
-                            id = userHashMap["id"] as? String ?: "",
-                            status = userHashMap["status"] as? String ?: ""
+                            name = userHashMap[Constants.USER_NAME] as? String ?: "",
+                            avatar = userHashMap[Constants.USER_AVATAR] as? String ?: "",
+                            id = userHashMap[Constants.USER_ID] as? String ?: "",
+                            status = userHashMap[Constants.USER_STATUS] as? String ?: ""
                         )
                         friendList.add(friend)
                     }
