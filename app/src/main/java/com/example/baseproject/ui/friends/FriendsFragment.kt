@@ -35,12 +35,6 @@ class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
-        viewModel.getAllUser()
-    }
-
-    @SuppressLint("MissingInflatedId")
-    override fun bindingStateView() {
-        super.bindingStateView()
         val fragmentList: List<FragmentData> = listOf(
             FragmentData(RealFriendFragment(), null, resources.getString(R.string.friend)),
             FragmentData(AllFriendFragment(), null, resources.getString(R.string.all_friend)),
@@ -80,17 +74,23 @@ class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R
             }
         }.attach()
 
+    }
+
+    @SuppressLint("MissingInflatedId")
+    override fun bindingStateView() {
+        super.bindingStateView()
+
         binding.tabLayout
             .addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 @SuppressLint("SuspiciousIndentation")
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     val tabTextView = tab?.customView?.findViewById<TextView>(R.id.tv_tab_title)
-                        tabTextView?.setTextColor(resources.getColor(R.color.primary_color)) // Set the color for selected tab
+                        tabTextView?.setTextColor(resources.getColor(R.color.primary_color))
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {
                     val tabTextView = tab?.customView?.findViewById<TextView>(R.id.tv_tab_title)
-                    tabTextView?.setTextColor(resources.getColor(R.color.grey_999999)) // Set the color for selected tab
+                    tabTextView?.setTextColor(resources.getColor(R.color.grey_999999))
                 }
 
                 override fun onTabReselected(tab: TabLayout.Tab?) {

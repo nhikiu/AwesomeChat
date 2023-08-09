@@ -28,8 +28,6 @@ class RealFriendFragment : BaseFragment<FragmentRealFriendBinding, FriendsViewMo
         super.initView(savedInstanceState)
 
         binding.recyclerViewRealFriend.adapter = realFriendAdapter
-
-        shareViewModel.getAllUser()
     }
 
     override fun bindingStateView() {

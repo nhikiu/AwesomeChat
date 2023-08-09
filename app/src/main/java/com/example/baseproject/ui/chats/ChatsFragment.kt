@@ -2,7 +2,6 @@ package com.example.baseproject.ui.chats
 
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
 import com.example.baseproject.R
@@ -24,17 +23,19 @@ class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layou
 
     private var chatAdapter: ChatsAdapter? = null
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+
+    override fun initView(savedInstanceState: Bundle?) {
+        super.initView(savedInstanceState)
         chatAdapter = ChatsAdapter()
         binding.recyclerviewChats.adapter = chatAdapter
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun bindingStateView() {
+        super.bindingStateView()
         viewModel.chatListLiveData.observe(viewLifecycleOwner) {
             chatAdapter?.submitList(it.toMutableList())
         }
     }
 
-    override fun bindingStateView() {
-        super.bindingStateView()
-    }
 }

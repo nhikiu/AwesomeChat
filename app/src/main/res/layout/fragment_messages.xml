@@ -5,9 +5,15 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey_f6f6f6"
+        android:background="@color/white"
         android:orientation="vertical"
         tools:context=".ui.messages.MessagesFragment">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_300"
+            android:background="@color/grey_f6f6f6"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/btn_back"
@@ -54,6 +60,7 @@
             android:background="@drawable/bg_white_top_radius"
             android:backgroundTint="@color/white"
             tools:listitem="@layout/item_message_text_send"
+            android:layout_marginBottom="@dimen/margin_item_64"
             app:layout_constraintTop_toBottomOf="@id/iv_avatar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@id/edt_message"/>
@@ -85,11 +92,12 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:src="@drawable/ic_photo"
             app:tint="@color/grey_999999" />
-        
+
         <EditText
             android:id="@+id/edt_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:maxLines="3"
             android:drawableEnd="@drawable/ic_smile"
             android:layout_margin="@dimen/margin_item_12"
             android:paddingHorizontal="@dimen/padding_20"
@@ -105,7 +113,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_send"
-            android:visibility="gone"
             android:layout_marginEnd="@dimen/margin_item_12"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/edt_message"

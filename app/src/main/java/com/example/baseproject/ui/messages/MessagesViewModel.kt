@@ -1,5 +1,6 @@
 package com.example.baseproject.ui.messages
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.baseproject.models.Message
@@ -20,7 +21,7 @@ import javax.inject.Inject
 class MessagesViewModel @Inject constructor(
     private val database: FirebaseDatabase,
     private val auth: FirebaseAuth
-): BaseViewModel() {
+) : BaseViewModel() {
     private val _friendProfile: MutableLiveData<User> = MutableLiveData()
     val friendProfile: LiveData<User> get() = _friendProfile
 
@@ -38,7 +39,8 @@ class MessagesViewModel @Inject constructor(
         _chatId.value = ValidationUtils.validateChatId(fromId, toId)
 
 
-        val userRef = id.let { database.getReference(Constants.USER).child(it).child(Constants.PROFILE) }
+        val userRef =
+            id.let { database.getReference(Constants.USER).child(it).child(Constants.PROFILE) }
 
         userRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -47,14 +49,16 @@ class MessagesViewModel @Inject constructor(
                         id = id,
                         name = snapshot.child(Constants.USER_NAME).getValue<String?>() ?: "",
                         email = snapshot.child(Constants.USER_EMAIL).getValue<String?>() ?: "",
-                        phoneNumber = snapshot.child(Constants.USER_PHONENUMBER).getValue<String?>() ?: "",
-                        dateOfBirth = snapshot.child(Constants.USER_DATE_OF_BIRTH).getValue<String>() ?: "",
+                        phoneNumber = snapshot.child(Constants.USER_PHONENUMBER).getValue<String?>()
+                            ?: "",
+                        dateOfBirth = snapshot.child(Constants.USER_DATE_OF_BIRTH)
+                            .getValue<String>() ?: "",
                         avatar = snapshot.child(Constants.USER_AVATAR).getValue<String>() ?: ""
                     )
 
                     _friendProfile.postValue(user)
 
-                    }
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -63,25 +67,34 @@ class MessagesViewModel @Inject constructor(
     }
 
     fun getAllMessage() {
-        val chatRef =  database.getReference(Constants.CHATS).child(_chatId.value.toString())
-        chatRef?.addListenerForSingleValueEvent(object : ValueEventListener{
+        val chatRef = database.getReference(Constants.CHATS).child(_chatId.value.toString())
+        chatRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                mMessageList.clear()
                 if (snapshot.exists()) {
                     for (dataSnapshot in snapshot.children) {
 
-                        val id = dataSnapshot.child(Constants.MESSAGE_ID).getValue(String::class.java)
-                        val sendAt = dataSnapshot.child(Constants.MESSAGE_SEND_AT).getValue(String::class.java)
-                        val sendId = dataSnapshot.child(Constants.MESSAGE_SEND_ID).getValue(String::class.java)
-                        val toId = dataSnapshot.child(Constants.MESSAGE_TO_ID).getValue(String::class.java)
-                        val type = dataSnapshot.child(Constants.MESSAGE_TYPE).getValue(String::class.java)
-                        val content = dataSnapshot.child(Constants.MESSAGE_CONTENT).getValue(String::class.java)
+                        val id =
+                            dataSnapshot.child(Constants.MESSAGE_ID).getValue(String::class.java)
+                        val sendAt = dataSnapshot.child(Constants.MESSAGE_SEND_AT)
+                            .getValue(String::class.java)
+                        val sendId = dataSnapshot.child(Constants.MESSAGE_SEND_ID)
+                            .getValue(String::class.java)
+                        val toId =
+                            dataSnapshot.child(Constants.MESSAGE_TO_ID).getValue(String::class.java)
+                        val type =
+                            dataSnapshot.child(Constants.MESSAGE_TYPE).getValue(String::class.java)
+                        val content = dataSnapshot.child(Constants.MESSAGE_CONTENT)
+                            .getValue(String::class.java)
                         if (id != null && sendId != null && toId != null && sendAt != null && type != null && content != null) {
                             val message = Message(id, sendId, toId, sendAt, type, content)
                             mMessageList.add(message)
                         }
                     }
-                    _messageListLiveData.value = mMessageList.sortedBy { it.sendAt }
                 }
+                _messageListLiveData.value = mMessageList.sortedByDescending { it.sendAt }
+                Log.e("abc", "onDataChange: ${_messageListLiveData.value!!.size}")
+
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -98,8 +111,15 @@ class MessagesViewModel @Inject constructor(
             val chatsRef = database.getReference(Constants.CHATS).child(chatId)
 
             val chatRef = chatsRef.push()
-            chatRef.setValue(Message(chatRef.key.toString(), sendId, toId, System.currentTimeMillis().toString(), type, text))
-
+            val message = Message(
+                chatRef.key.toString(),
+                sendId,
+                toId,
+                System.currentTimeMillis().toString(),
+                type,
+                text
+            )
+            chatRef.setValue(message)
         }
     }
 }

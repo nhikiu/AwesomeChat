@@ -33,8 +33,6 @@ class AllFriendFragment :
         allFriendAdapter = AllFriendAdapter()
 
         binding.recyclerviewAllFriend.adapter = allFriendAdapter
-
-        shareViewModel.getAllUser()
     }
 
     override fun setOnClick() {

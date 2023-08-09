@@ -48,7 +48,6 @@ class MessagesFragment : BaseFragment<FragmentMessagesBinding, MessagesViewModel
     override fun bindingStateView() {
         super.bindingStateView()
         viewModel.messageListLiveData.observe(viewLifecycleOwner){
-            Log.e("abc", "Message: $it", )
             messagesAdapter?.submitList(it.toMutableList())
         }
     }
@@ -84,6 +83,8 @@ class MessagesFragment : BaseFragment<FragmentMessagesBinding, MessagesViewModel
 
         binding.btnSend.setOnClickListener {
             viewModel.sendMessage(toId, binding.edtMessage.text.toString(), "text")
+            binding.edtMessage.text.clear()
+            binding.recyclerViewMessages.layoutManager?.smoothScrollToPosition(binding.recyclerViewMessages, null, 0)
         }
     }
 

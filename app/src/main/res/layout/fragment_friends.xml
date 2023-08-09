@@ -17,9 +17,7 @@
             app:layout_constraintDimensionRatio="1:0.6"
             android:background="@drawable/background_app_common"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            >
-
+            app:layout_constraintBottom_toBottomOf="parent">
         </FrameLayout>
 
         <TextView
@@ -76,7 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:tabIndicatorColor="@color/primary_color"
-                app:tabIconTint="@color/color_item_bottom_nav" />
+                app:tabIconTint="@drawable/color_item_bottom_nav" />
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/view_pager"
@@ -84,7 +82,5 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"/>
         </LinearLayout>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

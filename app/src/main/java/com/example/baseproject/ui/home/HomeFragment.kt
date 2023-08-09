@@ -3,7 +3,6 @@ package com.example.baseproject.ui.home
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import androidx.fragment.app.viewModels
@@ -11,9 +10,11 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentHomeBinding
 import com.example.baseproject.models.FragmentData
+import com.example.baseproject.models.Friend
 import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.ui.chats.ChatsFragment
 import com.example.baseproject.ui.friends.FriendsFragment
+import com.example.baseproject.ui.friends.FriendsViewModel
 import com.example.baseproject.ui.profile.ProfileFragment
 import com.example.baseproject.utils.Constants
 import com.example.core.base.fragment.BaseFragment
@@ -29,10 +30,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
     lateinit var appNavigation: AppNavigation
 
     private val viewModel: HomeViewModel by viewModels()
-
-    fun dpToPx(context: Context, dp: Int): Int {
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), resources.displayMetrics))
-    }
+    private val friendViewModel: FriendsViewModel by viewModels()
 
     @SuppressLint("MissingInflatedId")
     override fun initView(savedInstanceState: Bundle?) {
@@ -42,16 +40,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
         sharePreferences?.let {
             isLogIn = it.getBoolean(Constants.ISLOGIN, false)
             if (isLogIn) {
-                Log.e("abc", "Is Login: ${isLogIn}", )
+                Timber.tag("abc").e("Is Login: %s", isLogIn)
             }
         }
 
-//        val badge = binding.bottomNav.getOrCreateBadge(R.id.itFriends)
-//        badge.isVisible = true
-//        badge.verticalOffset = dpToPx(requireContext(), 3)
-//        badge.badgeTextColor = resources.getColor(R.color.white)
-//        badge.number = 12
-//        badge.backgroundColor = resources.getColor(R.color.red)
+        friendViewModel.friendListLiveData.observe(viewLifecycleOwner) {
+            val sendList: MutableList<Friend> = it.toMutableList().filter { friend -> (friend.status == Constants.STATE_RECEIVE) } as MutableList<Friend>
+            val badge = binding.bottomNav.getOrCreateBadge(R.id.itFriends)
+            badge.isVisible = true
+            badge.verticalOffset = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                4.0F, resources.displayMetrics))
+            badge.badgeTextColor = resources.getColor(R.color.white)
+            badge.number = sendList.size
+            badge.backgroundColor = resources.getColor(R.color.red)
+        }
     }
 
     override fun getVM() = viewModel

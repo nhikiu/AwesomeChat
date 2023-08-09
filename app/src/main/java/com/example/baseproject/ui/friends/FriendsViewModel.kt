@@ -28,7 +28,11 @@ class FriendsViewModel @Inject constructor(
     private var _friendListLiveData: MutableLiveData<List<Friend>> = MutableLiveData()
     val friendListLiveData: LiveData<List<Friend>> get() = _friendListLiveData
 
-    fun getAllUser() {
+    init {
+        getAllUser()
+    }
+
+    private fun getAllUser() {
         val myRef = database.getReference(Constants.USER)
 
         myRef.addValueEventListener(object : ValueEventListener {

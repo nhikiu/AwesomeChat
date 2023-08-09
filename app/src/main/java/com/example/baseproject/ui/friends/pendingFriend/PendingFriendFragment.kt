@@ -35,8 +35,6 @@ class PendingFriendFragment : BaseFragment<FragmentPendingFriendBinding, Friends
         binding.recyclerViewSendFriend.adapter = sendFriendAdapter
         binding.recyclerViewReceiveFriend.adapter = receiveFriendAdapter
 
-        shareViewModel.getAllUser()
-
         shareViewModel.friendListLiveData.observe(viewLifecycleOwner) {
             val sendList: MutableList<Friend> = it.toMutableList().filter { friend -> (friend.status == Constants.STATE_SEND) } as MutableList<Friend>
             sendFriendAdapter.submitList(sendList)
