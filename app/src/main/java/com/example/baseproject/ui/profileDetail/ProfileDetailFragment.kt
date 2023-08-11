@@ -16,7 +16,6 @@ import android.widget.ImageView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentProfileDetailBinding
@@ -64,17 +63,7 @@ class ProfileDetailFragment :
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
-        viewModel.getCurrentUser { state ->
-            when (state) {
-                is UIState.Loading -> ProgressBarView.showProgressBar(activity)
-                is UIState.Success -> {
-                    ProgressBarView.hideProgressBar()
-                }
-                is UIState.Failure -> {
-                    ProgressBarView.hideProgressBar()
-                }
-            }
-        }
+        viewModel.getCurrentUser()
     }
 
     override fun bindingStateView() {
@@ -172,33 +161,9 @@ class ProfileDetailFragment :
                 )
 
                 if (selectedImageUri != null) {
-                    viewModel.uploadImageToStorage(userUpdate, selectedImageUri!!) { state ->
-                        when (state) {
-                            is UIState.Loading -> ProgressBarView.showProgressBar(activity)
-                            is UIState.Success -> {
-                                ProgressBarView.hideProgressBar()
-//                                appNavigation.navigateUp()
-                                view?.findNavController()?.navigateUp()
-                            }
-                            is UIState.Failure -> {
-                                ProgressBarView.hideProgressBar()
-                            }
-                        }
-                    }
+                    viewModel.uploadImageToStorage(userUpdate, selectedImageUri!!)
                 } else {
-                    viewModel.updateUserInfor(userUpdate) { state ->
-                        when (state) {
-                            is UIState.Loading -> ProgressBarView.showProgressBar(activity)
-                            is UIState.Success -> {
-                                ProgressBarView.hideProgressBar()
-//                                appNavigation.navigateUp()
-                                view?.findNavController()?.navigateUp()
-                            }
-                            is UIState.Failure -> {
-                                ProgressBarView.hideProgressBar()
-                            }
-                        }
-                    }
+                    viewModel.updateUserInfor(userUpdate)
                 }
             }
         }

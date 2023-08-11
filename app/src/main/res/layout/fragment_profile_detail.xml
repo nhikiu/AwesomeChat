@@ -81,6 +81,7 @@
             android:src="@drawable/ic_avatar_default"
             android:padding="@dimen/padding_13"
             android:scaleType="centerCrop"
+            app:strokeColor="@null"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/frame_background"/>
@@ -91,6 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_camera"
+            app:strokeColor="@null"
             app:layout_constraintBottom_toBottomOf="@id/iv_avatar"
             app:layout_constraintEnd_toEndOf="@id/iv_avatar"/>
         

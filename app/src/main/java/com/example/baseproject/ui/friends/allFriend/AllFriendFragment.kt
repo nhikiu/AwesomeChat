@@ -1,7 +1,7 @@
 package com.example.baseproject.ui.friends.allFriend
 
 import android.os.Bundle
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentAllFriendBinding
 import com.example.baseproject.models.Friend
@@ -10,7 +10,6 @@ import com.example.baseproject.ui.friends.FriendsViewModel
 import com.example.baseproject.utils.Constants
 import com.example.baseproject.utils.DialogView
 import com.example.baseproject.utils.ListUtils
-import com.example.baseproject.utils.UIState
 import com.example.core.base.fragment.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -21,7 +20,7 @@ class AllFriendFragment :
     @Inject
     lateinit var appNavigation: AppNavigation
 
-    private val shareViewModel: FriendsViewModel by viewModels()
+    private val shareViewModel: FriendsViewModel by activityViewModels()
 
     override fun getVM() = shareViewModel
 
@@ -51,37 +50,13 @@ class AllFriendFragment :
                 override fun onClickUnfriendToSending(friend: Friend) {
                     val newFriend =
                         Friend(friend.id, friend.name, friend.avatar, Constants.STATE_SEND)
-                    shareViewModel.updateFriendState(newFriend) { state ->
-                        when (state) {
-                            is UIState.Loading -> {}
-                            is UIState.Success -> {}
-                            is UIState.Failure -> {
-                                DialogView().showErrorDialog(
-                                    activity,
-                                    resources.getString(R.string.error),
-                                    resources.getString(R.string.error_update)
-                                )
-                            }
-                        }
-                    }
+                    shareViewModel.updateFriendState(newFriend)
                 }
 
                 override fun onClickReceiveToConfirm(friend: Friend) {
                     val newFriend =
                         Friend(friend.id, friend.name, friend.avatar, Constants.STATE_FRIEND)
-                    shareViewModel.updateFriendState(newFriend) { state ->
-                        when (state) {
-                            is UIState.Loading -> {}
-                            is UIState.Success -> {}
-                            is UIState.Failure -> {
-                                DialogView().showErrorDialog(
-                                    activity,
-                                    resources.getString(R.string.error),
-                                    resources.getString(R.string.error_update)
-                                )
-                            }
-                        }
-                    }
+                    shareViewModel.updateFriendState(newFriend)
                 }
 
                 override fun onClickSendingToCancel(friend: Friend) {
@@ -92,19 +67,7 @@ class AllFriendFragment :
                     ) {
                         val newFriend =
                             Friend(friend.id, friend.name, friend.avatar, Constants.STATE_UNFRIEND)
-                        shareViewModel.updateFriendState(newFriend) { state ->
-                            when (state) {
-                                is UIState.Loading -> {}
-                                is UIState.Success -> {}
-                                is UIState.Failure -> {
-                                    DialogView().showErrorDialog(
-                                        activity,
-                                        resources.getString(R.string.error),
-                                        resources.getString(R.string.error_update),
-                                    )
-                                }
-                            }
-                        }
+                        shareViewModel.updateFriendState(newFriend)
                     }
                 }
             }
@@ -114,8 +77,8 @@ class AllFriendFragment :
     override fun bindingStateView() {
         super.bindingStateView()
 
-        shareViewModel.friendListLiveData.observe(viewLifecycleOwner) {
-            allFriendAdapter?.submitList(ListUtils.getListSortByName(it.toMutableList()))
+        shareViewModel.friendListLiveData.observe(viewLifecycleOwner){
+            allFriendAdapter?.submitList(ListUtils.getListSortByName(it))
         }
     }
 }

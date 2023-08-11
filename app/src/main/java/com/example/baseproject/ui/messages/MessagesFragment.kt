@@ -11,6 +11,7 @@ import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentMessagesBinding
 import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.utils.Constants
+import com.example.baseproject.utils.ListUtils
 import com.example.core.base.fragment.BaseFragment
 import com.example.core.utils.tint
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,13 +43,28 @@ class MessagesFragment : BaseFragment<FragmentMessagesBinding, MessagesViewModel
 
         messagesAdapter = MessagesAdapter()
         binding.recyclerViewMessages.adapter = messagesAdapter
-
     }
 
     override fun bindingStateView() {
         super.bindingStateView()
         viewModel.messageListLiveData.observe(viewLifecycleOwner){
-            messagesAdapter?.submitList(it.toMutableList())
+            messagesAdapter?.submitList(ListUtils.getMessageListSortByTime(it.toMutableList()))
+        }
+
+        viewModel.friendProfile.observe(viewLifecycleOwner){ user ->
+            binding.tvName.text = user.name
+            if (user.avatar != null && user.avatar.isNotEmpty()){
+                Glide.with(this).load(user.avatar)
+                    .error(R.drawable.ic_error)
+                    .placeholder(R.drawable.ic_avatar_default)
+                    .into(binding.ivAvatar)
+            }
+            messagesAdapter?.getFriendProfile(user, user)
+
+        }
+
+        viewModel.chatId.observe(viewLifecycleOwner){
+            Log.e("abc", "Chat ID: $it", )
         }
     }
 
@@ -64,21 +80,6 @@ class MessagesFragment : BaseFragment<FragmentMessagesBinding, MessagesViewModel
 
         binding.btnImagePicker.setOnClickListener {
             binding.btnImagePicker.tint(R.color.primary_color)
-        }
-
-        viewModel.friendProfile.observe(viewLifecycleOwner){ user ->
-            binding.tvName.text = user.name
-            if (user.avatar != null && user.avatar.isNotEmpty()){
-                Glide.with(this).load(user.avatar)
-                    .error(R.drawable.ic_error)
-                    .placeholder(R.drawable.ic_avatar_default)
-                    .into(binding.ivAvatar)
-            }
-
-        }
-
-        viewModel.chatId.observe(viewLifecycleOwner){
-            Log.e("abc", "Chat ID: $it", )
         }
 
         binding.btnSend.setOnClickListener {

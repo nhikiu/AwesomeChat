@@ -1,11 +1,11 @@
 package com.example.baseproject.ui.messages
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.baseproject.models.Message
 import com.example.baseproject.models.User
 import com.example.baseproject.utils.Constants
+import com.example.baseproject.utils.ListUtils
 import com.example.baseproject.utils.ValidationUtils
 import com.example.core.base.BaseViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -87,13 +87,13 @@ class MessagesViewModel @Inject constructor(
                         val content = dataSnapshot.child(Constants.MESSAGE_CONTENT)
                             .getValue(String::class.java)
                         if (id != null && sendId != null && toId != null && sendAt != null && type != null && content != null) {
-                            val message = Message(id, sendId, toId, sendAt, type, content)
+
+                            val message = Message(id, sendId, toId, sendAt, type, content, Constants.POSITION_MIDDLE)
                             mMessageList.add(message)
                         }
                     }
                 }
-                _messageListLiveData.value = mMessageList.sortedByDescending { it.sendAt }
-                Log.e("abc", "onDataChange: ${_messageListLiveData.value!!.size}")
+                _messageListLiveData.value = ListUtils.sortMessageByTime(mMessageList)
 
             }
 
@@ -117,7 +117,8 @@ class MessagesViewModel @Inject constructor(
                 toId,
                 System.currentTimeMillis().toString(),
                 type,
-                text
+                text,
+                Constants.POSITION_LAST
             )
             chatRef.setValue(message)
         }

@@ -93,6 +93,7 @@ class ProfileFragment :
                         editor.apply()
                     }
                     ProgressBarView.hideProgressBar()
+                    activity?.viewModelStore?.clear()
                 }
             }
         }

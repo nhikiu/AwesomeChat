@@ -1,7 +1,7 @@
 package com.example.baseproject.ui.friends.realFriend
 
 import android.os.Bundle
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentRealFriendBinding
 import com.example.baseproject.models.Friend
@@ -18,7 +18,7 @@ class RealFriendFragment : BaseFragment<FragmentRealFriendBinding, FriendsViewMo
     @Inject
     lateinit var appNavigation: AppNavigation
 
-    private val shareViewModel: FriendsViewModel by viewModels()
+    private val shareViewModel: FriendsViewModel by activityViewModels()
 
     override fun getVM() = shareViewModel
 

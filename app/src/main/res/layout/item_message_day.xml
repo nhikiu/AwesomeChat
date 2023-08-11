@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/margin_item_3">
+
+        <TextView
+            android:id="@+id/tv_day"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:text="Hom qua"
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/grey_f6f6f6"
+            android:background="@drawable/bg_button_disable"
+            android:paddingHorizontal="14dp"
+            style="@style/text_14"/>
+
+    </FrameLayout>
+
+</layout>

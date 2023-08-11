@@ -56,8 +56,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginViewModel>(R.layou
     }
 
     fun checkButtonVisibility() {
-        val email = binding.edtEmail.text.toString()
-        val password = binding.edtPassword.text.toString()
+        val email = binding.edtEmail.text.toString().trim()
+        val password = binding.edtPassword.text.toString().trim()
 
         if (email.isNotEmpty() && password.isNotEmpty()) {
             binding.btnLogin.isClickable = true

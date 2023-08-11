@@ -33,6 +33,7 @@
             android:src="@drawable/ic_avatar_default"
             app:shapeAppearance="@style/circle"
             android:scaleType="centerCrop"
+            app:strokeColor="@null"
             android:layout_marginTop="@dimen/margin_item_54"
             android:layout_marginStart="@dimen/margin_item_12"
             app:layout_constraintStart_toEndOf="@id/btn_back"
@@ -56,67 +57,53 @@
             android:layout_height="0dp"
             app:reverseLayout="true"
             android:layout_marginTop="@dimen/margin_item_25"
+            android:paddingTop="@dimen/padding_13"
+            android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:background="@drawable/bg_white_top_radius"
             android:backgroundTint="@color/white"
             tools:listitem="@layout/item_message_text_send"
-            android:layout_marginBottom="@dimen/margin_item_64"
             app:layout_constraintTop_toBottomOf="@id/iv_avatar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/edt_message"/>
+            app:layout_constraintBottom_toTopOf="@id/linear_bottom"/>
 
-        <TextView
-            android:id="@+id/tv_day"
-            android:layout_width="wrap_content"
-            android:layout_height="28dp"
-            android:text="Hom qua"
-            android:textColor="@color/black"
-            android:backgroundTint="@color/grey_f6f6f6"
-            android:background="@drawable/bg_button_disable"
-            android:layout_marginTop="@dimen/size_11"
-            android:paddingHorizontal="14dp"
-            style="@style/text_14"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_avatar"/>
-        
-        <ImageView
-            android:id="@+id/btn_image_picker"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:background="@drawable/bg_common_circle"
-            android:padding="@dimen/text_size_14"
-            android:layout_margin="@dimen/margin_item_12"
-            android:backgroundTint="@color/grey_f6f6f6"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:src="@drawable/ic_photo"
-            app:tint="@color/grey_999999" />
-
-        <EditText
-            android:id="@+id/edt_message"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/linear_bottom"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="3"
-            android:drawableEnd="@drawable/ic_smile"
-            android:layout_margin="@dimen/margin_item_12"
-            android:paddingHorizontal="@dimen/padding_20"
-            android:background="@drawable/custom_btn_large"
-            android:backgroundTint="@color/grey_f6f6f6"
-            android:hint="@string/hint_message"
-            app:layout_constraintStart_toEndOf="@id/btn_image_picker"
-            app:layout_constraintEnd_toStartOf="@id/btn_send"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <ImageView
+                android:id="@+id/btn_image_picker"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:background="@drawable/bg_common_circle"
+                android:padding="@dimen/text_size_14"
+                android:layout_margin="@dimen/margin_item_12"
+                android:backgroundTint="@color/grey_f6f6f6"
+                android:src="@drawable/ic_photo"
+                app:tint="@color/grey_999999" />
 
-        <ImageView
-            android:id="@+id/btn_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_send"
-            android:layout_marginEnd="@dimen/margin_item_12"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/edt_message"
-            app:layout_constraintTop_toTopOf="@id/edt_message"/>
+            <EditText
+                android:id="@+id/edt_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:maxLines="3"
+                android:layout_weight="1"
+                android:drawableEnd="@drawable/ic_smile"
+                android:layout_margin="@dimen/margin_item_12"
+                android:paddingHorizontal="@dimen/padding_20"
+                android:background="@drawable/custom_btn_large"
+                android:backgroundTint="@color/grey_f6f6f6"
+                android:hint="@string/hint_message"/>
+
+            <ImageView
+                android:id="@+id/btn_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_send"
+                android:layout_marginEnd="@dimen/margin_item_12"/>
+        </LinearLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

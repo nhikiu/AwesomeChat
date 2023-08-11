@@ -11,7 +11,7 @@
             android:id="@+id/tv_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxWidth="300dp"
+            android:maxWidth="@dimen/size_300"
             android:textSize="@dimen/size_16"
             android:text="@string/hint_message"
             android:textColor="@color/white"
@@ -25,10 +25,9 @@
             android:id="@+id/tv_sendtime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="10:00"
+            android:visibility="gone"
             android:textSize="@dimen/text_size_12"
             android:textColor="@color/grey_999999"
-            android:visibility="gone"
             android:layout_marginEnd="@dimen/margin_item_12"/>
     </LinearLayout>
 </layout>

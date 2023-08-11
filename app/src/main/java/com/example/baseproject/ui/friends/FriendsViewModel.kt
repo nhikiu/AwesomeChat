@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import com.example.baseproject.models.Friend
 import com.example.baseproject.utils.Constants
 import com.example.baseproject.utils.ListUtils
-import com.example.baseproject.utils.UIState
 import com.example.core.base.BaseViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -27,6 +26,13 @@ class FriendsViewModel @Inject constructor(
 
     private var _friendListLiveData: MutableLiveData<List<Friend>> = MutableLiveData()
     val friendListLiveData: LiveData<List<Friend>> get() = _friendListLiveData
+
+    private var _query: MutableLiveData<String> = MutableLiveData()
+
+    fun setSearchQuery(query: String) {
+        _query.value = query
+        getAllUser()
+    }
 
     init {
         getAllUser()
@@ -70,7 +76,17 @@ class FriendsViewModel @Inject constructor(
                                 }
                             }
                         }
-                        _friendListLiveData.value = ListUtils.sortByName(mFriendList)
+
+                        val searchString: String = _query.value ?: ""
+                        _friendListLiveData.postValue(ListUtils.sortByName(mFriendList.filter { friend ->
+                            ListUtils.removeVietnameseAccents(
+                                friend.name.lowercase()
+                            ).contains(
+                                ListUtils.removeVietnameseAccents(
+                                    searchString.lowercase().trim()
+                                )
+                            )
+                        }.toMutableList()))
                     }
                     .addOnFailureListener {
                     }
@@ -82,19 +98,18 @@ class FriendsViewModel @Inject constructor(
         })
     }
 
-    fun updateFriendState(friend: Friend, result: (UIState<String>) -> Unit) {
+    fun updateFriendState(friend: Friend) {
         val userRef = database.getReference(Constants.USER)
         val currentId = auth.currentUser!!.uid
         //update friend in current user
-        result.invoke(UIState.Loading)
         userRef.child(currentId)
             .child(Constants.FRIEND).child(friend.id)
             .setValue(friend)
             .addOnSuccessListener {
-                result.invoke(UIState.Success(currentId))
+
             }
             .addOnFailureListener {
-                result.invoke(UIState.Failure(it.localizedMessage))
+
             }
 
         //update friend in other user
@@ -123,16 +138,14 @@ class FriendsViewModel @Inject constructor(
                             .child(Constants.FRIEND).child(currentId)
                             .setValue(currentFriend)
                             .addOnSuccessListener {
-                                result.invoke(UIState.Success(currentId))
+
                             }
                             .addOnFailureListener {
-                                result.invoke(UIState.Failure(it.localizedMessage))
                             }
                     }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    result.invoke(UIState.Failure(error.message))
                 }
             })
     }

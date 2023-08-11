@@ -101,7 +101,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun getUserById(id: String, liveData: MutableLiveData<User>) {
-        val userRef = database.getReference(Constants.USER).child(id).child("profile")
+        val userRef = database.getReference(Constants.USER).child(id).child(Constants.PROFILE)
 
         userRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {

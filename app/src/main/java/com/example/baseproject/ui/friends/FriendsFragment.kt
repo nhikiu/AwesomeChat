@@ -5,10 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.baseproject.R
-import com.example.baseproject.container.MainViewModel
 import com.example.baseproject.databinding.FragmentFriendsBinding
 import com.example.baseproject.models.FragmentData
 import com.example.baseproject.navigation.AppNavigation
@@ -31,7 +32,7 @@ class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R
 
     override fun getVM() = viewModel
 
-    private val share: MainViewModel by activityViewModels()
+    private val shareViewModel: FriendsViewModel by activityViewModels()
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
@@ -85,12 +86,12 @@ class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R
                 @SuppressLint("SuspiciousIndentation")
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     val tabTextView = tab?.customView?.findViewById<TextView>(R.id.tv_tab_title)
-                        tabTextView?.setTextColor(resources.getColor(R.color.primary_color))
+                        tabTextView?.setTextColor(ContextCompat.getColor(requireContext(),R.color.primary_color))
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {
                     val tabTextView = tab?.customView?.findViewById<TextView>(R.id.tv_tab_title)
-                    tabTextView?.setTextColor(resources.getColor(R.color.grey_999999))
+                    tabTextView?.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey_999999))
                 }
 
                 override fun onTabReselected(tab: TabLayout.Tab?) {
@@ -100,6 +101,20 @@ class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R
 
         val initialSelectedTab = binding.tabLayout.getTabAt(0)
         initialSelectedTab?.let { it.customView?.findViewById<TextView>(R.id.tv_tab_title)
-            ?.setTextColor(resources.getColor(R.color.primary_color)) }
+            ?.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary_color)) }
+
+        val queryTextListener: SearchView.OnQueryTextListener = object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                shareViewModel.setSearchQuery(p0 ?: "")
+                return true
+            }
+
+        }
+
+        binding.searchFriend.setOnQueryTextListener(queryTextListener)
     }
 }

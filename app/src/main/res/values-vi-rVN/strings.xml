@@ -49,6 +49,7 @@
     <!--    Chats Screen-->
     <string name="search_message">Tìm kiếm tin nhắn...</string>
     <string name="is_yesterday">Hôm qua</string>
+    <string name="is_today">Hôm nay</string>
     <string name="search_friend">Tìm kiếm bạn bè...</string>
 
     <!--    Friend Screen-->

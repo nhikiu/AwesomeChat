@@ -2,7 +2,7 @@ package com.example.baseproject.ui.friends.pendingFriend
 
 import android.os.Bundle
 import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.baseproject.R
@@ -20,7 +20,7 @@ class PendingFriendFragment : BaseFragment<FragmentPendingFriendBinding, Friends
     @Inject
     lateinit var appNavigation: AppNavigation
 
-    private val shareViewModel: FriendsViewModel by viewModels()
+    private val shareViewModel: FriendsViewModel by activityViewModels()
 
     override fun getVM() = shareViewModel
 
@@ -59,30 +59,22 @@ class PendingFriendFragment : BaseFragment<FragmentPendingFriendBinding, Friends
 
             override fun onClickUnfriendToSending(friend: Friend) {
                 friend.status = Constants.STATE_SEND
-                shareViewModel.updateFriendState(friend){
-
-                }
+                shareViewModel.updateFriendState(friend)
             }
 
             override fun onClickReceiveToConfirm(friend: Friend) {
                 friend.status = Constants.STATE_FRIEND
-                shareViewModel.updateFriendState(friend){
-
-                }
+                shareViewModel.updateFriendState(friend)
             }
 
             override fun onClickSendingToCancel(friend: Friend) {
                 friend.status = Constants.STATE_UNFRIEND
-                shareViewModel.updateFriendState(friend){
-
-                }
+                shareViewModel.updateFriendState(friend)
             }
 
             override fun onClickReceiveToUnfriend(friend: Friend) {
                 friend.status = Constants.STATE_UNFRIEND
-                shareViewModel.updateFriendState(friend){
-
-                }
+                shareViewModel.updateFriendState(friend)
             }
         })
 
@@ -113,23 +105,17 @@ class PendingFriendFragment : BaseFragment<FragmentPendingFriendBinding, Friends
 
             override fun onClickUnfriendToSending(friend: Friend) {
                 friend.status = Constants.STATE_SEND
-                shareViewModel.updateFriendState(friend){
-
-                }
+                shareViewModel.updateFriendState(friend)
             }
 
             override fun onClickReceiveToConfirm(friend: Friend) {
                 friend.status = Constants.STATE_FRIEND
-                shareViewModel.updateFriendState(friend){
-
-                }
+                shareViewModel.updateFriendState(friend)
             }
 
             override fun onClickSendingToCancel(friend: Friend) {
                 friend.status = Constants.STATE_UNFRIEND
-                shareViewModel.updateFriendState(friend){
-
-                }
+                shareViewModel.updateFriendState(friend)
             }
 
             override fun onClickReceiveToUnfriend(friend: Friend) {

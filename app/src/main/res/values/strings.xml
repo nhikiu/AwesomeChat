@@ -57,6 +57,7 @@
     <string name="search_message">Search messages…</string>
     <string name="avatar" translatable="false">Avatar</string>
     <string name="is_yesterday">Yesterday</string>
+    <string name="is_today">Today</string>
     <string name="search_friend">Search friend...</string>
 
     <!--    Friend Screen-->

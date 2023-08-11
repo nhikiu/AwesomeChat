@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -20,7 +20,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:src="@drawable/preview"
             android:scaleType="centerCrop"
-            />
+            android:contentDescription="@string/avatar" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,19 +40,21 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/iv_avatar"
-                    android:layout_width="69dp"
-                    android:layout_height="69dp"
+                    android:layout_width="@dimen/size_69"
+                    android:layout_height="@dimen/size_69"
                     android:src="@drawable/ic_avatar_default"
                     android:scaleType="centerCrop"
+                    app:strokeColor="@null"
                     app:shapeAppearance="@style/circle"
                     android:padding="@dimen/padding_6"/>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_weight="1"
-                    android:layout_marginStart="@dimen/margin_item_12">
+                    android:layout_marginStart="@dimen/margin_item_12"
+                    tools:ignore="NestedWeights">
                     <TextView
                         android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
@@ -91,7 +93,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_global"/>
+                    android:src="@drawable/ic_global"
+                    android:contentDescription="@string/app_name" />
                 
                 <TextView
                     android:layout_width="0dp"
@@ -100,7 +103,8 @@
                     android:layout_weight="1"
                     android:text="@string/language"
                     android:layout_marginStart="@dimen/margin_item_18"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black"
+                    tools:ignore="NestedWeights" />
 
                 <TextView
                     android:id="@+id/tv_language"
@@ -135,7 +139,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_notification"/>
+                    android:src="@drawable/ic_notification"
+                    android:contentDescription="@string/notification" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -144,7 +149,8 @@
                     android:layout_weight="1"
                     android:text="@string/notification"
                     android:layout_marginStart="@dimen/margin_item_18"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black"
+                    tools:ignore="NestedWeights" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -170,7 +176,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_version"/>
+                    android:src="@drawable/ic_version"
+                    android:contentDescription="@string/version" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -179,7 +186,8 @@
                     android:layout_weight="1"
                     android:text="@string/version"
                     android:layout_marginStart="@dimen/margin_item_18"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black"
+                    tools:ignore="NestedWeights" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -198,11 +206,13 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:layout_marginHorizontal="@dimen/margin_item_12">
+                android:layout_marginHorizontal="@dimen/margin_item_12"
+                tools:ignore="UseCompoundDrawables">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_logout"/>
+                    android:src="@drawable/ic_logout"
+                    android:contentDescription="@string/log_out" />
 
                 <TextView
                     android:id="@+id/btn_log_out"
@@ -212,7 +222,8 @@
                     android:layout_weight="1"
                     android:text="@string/log_out"
                     android:textColor="@color/red_c92323"
-                    android:layout_marginStart="@dimen/margin_item_18"/>
+                    android:layout_marginStart="@dimen/margin_item_18"
+                    tools:ignore="NestedWeights" />
             </LinearLayout>
 
         </LinearLayout>

@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentChatsBinding
 import com.example.baseproject.navigation.AppNavigation
+import com.example.baseproject.utils.Constants
 import com.example.core.base.fragment.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -34,8 +35,19 @@ class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layou
     override fun bindingStateView() {
         super.bindingStateView()
         viewModel.chatListLiveData.observe(viewLifecycleOwner) {
-            chatAdapter?.submitList(it.toMutableList())
+            chatAdapter?.submitList(it.sortedByDescending { chat -> chat.messages?.get(chat.messages.size - 1)?.sendAt }.toMutableList())
         }
+    }
+
+    override fun setOnClick() {
+        super.setOnClick()
+        chatAdapter?.setOnClickListener(object : ChatsAdapter.OnClickToMessage{
+            override fun onClickToMessage(id: String) {
+                val bundle = Bundle()
+                bundle.putString(Constants.USER_ID, id)
+                appNavigation.openHomeToMessageScreen(bundle)
+            }
+        })
     }
 
 }

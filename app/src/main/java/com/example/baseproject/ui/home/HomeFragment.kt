@@ -46,13 +46,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
 
         friendViewModel.friendListLiveData.observe(viewLifecycleOwner) {
             val sendList: MutableList<Friend> = it.toMutableList().filter { friend -> (friend.status == Constants.STATE_RECEIVE) } as MutableList<Friend>
-            val badge = binding.bottomNav.getOrCreateBadge(R.id.itFriends)
-            badge.isVisible = true
-            badge.verticalOffset = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                4.0F, resources.displayMetrics))
-            badge.badgeTextColor = resources.getColor(R.color.white)
-            badge.number = sendList.size
-            badge.backgroundColor = resources.getColor(R.color.red)
+            if (sendList.size > 0) {
+                val badge = binding.bottomNav.getOrCreateBadge(R.id.itFriends)
+                badge.isVisible = true
+                badge.verticalOffset = Math.round(
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                    4.0F, resources.displayMetrics))
+                badge.badgeTextColor = resources.getColor(R.color.white)
+                badge.number = sendList.size
+                badge.backgroundColor = resources.getColor(R.color.red)
+            }
         }
     }
 

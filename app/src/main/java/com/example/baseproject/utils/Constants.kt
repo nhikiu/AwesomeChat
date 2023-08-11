@@ -30,7 +30,8 @@ object Constants {
     const val TOO_MANY_REQUEST = "too_many_request"
     const val USER_EXIST = "user_is_exist"
 
-    const val IS_YESTERDAY = "is_yesterday"
+    const val IS_YESTERDAY = "Yesterday"
+    const val IS_TODAY = "Today"
 
     // friend state
     const val STATE_UNFRIEND = "unfriend"
@@ -46,4 +47,8 @@ object Constants {
     const val MESSAGE_TO_ID = "toId"
     const val MESSAGE_TYPE = "type"
     const val MESSAGE_CONTENT = "content"
+    const val POSITION_FIRST = "first"
+    const val POSITION_LAST = "last"
+    const val POSITION_MIDDLE = "middle"
+    const val POSITION_ONLY = "only"
 }
