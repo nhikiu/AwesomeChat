@@ -1,6 +1,7 @@
 package com.example.baseproject.ui.chats
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -37,62 +38,68 @@ class ChatsViewModel @Inject constructor(
 
     private fun getAllChat() {
         val chatRef = database.getReference(Constants.CHATS)
+        val uid = auth.currentUser?.uid.toString()
         chatRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     for (dataSnapshot in snapshot.children) {
-                        val chatId = dataSnapshot.key.toString()
-                        val uid = auth.currentUser?.uid.toString()
-                        val listMessage = arrayListOf<Message>()
-                        for (i in dataSnapshot.children) {
-                            val message = i.value as HashMap<*, *>
-                            val id = message[Constants.MESSAGE_ID].toString()
-                            val sendAt = message[Constants.MESSAGE_SEND_AT].toString()
-                            val sendId = message[Constants.MESSAGE_SEND_ID].toString()
-                            val toId = message[Constants.MESSAGE_TO_ID].toString()
-                            val content = message[Constants.MESSAGE_CONTENT].toString()
-                            val type = message[Constants.MESSAGE_TYPE].toString()
+                        if (dataSnapshot.key.toString().contains(uid)) {
+                            val chatId = dataSnapshot.key.toString()
 
-                            listMessage.add(Message(
-                                id = id,
-                                sendId = sendId,
-                                sendAt = sendAt,
-                                toId = toId,
-                                content = content,
-                                type = type,
-                                position = Constants.POSITION_MIDDLE
-                            ))
-                        }
+                            val listMessage = arrayListOf<Message>()
+                            for (i in dataSnapshot.children) {
+                                val message = i.value as HashMap<*, *>
+                                val id = message[Constants.MESSAGE_ID].toString()
+                                val sendAt = message[Constants.MESSAGE_SEND_AT].toString()
+                                val sendId = message[Constants.MESSAGE_SEND_ID].toString()
+                                val toId = message[Constants.MESSAGE_TO_ID].toString()
+                                val content = message[Constants.MESSAGE_CONTENT].toString()
+                                val type = message[Constants.MESSAGE_TYPE].toString()
 
-                        var friendId = ""
-                        for (i in chatId.split("-")){
-                            if (i != uid) {
-                                friendId = i
+                                listMessage.add(Message(
+                                    id = id,
+                                    sendId = sendId,
+                                    sendAt = sendAt,
+                                    toId = toId,
+                                    content = content,
+                                    type = type,
+                                    position = Constants.POSITION_MIDDLE
+                                ))
                             }
-                        }
 
-                        val userRef = database.getReference(Constants.USER).child(friendId).child(Constants.PROFILE)
-                        mChatList.clear()
-                        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(snapshot: DataSnapshot) {
-                                if (snapshot.exists()) {
-                                    val friendProfile = User(
-                                        id = friendId,
-                                        name = snapshot.child(Constants.USER_NAME).value.toString(),
-                                        email = snapshot.child(Constants.USER_EMAIL).value.toString(),
-                                        phoneNumber = snapshot.child(Constants.USER_PHONENUMBER).value.toString(),
-                                        dateOfBirth = snapshot.child(Constants.USER_DATE_OF_BIRTH).value.toString(),
-                                        avatar = snapshot.child(Constants.USER_AVATAR).value.toString()
-                                    )
-                                    val chat = Chat(chatId, friendProfile, listMessage.sortedBy { it.sendAt })
-                                    mChatList.add(chat)
+                            var friendId = ""
+                            for (i in chatId.split("-")){
+                                if (i != uid) {
+                                    friendId = i
                                 }
-                                _chatListLiveData.postValue(mChatList)
                             }
 
-                            override fun onCancelled(error: DatabaseError) {
-                            }
-                        })
+                            Log.e("abc", "onDataChange: $uid $friendId", )
+
+                            val userRef = database.getReference(Constants.USER).child(friendId).child(Constants.PROFILE)
+                            mChatList.clear()
+                            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    if (snapshot.exists()) {
+                                        val friendProfile = User(
+                                            id = friendId,
+                                            name = snapshot.child(Constants.USER_NAME).value.toString(),
+                                            email = snapshot.child(Constants.USER_EMAIL).value.toString(),
+                                            phoneNumber = snapshot.child(Constants.USER_PHONENUMBER).value.toString(),
+                                            dateOfBirth = snapshot.child(Constants.USER_DATE_OF_BIRTH).value.toString(),
+                                            avatar = snapshot.child(Constants.USER_AVATAR).value.toString()
+                                        )
+                                        val chat = Chat(chatId, friendProfile, listMessage.sortedBy { it.sendAt })
+                                        mChatList.add(chat)
+                                    }
+                                    _chatListLiveData.value = mChatList
+                                }
+
+                                override fun onCancelled(error: DatabaseError) {
+                                }
+                            })
+                        }
+
 
                     }
 

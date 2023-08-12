@@ -50,7 +50,7 @@ class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R
         TabLayoutMediator(binding.tabLayout, binding.viewPager) {
                 tab, position ->
             run {
-                val customView = LayoutInflater.from(tab.parent!!.context).inflate(R.layout.item_tab_layout, null)
+                val customView = LayoutInflater.from(tab.parent?.context).inflate(R.layout.item_tab_layout, null)
                 val title = customView.findViewById<TextView>(R.id.tv_tab_title)
                 val countNum = customView.findViewById<TextView>(R.id.tv_tab_count)
                 var count: Int

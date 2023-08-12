@@ -28,6 +28,7 @@ class FriendsViewModel @Inject constructor(
     val friendListLiveData: LiveData<List<Friend>> get() = _friendListLiveData
 
     private var _query: MutableLiveData<String> = MutableLiveData()
+    val query: LiveData<String> get() = _query
 
     fun setSearchQuery(query: String) {
         _query.value = query
@@ -53,43 +54,40 @@ class FriendsViewModel @Inject constructor(
                     val avatar =
                         profileRef.child(Constants.USER_AVATAR).getValue(String::class.java)
 
-                    if (id != auth.currentUser!!.uid && id != null && name != null) {
+                    if (id != auth.currentUser?.uid && id != null && name != null) {
                         mFriendList.add(Friend(id, name, avatar, Constants.STATE_UNFRIEND))
                     }
                 }
 
-                val friendRef = myRef.child(auth.currentUser!!.uid).child(Constants.FRIEND)
+                val friendRef = auth.currentUser?.uid?.let { myRef.child(it).child(Constants.FRIEND) }
 
-                friendRef
-                    .get()
-                    .addOnSuccessListener {
-                        if (it.value != null) {
-                            val friends = it.value as HashMap<*, *>
-                            for (i in friends.values) {
-                                val friend = i as HashMap<*, *>
-                                val id = friend[Constants.USER_ID] as String
-                                val status = friend[Constants.USER_STATUS] as String
-                                for (mFriend in mFriendList) {
-                                    if (id == mFriend.id) {
-                                        mFriend.status = status
-                                    }
+                friendRef?.get()?.addOnSuccessListener {
+                    if (it.value != null) {
+                        val friends = it.value as HashMap<*, *>
+                        for (i in friends.values) {
+                            val friend = i as HashMap<*, *>
+                            val id = friend[Constants.USER_ID] as String
+                            val status = friend[Constants.USER_STATUS] as String
+                            for (mFriend in mFriendList) {
+                                if (id == mFriend.id) {
+                                    mFriend.status = status
                                 }
                             }
                         }
+                    }
 
-                        val searchString: String = _query.value ?: ""
-                        _friendListLiveData.postValue(ListUtils.sortByName(mFriendList.filter { friend ->
+                    val searchString: String = _query.value ?: ""
+                    _friendListLiveData.postValue(ListUtils.sortByName(mFriendList.filter { friend ->
+                        ListUtils.removeVietnameseAccents(
+                            friend.name.lowercase()
+                        ).contains(
                             ListUtils.removeVietnameseAccents(
-                                friend.name.lowercase()
-                            ).contains(
-                                ListUtils.removeVietnameseAccents(
-                                    searchString.lowercase().trim()
-                                )
+                                searchString.lowercase().trim()
                             )
-                        }.toMutableList()))
-                    }
-                    .addOnFailureListener {
-                    }
+                        )
+                    }.toMutableList()))
+                }?.addOnFailureListener {
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -100,17 +98,19 @@ class FriendsViewModel @Inject constructor(
 
     fun updateFriendState(friend: Friend) {
         val userRef = database.getReference(Constants.USER)
-        val currentId = auth.currentUser!!.uid
+        val currentId = auth.currentUser?.uid
         //update friend in current user
-        userRef.child(currentId)
-            .child(Constants.FRIEND).child(friend.id)
-            .setValue(friend)
-            .addOnSuccessListener {
+        if (currentId != null) {
+            userRef.child(currentId)
+                .child(Constants.FRIEND).child(friend.id)
+                .setValue(friend)
+                .addOnSuccessListener {
 
-            }
-            .addOnFailureListener {
+                }
+                .addOnFailureListener {
 
-            }
+                }
+        }
 
         //update friend in other user
         var status = Constants.STATE_RECEIVE
@@ -122,31 +122,33 @@ class FriendsViewModel @Inject constructor(
             Constants.STATE_UNFRIEND -> status = Constants.STATE_UNFRIEND
         }
 
-        userRef.child(currentId).child(Constants.PROFILE)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()) {
-                        val name = snapshot.child(Constants.USER_NAME).getValue<String?>() ?: ""
-                        val avatar = snapshot.child(Constants.USER_AVATAR).getValue<String?>() ?: ""
-                        val currentFriend = Friend(
-                            id = currentId,
-                            name = name,
-                            status = status,
-                            avatar = avatar
-                        )
-                        userRef.child(friend.id)
-                            .child(Constants.FRIEND).child(currentId)
-                            .setValue(currentFriend)
-                            .addOnSuccessListener {
+        if (currentId != null) {
+            userRef.child(currentId).child(Constants.PROFILE)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if (snapshot.exists()) {
+                            val name = snapshot.child(Constants.USER_NAME).getValue<String?>() ?: ""
+                            val avatar = snapshot.child(Constants.USER_AVATAR).getValue<String?>() ?: ""
+                            val currentFriend = Friend(
+                                id = currentId,
+                                name = name,
+                                status = status,
+                                avatar = avatar
+                            )
+                            userRef.child(friend.id)
+                                .child(Constants.FRIEND).child(currentId)
+                                .setValue(currentFriend)
+                                .addOnSuccessListener {
 
-                            }
-                            .addOnFailureListener {
-                            }
+                                }
+                                .addOnFailureListener {
+                                }
+                        }
                     }
-                }
 
-                override fun onCancelled(error: DatabaseError) {
-                }
-            })
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+                })
+        }
     }
 }

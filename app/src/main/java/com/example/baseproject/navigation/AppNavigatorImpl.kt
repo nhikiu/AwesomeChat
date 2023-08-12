@@ -51,4 +51,12 @@ class AppNavigatorImpl @Inject constructor() : BaseNavigatorImpl(),
     override fun openHomeToMessageScreen(bundle: Bundle?) {
         openScreen(R.id.action_homeFragment_to_messagesFragment, bundle)
     }
+
+    override fun openHomeToCreateMessagesScreen(bundle: Bundle?) {
+        openScreen(R.id.action_homeFragment_to_createMessagesFragment)
+    }
+
+    override fun openCreateMessagesToMessaagesScreen(bundle: Bundle?) {
+        openScreen(R.id.action_createMessagesFragment_to_messagesFragment, bundle)
+    }
 }

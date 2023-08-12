@@ -41,6 +41,9 @@
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_homeFragment_to_createMessagesFragment"
+            app:destination="@id/createMessagesFragment" />
 
     </fragment>
 
@@ -78,5 +81,16 @@
         android:name="com.example.baseproject.ui.messages.MessagesFragment"
         android:label="MessagesFragment"
         tools:layout="@layout/fragment_messages"/>
+    <fragment
+        android:id="@+id/createMessagesFragment"
+        android:name="com.example.baseproject.ui.friends.createMessages.CreateMessagesFragment"
+        android:label="CreateMessagesFragment"
+        tools:layout="@layout/fragment_create_messages">
+        <action
+            android:id="@+id/action_createMessagesFragment_to_messagesFragment"
+            app:destination="@id/messagesFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/homeFragment"/>
+    </fragment>
 
 </navigation>

@@ -1,6 +1,7 @@
 package com.example.baseproject.ui.friends.realFriend
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.activityViewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentRealFriendBinding
@@ -35,6 +36,11 @@ class RealFriendFragment : BaseFragment<FragmentRealFriendBinding, FriendsViewMo
 
         shareViewModel.friendListLiveData.observe(viewLifecycleOwner) {
             val friendList = ListUtils.getListSortByName(it.toMutableList().filter { friend -> (friend.status == Constants.STATE_FRIEND)})
+            if (friendList.isNotEmpty()) {
+                binding.fragmentNotFound.visibility = View.GONE
+            } else {
+                binding.fragmentNotFound.visibility = View.VISIBLE
+            }
             realFriendAdapter.submitList(friendList)
         }
     }

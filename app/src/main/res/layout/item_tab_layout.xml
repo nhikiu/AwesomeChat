@@ -14,9 +14,8 @@
         <TextView
             android:id="@+id/tv_tab_count"
             android:gravity="center"
-            android:layout_width="23dp"
-            android:layout_height="23dp"
-            android:text="0"
+            android:layout_width="@dimen/size_23"
+            android:layout_height="@dimen/size_23"
             android:visibility="gone"
             style="@style/text_bold_12"
             android:layout_marginStart="@dimen/margin_item_12"

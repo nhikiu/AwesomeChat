@@ -4,78 +4,99 @@
     <LinearLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_item_12"
-        android:layout_marginVertical="@dimen/margin_item_8"
-        android:gravity="center">
+        android:orientation="vertical">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/iv_avatar"
-            android:layout_width="@dimen/size_35"
-            android:layout_height="@dimen/size_35"
-            app:shapeAppearance="@style/circle"
-            app:strokeColor="@null"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_avatar_default"/>
-
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_16"
-            android:textColor="@color/black"
-            android:text="@string/name_hint"
-            android:layout_marginStart="@dimen/margin_item_12"/>
+            android:gravity="center"
+            android:layout_marginVertical="@dimen/margin_item_8">
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="@dimen/size_35"
+                android:layout_height="@dimen/size_35"
+                app:shapeAppearance="@style/circle"
+                app:strokeColor="@null"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_avatar_default"/>
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                style="@style/text_bold_16"
+                android:textColor="@color/black"
+                android:text="@string/name_hint"
+                android:layout_marginStart="@dimen/margin_item_12"/>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/btn_unfriend_to_sending"
+                    android:layout_width="@dimen/size_73"
+                    android:layout_height="@dimen/size_27"
+                    android:background="@drawable/custom_btn_small"
+                    android:text="@string/add_friend"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/primary_color"
+                    android:textSize="@dimen/text_size_14"/>
+
+                <Button
+                    android:id="@+id/btn_sending_to_cancel"
+                    android:layout_width="@dimen/size_73"
+                    android:layout_height="@dimen/size_27"
+                    android:background="@drawable/custom_btn_small"
+                    android:text="@string/cancel"
+                    android:visibility="gone"
+                    android:textAllCaps="false"
+                    android:textColor="@color/primary_color"
+                    android:textSize="@dimen/text_size_14"/>
+
+                <Button
+                    android:id="@+id/btn_receive_to_confirm"
+                    android:layout_width="@dimen/size_73"
+                    android:layout_height="@dimen/size_27"
+                    android:background="@drawable/custom_btn_small"
+                    android:text="@string/confirm_friend"
+                    android:visibility="gone"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/primary_color"
+                    android:textSize="@dimen/text_size_14"/>
+
+                <CheckBox
+                    android:id="@+id/cb_friend"
+                    android:button="@drawable/custom_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:visibility="gone"/>
+
+
+            </FrameLayout>
             <Button
-                android:id="@+id/btn_unfriend_to_sending"
+                android:id="@+id/btn_decline"
                 android:layout_width="@dimen/size_73"
                 android:layout_height="@dimen/size_27"
-                android:background="@drawable/custom_btn_small"
-                android:text="@string/add_friend"
-                android:textAllCaps="false"
+                android:background="@color/red_c92323"
+                android:text="@string/decline"
                 android:textColor="@color/white"
-                android:backgroundTint="@color/primary_color"
-                android:textSize="@dimen/text_size_14"/>
-
-            <Button
-                android:id="@+id/btn_sending_to_cancel"
-                android:layout_width="@dimen/size_73"
-                android:layout_height="@dimen/size_27"
-                android:background="@drawable/custom_btn_small"
-                android:text="@string/cancel"
-                android:visibility="invisible"
+                android:visibility="gone"
                 android:textAllCaps="false"
-                android:textColor="@color/primary_color"
-                android:textSize="@dimen/text_size_14"/>
+                android:layout_marginStart="@dimen/margin_item_8"/>
 
-            <Button
-                android:id="@+id/btn_receive_to_confirm"
-                android:layout_width="@dimen/size_73"
-                android:layout_height="@dimen/size_27"
-                android:background="@drawable/custom_btn_small"
-                android:text="@string/confirm_friend"
-                android:visibility="invisible"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:backgroundTint="@color/primary_color"
-                android:textSize="@dimen/text_size_14"/>
+        </LinearLayout>
 
-
-        </FrameLayout>
-        <Button
-            android:id="@+id/btn_decline"
-            android:layout_width="@dimen/size_73"
-            android:layout_height="@dimen/size_27"
-            android:background="@color/red_c92323"
-            android:text="@string/decline"
-            android:textColor="@color/white"
-            android:visibility="gone"
-            android:textAllCaps="false"
-            android:layout_marginStart="@dimen/margin_item_8"/>
-
+        <View
+            android:id="@+id/bottom_line"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1"
+            android:background="@color/grey_d2d2d2"
+            android:layout_marginStart="@dimen/margin_item_47"
+            android:visibility="gone"/>
 
     </LinearLayout>
 </layout>

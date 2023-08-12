@@ -51,6 +51,8 @@
     <string name="is_yesterday">Hôm qua</string>
     <string name="is_today">Hôm nay</string>
     <string name="search_friend">Tìm kiếm bạn bè...</string>
+    <string name="create_messages">Tạo tin nhắn</string>
+    <string name="list_friend">Danh sách bạn bè</string>
 
     <!--    Friend Screen-->
     <string name="all_friend">Tất cả</string>
@@ -63,6 +65,7 @@
     <string name="change_title">Thay đổi</string>
     <string name="change_body">Bạn muốn huỷ yêu cầu kết bạn này?</string>
     <string name="decline">Từ chối</string>
+    <string name="not_found">Không tìm thấy kết quả phù hợp</string>
 
     <!--    Message Screen-->
     <string name="hint_message">Nhập tin nhắn...</string>

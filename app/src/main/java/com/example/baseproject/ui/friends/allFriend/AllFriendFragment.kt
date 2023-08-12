@@ -1,6 +1,8 @@
 package com.example.baseproject.ui.friends.allFriend
 
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.fragment.app.activityViewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentAllFriendBinding
@@ -78,6 +80,12 @@ class AllFriendFragment :
         super.bindingStateView()
 
         shareViewModel.friendListLiveData.observe(viewLifecycleOwner){
+            if (it.isEmpty()) {
+                Log.e("abc", "EMPTY!!!!!", )
+                binding.fragmentNotFound.visibility = View.VISIBLE
+            } else {
+                binding.fragmentNotFound.visibility = View.GONE
+            }
             allFriendAdapter?.submitList(ListUtils.getListSortByName(it))
         }
     }

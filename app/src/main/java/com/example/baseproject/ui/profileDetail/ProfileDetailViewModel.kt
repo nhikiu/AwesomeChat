@@ -67,20 +67,17 @@ class ProfileDetailViewModel @Inject constructor(
             val avatarRef = storage.reference.child(Constants.USER_AVATAR).child(user.id)
             avatarRef.putFile(uri)
                 .addOnSuccessListener {
-                    val id = auth.currentUser!!.uid
+                    val id = auth.currentUser?.uid
                     val userRef =
-                        database.getReference(Constants.USER).child(id).child(Constants.PROFILE)
+                        id?.let { it1 -> database.getReference(Constants.USER).child(it1).child(Constants.PROFILE) }
                     avatarRef
                         .downloadUrl
                         .addOnSuccessListener { avatarUri ->
                             val imgUrl = avatarUri.toString()
                             val newUser = user.copy(avatar = imgUrl)
-                            userRef
-                                .setValue(newUser)
-                                .addOnSuccessListener {
-                                }
-                                .addOnFailureListener {
-                                }
+                            userRef?.setValue(newUser)?.addOnSuccessListener {
+                            }?.addOnFailureListener {
+                            }
                         }
                 }
                 .addOnFailureListener {

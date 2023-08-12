@@ -10,13 +10,13 @@
         <TextView
             android:id="@+id/tv_day"
             android:layout_width="wrap_content"
-            android:layout_height="28dp"
-            android:text="Hom qua"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="@color/black"
             android:backgroundTint="@color/grey_f6f6f6"
-            android:background="@drawable/bg_button_disable"
+            android:background="@drawable/bg_circle"
             android:paddingHorizontal="14dp"
+            android:paddingVertical="@dimen/padding_6"
             style="@style/text_14"/>
 
     </FrameLayout>

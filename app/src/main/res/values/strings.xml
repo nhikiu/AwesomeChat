@@ -59,6 +59,9 @@
     <string name="is_yesterday">Yesterday</string>
     <string name="is_today">Today</string>
     <string name="search_friend">Search friend...</string>
+    <string name="time_hint" translatable="false">11:00</string>
+    <string name="create_messages">Create Messages</string>
+    <string name="list_friend">List Friend</string>
 
     <!--    Friend Screen-->
     <string name="all_friend">All</string>
@@ -71,6 +74,7 @@
     <string name="change_title">Change</string>
     <string name="change_body">Do you want to unsend this friend request?</string>
     <string name="decline">Decline</string>
+    <string name="not_found">Not found</string>
 
     <!--    Profile Screen-->
     <string name="log_out">Log out</string>

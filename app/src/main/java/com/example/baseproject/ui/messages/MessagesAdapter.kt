@@ -164,7 +164,7 @@ class MessagesAdapter : ListAdapter<Any, RecyclerView.ViewHolder>(ItemCallback()
         fun bindData(message: Message, context: Context) {
             binding.tvSendtime.text = DateTimeUtils.convertTimestampToDateTime(message.sendAt.toLong())
             val avatar = friendProfile?.avatar
-            if (avatar != null && avatar.isNotEmpty() && message.position == Constants.POSITION_FIRST) {
+            if (avatar != null && avatar.isNotEmpty() && (message.position == Constants.POSITION_FIRST || message.position == Constants.POSITION_ONLY)) {
                 Glide.with(context).load(avatar)
                     .error(R.drawable.ic_error)
                     .placeholder(R.drawable.ic_avatar_default)

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@color/primary_color"
+        tools:context=".ui.chats.ChatsFragment">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintDimensionRatio="1:0.6"
+            android:background="@drawable/background_app_common"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/margin_item_64"
+            android:layout_marginHorizontal="@dimen/margin_item_12"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_left"
+                app:tint="@color/white"
+                android:contentDescription="@string/login" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/create_messages"
+                style="@style/text_bold_18"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:text="@string/cancel"
+                android:textSize="@dimen/text_size_16"
+                android:textColor="@color/white"/>
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:queryHint="@string/search_friend"
+            app:iconifiedByDefault="false"
+            android:focusable="false"
+            app:searchHintIcon="@null"
+            android:textSize="@dimen/text_size_16"
+            app:closeIcon="@drawable/ic_delete"
+            app:searchIcon="@drawable/ic_search"
+            android:layout_marginHorizontal="@dimen/margin_item_12"
+            android:background="@drawable/custom_btn_large"
+            android:backgroundTint="@color/white"
+            app:queryBackground="@android:color/transparent"
+            android:layout_marginTop="@dimen/margin_item_114"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_white_top_radius"
+            android:layout_marginTop="@dimen/margin_item_22"
+            app:layout_constraintTop_toBottomOf="@id/search_message"
+            android:backgroundTint="@color/white"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/list_friend"
+                android:textAllCaps="true"
+                android:textColor="@color/grey_999999"
+                style="@style/text_bold_14"
+                android:layout_marginHorizontal="@dimen/margin_item_15"
+                android:layout_marginVertical="@dimen/margin_item_25"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview_friend"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_friend"
+                android:clipToPadding="false"
+                android:layout_margin="@dimen/margin_item_3"
+                android:layout_marginHorizontal="@dimen/margin_item_12"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_choose_friend"
+            android:layout_width="match_parent"
+            android:layout_height="77dp"
+            android:background="@color/grey_f6f6f6"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_item_12">
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_avatar"
+                    android:layout_width="@dimen/size_58"
+                    android:layout_height="@dimen/size_58"
+                    app:shapeAppearance="@style/circle"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_avatar_default"
+                    android:layout_margin="@dimen/margin_item_5"/>
+
+                <Button
+                    android:id="@+id/btn_delete"
+                    android:layout_width="@dimen/size_27"
+                    android:layout_height="@dimen/size_27"
+                    android:background="@drawable/ic_delete_promary_theme"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="top|right"
+                    android:foregroundTint="@color/primary_color"
+                    tools:ignore="RtlHardcoded"
+                    android:elevation="@dimen/size_5"/>
+            </FrameLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/btn_next"
+                android:layout_width="@dimen/size_58"
+                android:layout_height="@dimen/size_58"
+                android:src="@drawable/ic_arrow_right"
+                android:tint="@color/white"
+                android:scaleType="centerInside"
+                app:shapeAppearance="@style/circle"
+                style="@null"
+                android:elevation="@dimen/size_5"
+                android:background="@color/primary_color"
+                android:layout_marginEnd="@dimen/margin_item_12"/>
+
+        </LinearLayout>
+
+        <include android:id="@+id/fragment_not_found" layout="@layout/fragment_not_found" android:visibility="gone"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

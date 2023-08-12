@@ -2,6 +2,7 @@ package com.example.baseproject.ui.chats
 
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
 import com.example.baseproject.R
@@ -34,8 +35,20 @@ class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layou
     @RequiresApi(Build.VERSION_CODES.N)
     override fun bindingStateView() {
         super.bindingStateView()
+
         viewModel.chatListLiveData.observe(viewLifecycleOwner) {
-            chatAdapter?.submitList(it.sortedByDescending { chat -> chat.messages?.get(chat.messages.size - 1)?.sendAt }.toMutableList())
+            val sortedList = it.sortedByDescending { chat -> chat.messages?.get(chat.messages.size - 1)?.sendAt }
+            chatAdapter?.submitList(sortedList.toMutableList())
+
+            if (sortedList.isEmpty()) {
+                binding.fragmentNotFound.visibility = View.VISIBLE
+            } else {
+                binding.fragmentNotFound.visibility = View.GONE
+            }
+        }
+
+        if (viewModel.chatListLiveData.value == null) {
+            binding.fragmentNotFound.visibility = View.VISIBLE
         }
     }
 
@@ -48,6 +61,10 @@ class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layou
                 appNavigation.openHomeToMessageScreen(bundle)
             }
         })
+
+        binding.btnCreateMessages.setOnClickListener {
+            appNavigation.openHomeToCreateMessagesScreen()
+        }
     }
 
 }

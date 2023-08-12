@@ -77,9 +77,11 @@ class ProfileFragment :
                 }
                 is UIState.Failure -> {
                     context?.let {
-                        alert.showErrorDialog(
-                            activity, it.getString(R.string.error), state.error!!
-                        )
+                        state.error?.let { it1 ->
+                            alert.showErrorDialog(
+                                activity, it.getString(R.string.error), it1
+                            )
+                        }
                     }
                     ProgressBarView.hideProgressBar()
                 }
@@ -94,6 +96,7 @@ class ProfileFragment :
                     }
                     ProgressBarView.hideProgressBar()
                     activity?.viewModelStore?.clear()
+                    viewModelStore.clear()
                 }
             }
         }
