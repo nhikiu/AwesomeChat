@@ -14,7 +14,7 @@
             android:layout_gravity="center"
             android:textColor="@color/black"
             android:backgroundTint="@color/grey_f6f6f6"
-            android:background="@drawable/bg_circle"
+            android:background="@drawable/bg_corner_30"
             android:paddingHorizontal="14dp"
             android:paddingVertical="@dimen/padding_6"
             style="@style/text_14"/>

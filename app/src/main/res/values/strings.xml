@@ -62,6 +62,8 @@
     <string name="time_hint" translatable="false">11:00</string>
     <string name="create_messages">Create Messages</string>
     <string name="list_friend">List Friend</string>
+    <string name="you">You: </string>
+    <string name="sent_picture">Sent a picture</string>
 
     <!--    Friend Screen-->
     <string name="all_friend">All</string>
@@ -94,9 +96,11 @@
 
     <!--    Message Screen-->
     <string name="hint_message">Enter a message...</string>
+    <string name="send">Send</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="gallery_image" translatable="false">Gallery Image</string>
 
 
 </resources>

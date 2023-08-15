@@ -123,6 +123,7 @@
                     android:layout_width="@dimen/size_58"
                     android:layout_height="@dimen/size_58"
                     app:shapeAppearance="@style/circle"
+                    app:strokeColor="@null"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_avatar_default"
                     android:layout_margin="@dimen/margin_item_5"/>
@@ -153,6 +154,7 @@
                 android:scaleType="centerInside"
                 app:shapeAppearance="@style/circle"
                 style="@null"
+                app:strokeColor="@null"
                 android:elevation="@dimen/size_5"
                 android:background="@color/primary_color"
                 android:layout_marginEnd="@dimen/margin_item_12"/>

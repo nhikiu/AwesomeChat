@@ -53,6 +53,8 @@
     <string name="search_friend">Tìm kiếm bạn bè...</string>
     <string name="create_messages">Tạo tin nhắn</string>
     <string name="list_friend">Danh sách bạn bè</string>
+    <string name="you">Bạn: </string>
+    <string name="sent_picture">Đã gửi 1 ảnh</string>
 
     <!--    Friend Screen-->
     <string name="all_friend">Tất cả</string>
@@ -69,7 +71,7 @@
 
     <!--    Message Screen-->
     <string name="hint_message">Nhập tin nhắn...</string>
-
+    <string name="send">Gửi</string>
 
     <!--    Personal Screen-->
     <string name="log_out">Đăng xuất</string>

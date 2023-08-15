@@ -38,7 +38,9 @@
     <dimen name="size_18">18dp</dimen>
     <dimen name="size_19">19dp</dimen>
     <dimen name="size_23">23dp</dimen>
+    <dimen name="size_25">25dp</dimen>
     <dimen name="size_27">27dp</dimen>
+    <dimen name="size_30">30dp</dimen>
     <dimen name="size_35">35dp</dimen>
     <dimen name="size_42">42dp</dimen>
     <dimen name="size_52">52dp</dimen>
