@@ -11,9 +11,11 @@ import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.ui.friends.FriendsViewModel
 import com.example.baseproject.utils.Constants
 import com.example.core.base.fragment.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class CreateMessagesFragment : BaseFragment<FragmentCreateMessagesBinding, FriendsViewModel> (R.layout.fragment_create_messages) {
     @Inject
     lateinit var appNavigation: AppNavigation
@@ -62,6 +64,7 @@ class CreateMessagesFragment : BaseFragment<FragmentCreateMessagesBinding, Frien
         binding.btnBack.setOnClickListener {
             appNavigation.navigateUp()
         }
+
 
         friendAdapter?.mSelectedFriend?.observe(viewLifecycleOwner){
             Log.d("abc", "setOnClick() returned: $it")

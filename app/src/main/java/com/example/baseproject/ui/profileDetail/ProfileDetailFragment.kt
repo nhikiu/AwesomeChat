@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.Window
 import android.widget.ImageView
 import androidx.activity.result.ActivityResult
@@ -44,7 +45,9 @@ class ProfileDetailFragment :
     private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == RESULT_OK) {
+                // for camera
                 val selectedImageBitmap = result.data?.extras?.get("data") as? Bitmap
+                // for gallery
                 selectedImageUri = result.data?.data
 
                 if (selectedImageBitmap != null) {
@@ -53,6 +56,7 @@ class ProfileDetailFragment :
                 }
 
                 if (selectedImageUri != null) {
+                    Log.e("abc", "profile: $selectedImageUri: ", )
                     Glide.with(this).load(selectedImageUri)
                         .error(R.drawable.ic_error)
                         .placeholder(R.drawable.ic_avatar_default)

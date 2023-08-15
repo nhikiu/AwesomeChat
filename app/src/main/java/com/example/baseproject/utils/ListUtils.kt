@@ -1,6 +1,5 @@
 package com.example.baseproject.utils
 
-import android.util.Log
 import com.example.baseproject.models.Friend
 import com.example.baseproject.models.Message
 
@@ -52,44 +51,6 @@ object ListUtils {
         return messageList.sortedByDescending { it.sendAt }
     }
 
-    fun sort(messageList: MutableList<Message>) : List<Message> {
-        val sortList = messageList.sortedByDescending { it.sendAt }
-        val newList = mutableListOf<Message>()
-        var currentSendUserId: String? = null
-        Log.e("abc", "sort: ${sortList.size}", )
-        for (i in sortList.indices) {
-            val preMessage = sortList.getOrNull(i - 1)
-            val nextMessage = sortList.getOrNull(i + 1)
-            val currentMessage = sortList[i]
-            if (preMessage == null && nextMessage == null) {
-                sortList[i].position = Constants.POSITION_ONLY
-            } else if (preMessage == null && nextMessage != null) {
-                if (nextMessage.sendId != currentMessage.sendId) {
-                    sortList[i].position = Constants.POSITION_ONLY
-                } else {
-                    sortList[i].position = Constants.POSITION_FIRST
-                }
-            } else if (preMessage != null && nextMessage == null) {
-                if (currentMessage.sendId == preMessage.sendId) {
-                    sortList[i].position = Constants.POSITION_LAST
-                } else {
-                    sortList[i].position = Constants.POSITION_ONLY
-                }
-            } else if (preMessage != null && nextMessage != null){
-                if (currentMessage.sendId != preMessage.sendId && currentMessage.sendId != nextMessage.sendId) {
-                    sortList[i].position = Constants.POSITION_ONLY
-                } else if (currentMessage.sendId != preMessage.sendId && currentMessage.sendId == nextMessage.sendId) {
-                    sortList[i].position = Constants.POSITION_FIRST
-                } else if (currentMessage.sendId == preMessage.sendId && currentMessage.sendId != nextMessage.sendId) {
-                    sortList[i].position = Constants.POSITION_LAST
-                } else if (currentMessage.sendId == preMessage.sendId && currentMessage.sendId == nextMessage.sendId) {
-                    sortList[i].position = Constants.POSITION_MIDDLE
-                }
-            }
-        }
-        return sortList
-    }
-
     fun getMessageListSortByTime(messageList: MutableList<Message>) : List<Any> {
         val sortList: MutableList<Message> = sortMessageByTime(messageList).toMutableList()
         for (i in sortList.indices) {
@@ -139,7 +100,6 @@ object ListUtils {
             val currentItem = dateTimeList[i]
             if (currentItem is Message) {
                 val dateTime = DateTimeUtils.convertTimestampToDate(currentItem.sendAt.toLong())
-                Log.e("abc", "getMessageListSortByTime: $dateTime", )
                 if (!dateList.contains(dateTime)) {
                     dateList.add(dateTime)
                 }

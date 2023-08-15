@@ -1,7 +1,6 @@
 package com.example.baseproject.ui.splash
 
 import android.content.Context
-import android.os.Bundle
 import androidx.fragment.app.viewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentSplashBinding
@@ -22,24 +21,24 @@ class SplashFragment :
 
     override fun getVM() = viewModel
 
-    override fun initView(savedInstanceState: Bundle?) {
-        super.initView(savedInstanceState)
-        val sharePreferences = context?.getSharedPreferences(Constants.ISLOGIN, Context.MODE_PRIVATE)
-        var isLogIn: Boolean
-        sharePreferences?.let {
-            isLogIn = it.getBoolean(Constants.ISLOGIN, false)
-            if (isLogIn) {
-                appNavigation.openSplashToHomeScreen()
-            }
-        }
-    }
-
     override fun bindingAction() {
         super.bindingAction()
 
         viewModel.actionSPlash.observe(viewLifecycleOwner) {
-            appNavigation.openSplashToLogInScreen()
+            if (it == SplashActionState.Finish) {
+                val sharePreferences = context?.getSharedPreferences(Constants.ISLOGIN, Context.MODE_PRIVATE)
+                var isLogIn: Boolean
+                sharePreferences?.let {
+                    isLogIn = it.getBoolean(Constants.ISLOGIN, false)
+                    if (isLogIn) {
+                        appNavigation.openSplashToHomeScreen()
+                    }
+                    else {
+                        appNavigation.openSplashToLogInScreen()
+                    }
+                }
+            }
         }
-    }
 
+    }
 }

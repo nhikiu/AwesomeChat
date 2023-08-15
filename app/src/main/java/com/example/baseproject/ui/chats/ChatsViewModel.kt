@@ -30,6 +30,9 @@ class ChatsViewModel @Inject constructor(
     private var _chatListLiveData: MutableLiveData<List<Chat>> = MutableLiveData()
     val chatListLiveData: LiveData<List<Chat>> get() = _chatListLiveData
 
+    private var _unreadMessage: MutableLiveData<Int> = MutableLiveData()
+    val unreadMessage: LiveData<Int> get() = _unreadMessage
+
     init {
         mChatList.sortWith(compareBy<Chat> { it.messages?.get(it.messages.size - 1)?.sendAt }.reversed())
 
@@ -41,6 +44,7 @@ class ChatsViewModel @Inject constructor(
         val uid = auth.currentUser?.uid.toString()
         chatRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                Log.e("abc", "onDataChange: get all chat", )
                 if (snapshot.exists()) {
                     for (dataSnapshot in snapshot.children) {
                         if (dataSnapshot.key.toString().contains(uid)) {
@@ -52,6 +56,7 @@ class ChatsViewModel @Inject constructor(
                                 val id = message[Constants.MESSAGE_ID].toString()
                                 val sendAt = message[Constants.MESSAGE_SEND_AT].toString()
                                 val sendId = message[Constants.MESSAGE_SEND_ID].toString()
+                                val read = message[Constants.MESSAGE_READ].toString()
                                 val toId = message[Constants.MESSAGE_TO_ID].toString()
                                 val content = message[Constants.MESSAGE_CONTENT].toString()
                                 val type = message[Constants.MESSAGE_TYPE].toString()
@@ -61,12 +66,16 @@ class ChatsViewModel @Inject constructor(
                                     sendId = sendId,
                                     sendAt = sendAt,
                                     toId = toId,
+                                    read = read,
                                     content = content,
                                     type = type,
                                     position = Constants.POSITION_MIDDLE
                                 ))
                             }
 
+                            Log.e("abc", "UNREAD MESSAGE: ${listMessage.count { it.read == Constants.MESSAGE_UNREAD }}", )
+                            _unreadMessage.value = listMessage.count { it.read == Constants.MESSAGE_UNREAD }
+                            Log.e("abc", "Live data unread message: ${_unreadMessage.value}", )
                             var friendId = ""
                             for (i in chatId.split("-")){
                                 if (i != uid) {
@@ -74,12 +83,10 @@ class ChatsViewModel @Inject constructor(
                                 }
                             }
 
-                            Log.e("abc", "onDataChange: $uid $friendId", )
-
                             val userRef = database.getReference(Constants.USER).child(friendId).child(Constants.PROFILE)
-                            mChatList.clear()
                             userRef.addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onDataChange(snapshot: DataSnapshot) {
+                                    mChatList.clear()
                                     if (snapshot.exists()) {
                                         val friendProfile = User(
                                             id = friendId,
@@ -89,18 +96,18 @@ class ChatsViewModel @Inject constructor(
                                             dateOfBirth = snapshot.child(Constants.USER_DATE_OF_BIRTH).value.toString(),
                                             avatar = snapshot.child(Constants.USER_AVATAR).value.toString()
                                         )
-                                        val chat = Chat(chatId, friendProfile, listMessage.sortedBy { it.sendAt })
+
+                                        val chat = Chat(chatId, friendProfile, listMessage.count { it.read == Constants.MESSAGE_UNREAD }, listMessage.sortedBy { it.sendAt })
                                         mChatList.add(chat)
+                                        _chatListLiveData.value = mChatList
+
                                     }
-                                    _chatListLiveData.value = mChatList
                                 }
 
                                 override fun onCancelled(error: DatabaseError) {
                                 }
                             })
                         }
-
-
                     }
 
                 }

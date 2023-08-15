@@ -1,5 +1,7 @@
 package com.example.baseproject.ui.messages
 
+import android.util.Log
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.baseproject.models.Message
@@ -14,13 +16,15 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class MessagesViewModel @Inject constructor(
     private val database: FirebaseDatabase,
-    private val auth: FirebaseAuth
+    private val auth: FirebaseAuth,
+    private val storage: FirebaseStorage
 ) : BaseViewModel() {
     private val _friendProfile: MutableLiveData<User> = MutableLiveData()
     val friendProfile: LiveData<User> get() = _friendProfile
@@ -86,10 +90,24 @@ class MessagesViewModel @Inject constructor(
                             dataSnapshot.child(Constants.MESSAGE_TYPE).getValue(String::class.java)
                         val content = dataSnapshot.child(Constants.MESSAGE_CONTENT)
                             .getValue(String::class.java)
-                        if (id != null && sendId != null && toId != null && sendAt != null && type != null && content != null) {
 
-                            val message = Message(id, sendId, toId, sendAt, type, content, Constants.POSITION_MIDDLE)
+                        if (id != null && sendId != null && toId != null && sendAt != null && type != null && content != null) {
+                            val message = Message(
+                                id,
+                                sendId,
+                                toId,
+                                sendAt,
+                                Constants.MESSAGE_UNREAD,
+                                type,
+                                content,
+                                Constants.POSITION_MIDDLE
+                            )
                             mMessageList.add(message)
+
+                            // change unread to read
+                            if (message.toId == auth.currentUser?.uid){
+                                chatRef.child(id).child(Constants.MESSAGE_READ).setValue(Constants.MESSAGE_READ)
+                            }
                         }
                     }
                 }
@@ -106,21 +124,45 @@ class MessagesViewModel @Inject constructor(
 
     fun sendMessage(toId: String, text: String, type: String) {
         val sendId = auth.currentUser?.uid
+
         if (sendId != null) {
             val chatId = ValidationUtils.validateChatId(sendId, toId)
             val chatsRef = database.getReference(Constants.CHATS).child(chatId)
-
             val chatRef = chatsRef.push()
-            val message = Message(
-                chatRef.key.toString(),
-                sendId,
-                toId,
-                System.currentTimeMillis().toString(),
-                type,
-                text,
-                Constants.POSITION_LAST
-            )
-            chatRef.setValue(message)
+
+            if (type == Constants.TYPE_IMAGE) {
+                val avatarRef = storage.reference.child(Constants.CHATS).child(chatId).child("${sendId}_${System.currentTimeMillis()}")
+                avatarRef.putFile(text.toUri())
+                    .addOnSuccessListener {
+                        avatarRef.downloadUrl.addOnSuccessListener {uri ->
+                            Log.e("abc", "sendMessage: ${uri.toString()}")
+
+                            val message = Message(
+                                chatRef.key.toString(),
+                                sendId,
+                                toId,
+                                System.currentTimeMillis().toString(),
+                                Constants.MESSAGE_UNREAD,
+                                type,
+                                uri.toString(),
+                                Constants.POSITION_LAST
+                            )
+                            chatRef.setValue(message)
+                        }
+                    }
+            } else {
+                val message = Message(
+                    chatRef.key.toString(),
+                    sendId,
+                    toId,
+                    System.currentTimeMillis().toString(),
+                    Constants.MESSAGE_UNREAD,
+                    type,
+                    text,
+                    Constants.POSITION_LAST
+                )
+                chatRef.setValue(message)
+            }
         }
     }
 }

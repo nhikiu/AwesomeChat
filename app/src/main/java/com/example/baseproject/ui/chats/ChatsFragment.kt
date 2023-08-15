@@ -2,6 +2,7 @@ package com.example.baseproject.ui.chats
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
@@ -38,6 +39,7 @@ class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layou
 
         viewModel.chatListLiveData.observe(viewLifecycleOwner) {
             val sortedList = it.sortedByDescending { chat -> chat.messages?.get(chat.messages.size - 1)?.sendAt }
+            Log.e("abc", "Chat Fragment: size sort list = ${sortedList.size}", )
             chatAdapter?.submitList(sortedList.toMutableList())
 
             if (sortedList.isEmpty()) {
