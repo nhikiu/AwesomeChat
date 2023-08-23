@@ -1,8 +1,6 @@
 package com.example.baseproject.ui.messages
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,8 +13,8 @@ import com.example.baseproject.databinding.ItemImageGalleryBinding
 class GalleryAdapter : ListAdapter<String, GalleryAdapter.ImageGalleryViewHolder>(
     UriDiffCallback()
 ) {
-    private val selectedItems = mutableListOf<Int>()
-    private var onSelectedListener: OnSelectedListener? = null
+    val selectedItems = mutableListOf<Int>()
+    private var onSelectedListener: OnMultiSelectedListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageGalleryViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -25,15 +23,15 @@ class GalleryAdapter : ListAdapter<String, GalleryAdapter.ImageGalleryViewHolder
 
     override fun onBindViewHolder(holder: ImageGalleryViewHolder, position: Int) {
         val currentImage = getItem(position)
-        holder.bindData(currentImage, holder.itemView.context)
+        holder.bindData(currentImage)
     }
 
     inner class ImageGalleryViewHolder(private val binding: ItemImageGalleryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
-        fun bindData(string: String, context: Context) {
-            Glide.with(context).load(string)
+        fun bindData(string: String) {
+            Glide.with(itemView.context).load(string)
                 .into(binding.ivImage)
 
             if (selectedItems.contains(adapterPosition)) {
@@ -53,7 +51,6 @@ class GalleryAdapter : ListAdapter<String, GalleryAdapter.ImageGalleryViewHolder
                         selectedItems.add(position)
                     }
                     notifyDataSetChanged()
-                    Log.e("abc", "bindData: $selectedItems")
                     onSelectedListener?.onSelectedItemChange(selectedItems)
                 }
             }
@@ -71,18 +68,19 @@ class GalleryAdapter : ListAdapter<String, GalleryAdapter.ImageGalleryViewHolder
 
     }
 
-    interface OnSelectedListener {
+    interface OnMultiSelectedListener {
         fun onSelectedItemChange(selected: MutableList<Int>)
     }
 
-    fun setOnSelectedListener(listener: OnSelectedListener) {
+    fun setOnMultiSelectedListener(listener: OnMultiSelectedListener) {
         onSelectedListener = listener
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun clearSelectedItem() {
         selectedItems.clear()
-        Log.e("abc", "clearSelectedItem: $selectedItems", )
         notifyDataSetChanged()
+        onSelectedListener?.onSelectedItemChange(selectedItems)
+
     }
 }

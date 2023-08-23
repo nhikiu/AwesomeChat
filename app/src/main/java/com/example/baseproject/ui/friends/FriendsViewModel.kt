@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.baseproject.models.Friend
+import com.example.baseproject.ui.chats.ActionState
 import com.example.baseproject.utils.Constants
 import com.example.baseproject.utils.ListUtils
 import com.example.core.base.BaseViewModel
@@ -30,6 +31,7 @@ class FriendsViewModel @Inject constructor(
     private var _query: MutableLiveData<String> = MutableLiveData()
     val query: LiveData<String> get() = _query
 
+    val actionFriend = MutableLiveData<ActionState>()
     fun setSearchQuery(query: String) {
         _query.value = query
         getAllUser()
@@ -40,8 +42,9 @@ class FriendsViewModel @Inject constructor(
     }
 
     private fun getAllUser() {
-        val myRef = database.getReference(Constants.USER)
+        actionFriend.value = ActionState.Loading
 
+        val myRef = database.getReference(Constants.USER)
         myRef.addValueEventListener(object : ValueEventListener {
             @SuppressLint("SuspiciousIndentation")
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -86,11 +89,14 @@ class FriendsViewModel @Inject constructor(
                             )
                         )
                     }.toMutableList()))
+                    actionFriend.value = ActionState.Finish
                 }?.addOnFailureListener {
+                    actionFriend.value = ActionState.Fail
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
+                actionFriend.value = ActionState.Fail
             }
 
         })

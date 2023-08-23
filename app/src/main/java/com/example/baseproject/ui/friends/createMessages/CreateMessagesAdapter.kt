@@ -1,11 +1,10 @@
 package com.example.baseproject.ui.friends.createMessages
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -16,7 +15,7 @@ import com.example.baseproject.ui.friends.FriendCallback
 
 class CreateMessagesAdapter : ListAdapter<Friend, CreateMessagesAdapter.CreateMessagesViewHolder>(FriendCallback()){
     private var _selectedFriend: Friend? = null
-    var mSelectedFriend: MutableLiveData<Friend>? = null
+    private var onSingleSelectedListener: OnSingleSelectedListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CreateMessagesViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -25,12 +24,12 @@ class CreateMessagesAdapter : ListAdapter<Friend, CreateMessagesAdapter.CreateMe
 
     override fun onBindViewHolder(holder: CreateMessagesViewHolder, position: Int) {
         val currentFriend = getItem(position)
-        holder.bindData(currentFriend, holder.itemView.context)
+        holder.bindData(currentFriend)
     }
 
     inner class CreateMessagesViewHolder(private val binding: ItemFriendBinding)
         : RecyclerView.ViewHolder(binding.root) {
-        fun bindData(friend: Friend, context: Context) {
+        fun bindData(friend: Friend) {
             binding.btnDecline.visibility = View.GONE
             binding.btnReceiveToConfirm.visibility = View.GONE
             binding.btnUnfriendToSending.visibility = View.GONE
@@ -38,24 +37,36 @@ class CreateMessagesAdapter : ListAdapter<Friend, CreateMessagesAdapter.CreateMe
             binding.cbFriend.visibility = View.VISIBLE
             binding.bottomLine.visibility = View.VISIBLE
 
+            binding.cbFriend.isChecked = _selectedFriend != null && _selectedFriend == friend
+
             binding.tvName.text = friend.name
             if (friend.avatar != null && friend.avatar.isNotEmpty()) {
-                Glide.with(context).load(friend.avatar)
+                Glide.with(itemView.context).load(friend.avatar)
                     .error(R.drawable.ic_error)
                     .placeholder(R.drawable.ic_avatar_default)
                     .into(binding.ivAvatar)
             }
 
             binding.cbFriend.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener{
+                @SuppressLint("NotifyDataSetChanged")
                 override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-                    if (isChecked) {
-                        val item = getItem(adapterPosition)
-                        _selectedFriend = item
-                        mSelectedFriend?.postValue(item)
+                    val position = adapterPosition
+                    if (isChecked && position != RecyclerView.NO_POSITION) {
+                        _selectedFriend = getItem(position)
+                        notifyDataSetChanged()
+                        onSingleSelectedListener?.onSingleSelectedListener(_selectedFriend)
+
                     }
                 }
             })
-
         }
+    }
+
+    interface OnSingleSelectedListener {
+        fun onSingleSelectedListener(selectedFriend: Friend?)
+    }
+
+    fun setOnSingleSelectedListener(listener: OnSingleSelectedListener) {
+        onSingleSelectedListener = listener
     }
 }

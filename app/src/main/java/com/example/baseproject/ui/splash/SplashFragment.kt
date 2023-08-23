@@ -26,19 +26,18 @@ class SplashFragment :
 
         viewModel.actionSPlash.observe(viewLifecycleOwner) {
             if (it == SplashActionState.Finish) {
-                val sharePreferences = context?.getSharedPreferences(Constants.ISLOGIN, Context.MODE_PRIVATE)
+                val sharePreferences =
+                    requireContext().getSharedPreferences(Constants.ISLOGIN, Context.MODE_PRIVATE)
                 var isLogIn: Boolean
-                sharePreferences?.let {
-                    isLogIn = it.getBoolean(Constants.ISLOGIN, false)
+                sharePreferences?.let { share ->
+                    isLogIn = share.getBoolean(Constants.ISLOGIN, false)
                     if (isLogIn) {
                         appNavigation.openSplashToHomeScreen()
-                    }
-                    else {
+                    } else {
                         appNavigation.openSplashToLogInScreen()
                     }
                 }
             }
         }
-
     }
 }

@@ -1,6 +1,5 @@
 package com.example.baseproject.ui.messages
 
-import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -72,9 +71,8 @@ class MessagesViewModel @Inject constructor(
 
     fun getAllMessage() {
         val chatRef = database.getReference(Constants.CHATS).child(_chatId.value.toString())
-        chatRef.addValueEventListener(object : ValueEventListener {
+        chatRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                mMessageList.clear()
                 if (snapshot.exists()) {
                     for (dataSnapshot in snapshot.children) {
 
@@ -105,8 +103,9 @@ class MessagesViewModel @Inject constructor(
                             mMessageList.add(message)
 
                             // change unread to read
-                            if (message.toId == auth.currentUser?.uid){
-                                chatRef.child(id).child(Constants.MESSAGE_READ).setValue(Constants.MESSAGE_READ)
+                            if (message.toId == auth.currentUser?.uid) {
+                                chatRef.child(id).child(Constants.MESSAGE_READ)
+                                    .setValue(Constants.MESSAGE_READ)
                             }
                         }
                     }
@@ -131,11 +130,11 @@ class MessagesViewModel @Inject constructor(
             val chatRef = chatsRef.push()
 
             if (type == Constants.TYPE_IMAGE) {
-                val avatarRef = storage.reference.child(Constants.CHATS).child(chatId).child("${sendId}_${System.currentTimeMillis()}")
+                val avatarRef = storage.reference.child(Constants.CHATS).child(chatId)
+                    .child("${sendId}_${System.currentTimeMillis()}")
                 avatarRef.putFile(text.toUri())
                     .addOnSuccessListener {
-                        avatarRef.downloadUrl.addOnSuccessListener {uri ->
-                            Log.e("abc", "sendMessage: ${uri.toString()}")
+                        avatarRef.downloadUrl.addOnSuccessListener { uri ->
 
                             val message = Message(
                                 chatRef.key.toString(),
@@ -147,7 +146,11 @@ class MessagesViewModel @Inject constructor(
                                 uri.toString(),
                                 Constants.POSITION_LAST
                             )
-                            chatRef.setValue(message)
+                            chatRef.setValue(message).addOnSuccessListener {
+                                mMessageList.add(message)
+                                _messageListLiveData.value =
+                                    ListUtils.sortMessageByTime(mMessageList)
+                            }
                         }
                     }
             } else {
@@ -161,7 +164,10 @@ class MessagesViewModel @Inject constructor(
                     text,
                     Constants.POSITION_LAST
                 )
-                chatRef.setValue(message)
+                chatRef.setValue(message).addOnSuccessListener {
+                    mMessageList.add(message)
+                    _messageListLiveData.value = ListUtils.sortMessageByTime(mMessageList)
+                }
             }
         }
     }

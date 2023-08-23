@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.example.baseproject.R
@@ -53,9 +54,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
                     TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP,
                     4.0F, resources.displayMetrics))
-                badge.badgeTextColor = resources.getColor(R.color.white)
+                badge.badgeTextColor = ContextCompat.getColor(requireContext(), R.color.white)
                 badge.number = sendList.size
-                badge.backgroundColor = resources.getColor(R.color.red)
+                badge.backgroundColor = ContextCompat.getColor(requireContext(), R.color.red)
             }
         }
     }

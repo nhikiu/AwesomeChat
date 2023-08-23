@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_item_5"
+        android:gravity="bottom">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="@dimen/size_35"
+            android:layout_height="@dimen/size_35"
+            android:layout_marginHorizontal="@dimen/margin_item_12"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_avatar_default"
+            app:shapeAppearance="@style/circle"
+            app:strokeColor="@null" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_message_image"
+            android:layout_width="@dimen/size_150"
+            android:layout_height="@dimen/size_150"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/sticker_1"
+            app:shapeAppearance="@style/corner_10"
+            app:strokeColor="@null" />
+
+        <TextView
+            android:id="@+id/tv_sendtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_item_12"
+            android:text="@string/time_hint"
+            android:textColor="@color/grey_999999"
+            android:textSize="@dimen/text_size_12" />
+    </LinearLayout>
+</layout>

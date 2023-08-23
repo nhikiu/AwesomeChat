@@ -53,16 +53,22 @@ object Constants {
     const val POSITION_ONLY = "only"
     const val MESSAGE_READ = "read"
     const val MESSAGE_UNREAD = "unread"
+    const val POSITION = "position"
 
     // message
     const val TYPE_IMAGE = "image"
     const val TYPE_TEXT = "text"
+    const val TYPE_STICKER = "sticker"
     const val VIEW_TYPE_TIME_SEND = 0
     const val VIEW_TYPE_DAY_SEND = 1
     const val VIEW_TYPE_MESSAGE_TEXT_SEND = 2
     const val VIEW_TYPE_MESSAGE_TEXT_RECEIVE = 3
     const val VIEW_TYPE_MESSAGE_IMAGE_SEND = 4
     const val VIEW_TYPE_MESSAGE_IMAGE_RECEIVE = 5
-    const val PERMISSION_REQUEST_CODE = 101
+    const val VIEW_TYPE_MESSAGE_STICKER_SEND = 6
+    const val VIEW_TYPE_MESSAGE_STICKER_RECEIVE = 7
+
+    // notification
+    const val CHANNEL_ID = "CHAT_NOTIFICATION"
 
 }

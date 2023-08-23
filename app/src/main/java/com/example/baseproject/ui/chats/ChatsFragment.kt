@@ -21,7 +21,6 @@ class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layou
 
     private val viewModel: ChatsViewModel by viewModels()
 
-
     override fun getVM() = viewModel
 
     private var chatAdapter: ChatsAdapter? = null
@@ -36,6 +35,16 @@ class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layou
     @RequiresApi(Build.VERSION_CODES.N)
     override fun bindingStateView() {
         super.bindingStateView()
+
+        viewModel.actionChats.observe(viewLifecycleOwner) {
+            when (it) {
+                is ActionState.Loading -> {
+                    binding.fragmentNotFound.visibility = View.GONE
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+                else -> binding.progressBar.visibility = View.GONE
+            }
+        }
 
         viewModel.chatListLiveData.observe(viewLifecycleOwner) {
             val sortedList = it.sortedByDescending { chat -> chat.messages?.get(chat.messages.size - 1)?.sendAt }
@@ -68,5 +77,4 @@ class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layou
             appNavigation.openHomeToCreateMessagesScreen()
         }
     }
-
 }

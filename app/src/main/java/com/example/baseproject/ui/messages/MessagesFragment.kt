@@ -8,9 +8,10 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
-import android.view.View
+import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,16 +22,19 @@ import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.utils.Constants
 import com.example.baseproject.utils.GridSpacingItemDecoration
 import com.example.baseproject.utils.ListUtils
+import com.example.core.adapter.OnItemClickListener
 import com.example.core.base.fragment.BaseFragment
 import com.example.core.utils.getPxFromDp
 import com.example.core.utils.tint
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class MessagesFragment :
     BaseFragment<FragmentMessagesBinding, MessagesViewModel>(R.layout.fragment_messages),
-    GalleryAdapter.OnSelectedListener {
+    GalleryAdapter.OnMultiSelectedListener {
     @Inject
     lateinit var appNavigation: AppNavigation
 
@@ -38,12 +42,15 @@ class MessagesFragment :
 
     private lateinit var sendId: String
     private lateinit var toId: String
-    private var selectedImages =  mutableListOf<Int>()
+    private var selectedImages = mutableListOf<Int>()
 
     private var messagesAdapter: MessagesAdapter? = null
     private var galleryAdapter: GalleryAdapter? = null
+    private var stickerAdapter: StickerAdapter? = null
     private val imagePaths = mutableListOf<String>()
+    private var stickerList = listOf<Int>()
 
+    var checkEmoji = false
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -53,13 +60,17 @@ class MessagesFragment :
                 getAllImage()
             } else {
                 galleryAdapter?.submitList(imagePaths)
-                galleryAdapter?.setOnSelectedListener(this)
+                galleryAdapter?.setOnMultiSelectedListener(this)
 
                 binding.btnImagePicker.tint(R.color.primary_color)
                 binding.imagePickerContainer.visibility = View.VISIBLE
+                binding.recyclerViewImagePicker.visibility = View.VISIBLE
+                binding.recyclerStickerPicker.visibility = View.GONE
+                checkEmoji = true
+                checkVisibleStickerButton()
             }
         } else {
-            Log.e("abc", "Not granted")
+            Timber.tag("abc").e("Not granted")
         }
     }
 
@@ -67,12 +78,13 @@ class MessagesFragment :
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
-        val bundle = arguments?.getString(Constants.USER_ID).toString()
 
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
+        val bundle = arguments?.getString(Constants.USER_ID).toString()
         toId = bundle
 
         viewModel.getUserById(toId)
-
         viewModel.getAllMessage()
 
         messagesAdapter = MessagesAdapter()
@@ -83,13 +95,22 @@ class MessagesFragment :
         binding.recyclerViewImagePicker.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.recyclerViewImagePicker.addItemDecoration(
             GridSpacingItemDecoration(
-                3,
-                requireContext().getPxFromDp(2.0F),
-                false
+                3, requireContext().getPxFromDp(2.0F), false
+            )
+        )
+
+        stickerAdapter = StickerAdapter()
+        binding.recyclerStickerPicker.adapter = stickerAdapter
+        binding.recyclerStickerPicker.layoutManager = GridLayoutManager(requireContext(), 3)
+        binding.recyclerStickerPicker.addItemDecoration(
+            GridSpacingItemDecoration(
+                3, requireContext().getPxFromDp(15.0F), true
             )
         )
 
         binding.btnSend.visibility = View.GONE
+        stickerList = getAllSticker()
+        stickerAdapter?.submitList(stickerList)
     }
 
     override fun bindingStateView() {
@@ -101,16 +122,15 @@ class MessagesFragment :
         viewModel.friendProfile.observe(viewLifecycleOwner) { user ->
             binding.tvName.text = user.name
             if (user.avatar != null && user.avatar.isNotEmpty()) {
-                Glide.with(this).load(user.avatar)
-                    .error(R.drawable.ic_error)
-                    .placeholder(R.drawable.ic_avatar_default)
-                    .into(binding.ivAvatar)
+                Glide.with(this).load(user.avatar).error(R.drawable.ic_error)
+                    .placeholder(R.drawable.ic_avatar_default).into(binding.ivAvatar)
             }
+
             messagesAdapter?.getFriendProfile(user, user)
         }
     }
 
-    @SuppressLint("IntentReset")
+    @SuppressLint("IntentReset", "ClickableViewAccessibility")
     override fun setOnClick() {
         super.setOnClick()
 
@@ -122,34 +142,100 @@ class MessagesFragment :
         }
 
         binding.btnImagePicker.setOnClickListener {
-            if (binding.imagePickerContainer.visibility == View.VISIBLE) {
+            if (binding.recyclerViewImagePicker.visibility == View.VISIBLE) {
                 binding.imagePickerContainer.visibility = View.GONE
+                binding.recyclerViewImagePicker.visibility = View.GONE
                 binding.btnImagePicker.tint(R.color.grey_999999)
                 galleryAdapter?.clearSelectedItem()
                 if (selectedImages.isNotEmpty()) selectedImages.clear()
             } else {
                 requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-                Log.e("abc", "setOnClick: ${imagePaths.size}")
             }
         }
 
         binding.btnSend.setOnClickListener {
-            viewModel.sendMessage(toId, binding.edtMessage.text.toString(), Constants.TYPE_TEXT)
-            binding.edtMessage.text.clear()
-            binding.recyclerViewMessages.layoutManager?.smoothScrollToPosition(
-                binding.recyclerViewMessages,
-                null,
-                0
-            )
+            if (binding.edtMessage.text.isNotEmpty()) {
+                viewModel.sendMessage(toId, binding.edtMessage.text.toString(), Constants.TYPE_TEXT)
+                binding.edtMessage.text.clear()
+                binding.recyclerViewMessages.layoutManager?.smoothScrollToPosition(
+                    binding.recyclerViewMessages, null, 0
+                )
+            }
         }
 
         binding.btnSendImage.setOnClickListener {
             for (i in selectedImages) {
                 viewModel.sendMessage(toId, imagePaths[i].toUri().toString(), Constants.TYPE_IMAGE)
             }
-            selectedImages.clear()
-            galleryAdapter?.clearSelectedItem()
+            binding.recyclerViewImagePicker.visibility = View.GONE
             binding.imagePickerContainer.visibility = View.GONE
+            binding.btnImagePicker.tint(R.color.grey_999999)
+            binding.btnSend.visibility = View.GONE
+        }
+
+        binding.edtMessage.setOnClickListener {
+            binding.recyclerViewImagePicker.visibility = View.GONE
+        }
+
+        binding.edtMessage.setOnTouchListener(View.OnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (event.rawX >= binding.edtMessage.right - binding.edtMessage.paddingRight - binding.edtMessage.compoundDrawables[2].bounds.width()) {
+                    if (binding.recyclerStickerPicker.visibility == View.VISIBLE) {
+                        binding.imagePickerContainer.visibility = View.GONE
+                        binding.recyclerStickerPicker.visibility = View.GONE
+                        checkEmoji = true
+                    } else {
+                        binding.recyclerStickerPicker.visibility = View.VISIBLE
+                        checkEmoji = false
+                        binding.imagePickerContainer.visibility = View.VISIBLE
+                        binding.recyclerViewImagePicker.visibility = View.GONE
+                        binding.btnImagePicker.tint(R.color.grey_999999)
+
+                    }
+                    checkVisibleStickerButton()
+                    return@OnTouchListener true
+                } else {
+                    binding.imagePickerContainer.visibility = View.GONE
+                    binding.recyclerStickerPicker.visibility = View.GONE
+                    binding.recyclerViewImagePicker.visibility = View.GONE
+                    checkEmoji = true
+                    checkVisibleStickerButton()
+                    binding.btnImagePicker.tint(R.color.grey_999999)
+                }
+            }
+            false
+        })
+
+        stickerAdapter?.onClickItem(object : OnItemClickListener {
+            override fun onItemClick(position: Int) {
+                viewModel.sendMessage(
+                    toId, stickerList[position].toString(), Constants.TYPE_STICKER
+                )
+            }
+        })
+    }
+
+    private fun checkVisibleStickerButton() {
+        if (checkEmoji) {
+            checkEmoji = false
+            val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_smile_disable)
+            if (drawable != null) {
+                val wrapPaper = DrawableCompat.wrap(drawable)
+                binding.edtMessage.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    null, null, wrapPaper, null
+                )
+
+            }
+
+        } else {
+            checkEmoji = true
+            val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_smile_enable)
+            if (drawable != null) {
+                val wrapPaper = DrawableCompat.wrap(drawable)
+                binding.edtMessage.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    null, null, wrapPaper, null
+                )
+            }
         }
     }
 
@@ -163,11 +249,7 @@ class MessagesFragment :
             val orderBy = "${MediaStore.Images.Media.DATE_MODIFIED} DESC"
 
             val cursor = requireContext().contentResolver.query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                columns,
-                null,
-                null,
-                orderBy
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy
             )
             val count = cursor?.count ?: 0
             for (i in 0 until count) {
@@ -177,8 +259,7 @@ class MessagesFragment :
                 idColumnIndex?.let {
                     val imageId = cursor.getLong(it)
                     val imageUri = Uri.withAppendedPath(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        imageId.toString()
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageId.toString()
                     )
                     imagePaths.add(imageUri.toString())
                 }
@@ -221,5 +302,25 @@ class MessagesFragment :
         } else {
             binding.btnSendImage.visibility = View.GONE
         }
+    }
+
+    private fun getAllSticker(): List<Int> {
+        val stickerList = mutableListOf<Int>()
+        for (i in 1..12) {
+            stickerList.add(
+                resources.getIdentifier(
+                    "sticker_$i", "drawable", requireContext().packageName
+                )
+            )
+        }
+
+        return stickerList
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+        imagePaths.clear()
+        stickerList.toMutableList().clear()
     }
 }

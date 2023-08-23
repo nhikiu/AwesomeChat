@@ -55,6 +55,7 @@
     <string name="list_friend">Danh sách bạn bè</string>
     <string name="you">Bạn: </string>
     <string name="sent_picture">Đã gửi 1 ảnh</string>
+    <string name="sent_sticker">Đã gửi 1 nhãn dán</string>
 
     <!--    Friend Screen-->
     <string name="all_friend">Tất cả</string>

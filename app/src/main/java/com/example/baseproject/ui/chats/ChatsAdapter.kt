@@ -1,7 +1,6 @@
 package com.example.baseproject.ui.chats
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +28,7 @@ class ChatsAdapter : ListAdapter<Chat, ChatsAdapter.ChatViewHolder>(ChatDiffCall
 
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
         val currentChat = getItem(position)
-        holder.bindData(currentChat, holder.itemView.context)
+        holder.bindData(currentChat)
         var friendId = ""
         for (i in currentChat.id.split("-")) {
             if (i != FirebaseAuth.getInstance().currentUser?.uid) {
@@ -55,7 +54,7 @@ class ChatsAdapter : ListAdapter<Chat, ChatsAdapter.ChatViewHolder>(ChatDiffCall
         RecyclerView.ViewHolder(binding.root) {
 
         @SuppressLint("ResourceAsColor")
-        fun bindData(chat: Chat, context: Context) {
+        fun bindData(chat: Chat) {
             binding.tvUsername.text =
                 if (chat.friendProfile.name.length < 23) chat.friendProfile.name else "${
                     chat.friendProfile.name.substring(
@@ -67,23 +66,23 @@ class ChatsAdapter : ListAdapter<Chat, ChatsAdapter.ChatViewHolder>(ChatDiffCall
             if (unread > 0 && chat.messages?.last()?.toId == FirebaseAuth.getInstance().currentUser?.uid) {
                 binding.tvUnread.visibility = View.VISIBLE
                 binding.tvUnread.text = "$unread"
-                binding.tvMessage.setTextColor(ContextCompat.getColor(context, R.color.black))
-                binding.tvSendtime.setTextColor(ContextCompat.getColor(context, R.color.black))
+                binding.tvMessage.setTextColor(ContextCompat.getColor(itemView.context, R.color.black))
+                binding.tvSendtime.setTextColor(ContextCompat.getColor(itemView.context, R.color.black))
                 binding.tvMessage.setTypeface(null, Typeface.BOLD)
                 binding.tvSendtime.setTypeface(null, Typeface.BOLD)
-                val padding = context.getPxFromDp(3.0F)
+                val padding = itemView.context.getPxFromDp(3.0F)
                 binding.frameAvatarBackground.setPadding(padding, padding, padding, padding)
             } else {
                 binding.tvUnread.visibility = View.GONE
-                binding.tvMessage.setTextColor(ContextCompat.getColor(context, R.color.grey_393939))
-                binding.tvSendtime.setTextColor(ContextCompat.getColor(context, R.color.grey_393939))
+                binding.tvMessage.setTextColor(ContextCompat.getColor(itemView.context, R.color.grey_393939))
+                binding.tvSendtime.setTextColor(ContextCompat.getColor(itemView.context, R.color.grey_393939))
                 binding.tvMessage.setTypeface(null, Typeface.NORMAL)
                 binding.tvSendtime.setTypeface(null, Typeface.NORMAL)
                 binding.frameAvatarBackground.setPadding(0, 0, 0, 0)
             }
 
             if (chat.friendProfile.avatar != null && chat.friendProfile.avatar.isNotEmpty() && chat.friendProfile.avatar != "null") {
-                Glide.with(context).load(chat.friendProfile.avatar)
+                Glide.with(itemView.context).load(chat.friendProfile.avatar)
                     .error(R.drawable.ic_error)
                     .placeholder(R.drawable.ic_avatar_default)
                     .into(binding.ivAvatar)
@@ -96,12 +95,18 @@ class ChatsAdapter : ListAdapter<Chat, ChatsAdapter.ChatViewHolder>(ChatDiffCall
 
                 // last message
                 if (lastMessage.sendId == FirebaseAuth.getInstance().currentUser?.uid) {
-                    lastMessageContent = context.resources.getString(R.string.you) + " "
+                    lastMessageContent = itemView.context.resources.getString(R.string.you) + " "
                 }
-                lastMessageContent += if (lastMessage.type == Constants.TYPE_IMAGE) {
-                    context.resources.getString(R.string.sent_picture)
-                } else {
-                    lastMessage.content
+                lastMessageContent += when (lastMessage.type) {
+                    Constants.TYPE_IMAGE -> {
+                        itemView.context.resources.getString(R.string.sent_picture)
+                    }
+                    Constants.TYPE_STICKER -> {
+                        itemView.context.resources.getString(R.string.sent_sticker)
+                    }
+                    else -> {
+                        lastMessage.content
+                    }
                 }
                 binding.tvMessage.text = if (lastMessageContent.length < 35) {
                     lastMessageContent
@@ -113,7 +118,7 @@ class ChatsAdapter : ListAdapter<Chat, ChatsAdapter.ChatViewHolder>(ChatDiffCall
                 val time =
                     DateTimeUtils.convertTimestampToDateTimeForLastMessage(messages[messages.size - 1].sendAt.toLong())
                 if (time == Constants.IS_YESTERDAY) {
-                    binding.tvSendtime.text = context.getText(R.string.is_yesterday)
+                    binding.tvSendtime.text = itemView.context.getText(R.string.is_yesterday)
                 } else {
                     binding.tvSendtime.text = time
                 }

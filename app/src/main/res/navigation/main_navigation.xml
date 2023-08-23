@@ -53,8 +53,7 @@
         android:id="@+id/loginFragment"
         android:name="com.example.baseproject.ui.login.LoginFragment"
         android:label="LoginFragment"
-        tools:layout="@layout/fragment_login"
-        >
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_signupFragment"
             app:destination="@id/signupFragment" />
@@ -91,8 +90,7 @@
         <action
             android:id="@+id/action_createMessagesFragment_to_messagesFragment"
             app:destination="@id/messagesFragment"
-            app:popUpToInclusive="true"
-            app:popUpTo="@id/homeFragment"/>
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
-
 </navigation>

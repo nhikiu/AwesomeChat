@@ -26,12 +26,13 @@ class ChatsViewModel @Inject constructor(
 ) : BaseViewModel(){
     private var mChatList = arrayListOf<Chat>()
 
-
     private var _chatListLiveData: MutableLiveData<List<Chat>> = MutableLiveData()
     val chatListLiveData: LiveData<List<Chat>> get() = _chatListLiveData
 
     private var _unreadMessage: MutableLiveData<Int> = MutableLiveData()
     val unreadMessage: LiveData<Int> get() = _unreadMessage
+
+    val actionChats = MutableLiveData<ActionState>()
 
     init {
         mChatList.sortWith(compareBy<Chat> { it.messages?.get(it.messages.size - 1)?.sendAt }.reversed())
@@ -40,11 +41,13 @@ class ChatsViewModel @Inject constructor(
     }
 
     private fun getAllChat() {
+        actionChats.value = ActionState.Loading
+
         val chatRef = database.getReference(Constants.CHATS)
         val uid = auth.currentUser?.uid.toString()
+
         chatRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                Log.e("abc", "onDataChange: get all chat", )
                 if (snapshot.exists()) {
                     for (dataSnapshot in snapshot.children) {
                         if (dataSnapshot.key.toString().contains(uid)) {
@@ -73,9 +76,7 @@ class ChatsViewModel @Inject constructor(
                                 ))
                             }
 
-                            Log.e("abc", "UNREAD MESSAGE: ${listMessage.count { it.read == Constants.MESSAGE_UNREAD }}", )
                             _unreadMessage.value = listMessage.count { it.read == Constants.MESSAGE_UNREAD }
-                            Log.e("abc", "Live data unread message: ${_unreadMessage.value}", )
                             var friendId = ""
                             for (i in chatId.split("-")){
                                 if (i != uid) {
@@ -100,24 +101,37 @@ class ChatsViewModel @Inject constructor(
                                         val chat = Chat(chatId, friendProfile, listMessage.count { it.read == Constants.MESSAGE_UNREAD }, listMessage.sortedBy { it.sendAt })
                                         mChatList.add(chat)
                                         _chatListLiveData.value = mChatList
-
                                     }
+                                    actionChats.value = ActionState.Finish
                                 }
 
                                 override fun onCancelled(error: DatabaseError) {
+                                    actionChats.value = ActionState.Fail
                                 }
                             })
                         }
                     }
-
+                    actionChats.value = ActionState.Finish
+                }
+                else {
+                    Log.e("fail", "onDataChange: Fail", )
+                    actionChats.value = ActionState.Finish
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-
+                actionChats.value = ActionState.Fail
             }
 
         })
     }
 
+}
+
+sealed class ActionState {
+    object Finish : ActionState()
+
+    object Loading : ActionState()
+
+    object Fail : ActionState()
 }

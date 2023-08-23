@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.baseproject.models.User
 import com.example.baseproject.respository.AuthRepository
+import com.example.baseproject.ui.chats.ActionState
 import com.example.baseproject.utils.Constants
 import com.example.baseproject.utils.UIState
 import com.example.core.base.BaseViewModel
@@ -26,12 +27,14 @@ class ProfileViewModel @Inject constructor(
     private val database: FirebaseDatabase,
     private val auth: FirebaseAuth,
     private val rxPreferences: RxPreferences
-    ) : BaseViewModel(){
+) : BaseViewModel() {
     private val _signout = MutableLiveData<UIState<String>>()
     val signout: LiveData<UIState<String>> get() = _signout
 
     private val _currentUser: MutableLiveData<User> = MutableLiveData()
     val currentUser: LiveData<User> get() = _currentUser
+
+    val actionFriend = MutableLiveData<ActionState>()
 
     init {
         getCurrentUser()
@@ -40,14 +43,16 @@ class ProfileViewModel @Inject constructor(
     fun logoutUser() {
         _signout.value = UIState.Loading
 
-        repository.signoutUser{
+        repository.signoutUser {
             _signout.value = it
         }
     }
 
-    private fun getCurrentUser(){
+    fun getCurrentUser() {
+        actionFriend.value = ActionState.Loading
         val id = auth.currentUser?.uid
-        val userRef = id?.let { database.getReference(Constants.USER).child(it).child(Constants.PROFILE) }
+        val userRef =
+            id?.let { database.getReference(Constants.USER).child(it).child(Constants.PROFILE) }
 
         userRef?.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -56,16 +61,20 @@ class ProfileViewModel @Inject constructor(
                         id = id,
                         name = snapshot.child(Constants.USER_NAME).getValue<String?>() ?: "",
                         email = snapshot.child(Constants.USER_EMAIL).getValue<String?>() ?: "",
-                        phoneNumber = snapshot.child(Constants.USER_PHONENUMBER).getValue<String?>() ?: "",
-                        dateOfBirth = snapshot.child(Constants.USER_DATE_OF_BIRTH).getValue<String>() ?: "",
+                        phoneNumber = snapshot.child(Constants.USER_PHONENUMBER).getValue<String?>()
+                            ?: "",
+                        dateOfBirth = snapshot.child(Constants.USER_DATE_OF_BIRTH)
+                            .getValue<String>() ?: "",
                         avatar = snapshot.child(Constants.USER_AVATAR).getValue<String>() ?: ""
                     )
 
                     _currentUser.postValue(user)
+                    actionFriend.value = ActionState.Finish
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
+                actionFriend.value = ActionState.Fail
             }
         })
     }

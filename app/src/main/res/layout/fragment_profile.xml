@@ -10,17 +10,28 @@
         android:gravity="center"
         tools:context=".ui.profile.ProfileFragment">
 
-        <ImageView
-            android:id="@+id/iv_avatar_large"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintVertical_bias="0"
             app:layout_constraintDimensionRatio="1:1.368"
-            android:background="@drawable/background_app_common"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/preview"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/avatar" />
+            app:layout_constraintTop_toTopOf="parent">
+            <ImageView
+                android:id="@+id/iv_avatar_large"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_app_common"
+                android:src="@drawable/preview"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/avatar" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar_avatar_large"
+                android:layout_width="@dimen/size_30"
+                android:layout_height="@dimen/size_30"
+                android:layout_gravity="center"/>
+        </FrameLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,15 +49,25 @@
                 android:layout_margin="@dimen/margin_item_12"
                 android:layout_weight="2">
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/iv_avatar"
-                    android:layout_width="@dimen/size_69"
-                    android:layout_height="@dimen/size_69"
-                    android:src="@drawable/ic_avatar_default"
-                    android:scaleType="centerCrop"
-                    app:strokeColor="@null"
-                    app:shapeAppearance="@style/circle"
-                    android:padding="@dimen/padding_6"/>
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/iv_avatar"
+                        android:layout_width="@dimen/size_69"
+                        android:layout_height="@dimen/size_69"
+                        android:src="@drawable/ic_avatar_default"
+                        android:scaleType="centerCrop"
+                        app:strokeColor="@null"
+                        app:shapeAppearance="@style/circle"
+                        android:padding="@dimen/padding_6"/>
+<!--                    <ProgressBar-->
+<!--                        android:id="@+id/progress_bar_avatar"-->
+<!--                        android:layout_width="30dp"-->
+<!--                        android:layout_height="30dp"-->
+<!--                        android:layout_gravity="center"/>-->
+                </FrameLayout>
+
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -75,6 +96,7 @@
                     android:id="@+id/btn_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:padding="@dimen/margin_item_12"
                     android:src="@drawable/ic_pencil"
                     android:contentDescription="@string/edit_profile" />
             </LinearLayout>
@@ -119,7 +141,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_arrow_right"
-                    android:layout_marginStart="@dimen/margin_item_12"
+                    android:paddingVertical="@dimen/margin_item_12"
+                    android:paddingStart="@dimen/margin_item_12"
+                    android:paddingEnd="@dimen/margin_item_8"
                     android:contentDescription="@string/login" />
             </LinearLayout>
 
@@ -156,7 +180,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_arrow_right"
-                    android:layout_marginStart="@dimen/margin_item_12"
+                    android:paddingVertical="@dimen/margin_item_12"
+                    android:paddingStart="@dimen/margin_item_12"
+                    android:paddingEnd="@dimen/margin_item_8"
                     android:contentDescription="@string/login" />
             </LinearLayout>
 
@@ -227,6 +253,15 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

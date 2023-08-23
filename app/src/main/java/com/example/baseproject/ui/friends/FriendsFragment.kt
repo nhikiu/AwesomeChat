@@ -13,6 +13,7 @@ import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentFriendsBinding
 import com.example.baseproject.models.FragmentData
 import com.example.baseproject.navigation.AppNavigation
+import com.example.baseproject.ui.chats.ActionState
 import com.example.baseproject.ui.friends.allFriend.AllFriendFragment
 import com.example.baseproject.ui.friends.pendingFriend.PendingFriendFragment
 import com.example.baseproject.ui.friends.realFriend.RealFriendFragment
@@ -80,6 +81,13 @@ class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R
     @SuppressLint("MissingInflatedId")
     override fun bindingStateView() {
         super.bindingStateView()
+
+        viewModel.actionFriend.observe(viewLifecycleOwner) {
+            when(it) {
+                is ActionState.Loading -> binding.progressBar.visibility = View.VISIBLE
+                else -> binding.progressBar.visibility = View.GONE
+            }
+        }
 
         binding.tabLayout
             .addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {

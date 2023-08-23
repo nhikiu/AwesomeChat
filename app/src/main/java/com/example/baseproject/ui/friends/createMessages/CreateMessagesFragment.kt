@@ -1,12 +1,15 @@
 package com.example.baseproject.ui.friends.createMessages
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.activityViewModels
+import com.bumptech.glide.Glide
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentCreateMessagesBinding
+import com.example.baseproject.models.Friend
 import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.ui.friends.FriendsViewModel
 import com.example.baseproject.utils.Constants
@@ -16,11 +19,14 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class CreateMessagesFragment : BaseFragment<FragmentCreateMessagesBinding, FriendsViewModel> (R.layout.fragment_create_messages) {
+class CreateMessagesFragment
+    : BaseFragment<FragmentCreateMessagesBinding, FriendsViewModel> (R.layout.fragment_create_messages),
+    CreateMessagesAdapter.OnSingleSelectedListener{
     @Inject
     lateinit var appNavigation: AppNavigation
 
     private val shareViewModel: FriendsViewModel by activityViewModels()
+    private var _selectedFriend: Friend? = null
 
     override fun getVM() = shareViewModel
 
@@ -29,8 +35,18 @@ class CreateMessagesFragment : BaseFragment<FragmentCreateMessagesBinding, Frien
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
 
+
         friendAdapter = CreateMessagesAdapter()
         binding.recyclerviewFriend.adapter = friendAdapter
+
+        binding.recyclerviewFriend.post(object : Runnable{
+            @SuppressLint("NotifyDataSetChanged")
+            override fun run() {
+                friendAdapter?.notifyDataSetChanged()
+            }
+
+        })
+        friendAdapter?.setOnSingleSelectedListener(this)
     }
 
     override fun bindingStateView() {
@@ -42,7 +58,8 @@ class CreateMessagesFragment : BaseFragment<FragmentCreateMessagesBinding, Frien
             } else {
                 binding.fragmentNotFound.visibility = View.GONE
             }
-            friendAdapter?.submitList(it.filter { friend -> friend.status == Constants.STATE_FRIEND })
+            val friendList = it.filter { friend -> friend.status == Constants.STATE_FRIEND }
+            friendAdapter?.submitList(friendList)
         }
 
         binding.searchMessage.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
@@ -65,28 +82,23 @@ class CreateMessagesFragment : BaseFragment<FragmentCreateMessagesBinding, Frien
             appNavigation.navigateUp()
         }
 
+        binding.btnNext.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putString(Constants.USER_ID, _selectedFriend!!.id)
+                appNavigation.openCreateMessagesToMessaagesScreen(bundle)
 
-        friendAdapter?.mSelectedFriend?.observe(viewLifecycleOwner){
-            Log.d("abc", "setOnClick() returned: $it")
         }
-//        Log.e("abc", "setOnClick: $friend", )
-//        if (friend != null) {
-//            if (friend.avatar != null && friend.avatar.isNotEmpty()) {
-//                Glide.with(this).load(friend.avatar)
-//                    .error(R.drawable.ic_error)
-//                    .placeholder(R.drawable.ic_avatar_default)
-//                    .into(binding.ivAvatar)
-//            }
-//
-//            binding.btnDelete.setOnClickListener {
-//                friendAdapter?.selectedFriend = null
-//            }
-//
-//            binding.btnNext.setOnClickListener {
-//                val bundle = Bundle()
-//                bundle.putString(Constants.USER_ID, friend.id)
-//                appNavigation.openCreateMessagesToMessaagesScreen(bundle)
-//            }
-//        }
+    }
+
+    override fun onSingleSelectedListener(friend: Friend?) {
+        if (friend != null) {
+            _selectedFriend = friend
+        }
+        if (friend?.avatar != null && friend.avatar.isNotEmpty()) {
+            binding.linearChooseFriend.visibility = View.VISIBLE
+            Glide.with(requireContext()).load(friend?.avatar)
+                .into(binding.ivAvatar)
+            Log.e("abc", "onSingleSelectedListener: $friend", )
+        }
     }
 }

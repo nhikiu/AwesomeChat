@@ -2,11 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:fitsSystemWindows="true"
         android:orientation="vertical"
+        android:padding="0dp"
         tools:context=".ui.messages.MessagesFragment">
 
         <View
@@ -19,68 +21,71 @@
             android:id="@+id/btn_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="@dimen/margin_item_12"
+            android:contentDescription="TODO"
             android:src="@drawable/ic_arrow_left"
-            app:tint="@color/primary_color"
-            android:layout_marginStart="@dimen/margin_item_8"
-            android:layout_marginTop="@dimen/margin_item_64"
+            app:layout_constraintBottom_toTopOf="@id/recycler_view_messages"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/primary_color" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_avatar"
             android:layout_width="@dimen/size_42"
             android:layout_height="@dimen/size_42"
-            android:src="@drawable/ic_avatar_default"
-            app:shapeAppearance="@style/circle"
+            android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            app:strokeColor="@null"
-            android:layout_marginTop="@dimen/margin_item_54"
-            android:layout_marginStart="@dimen/margin_item_12"
+            android:src="@drawable/ic_avatar_default"
+            app:layout_constraintBottom_toTopOf="@id/recycler_view_messages"
             app:layout_constraintStart_toEndOf="@id/btn_back"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearance="@style/circle"
+            app:strokeColor="@null" />
 
         <TextView
             android:id="@+id/tv_name"
+            style="@style/text_bold_18"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/name_hint"
-            style="@style/text_bold_18"
-            android:textColor="@color/black"
             android:layout_marginStart="@dimen/margin_item_12"
-            android:layout_marginTop="@dimen/margin_item_64"
+            android:text="@string/name_hint"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@id/recycler_view_messages"
             app:layout_constraintStart_toEndOf="@id/iv_avatar"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_messages"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:reverseLayout="true"
-            android:layout_marginTop="@dimen/margin_item_25"
-            android:paddingTop="@dimen/padding_13"
-            android:clipToPadding="false"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_marginTop="@dimen/margin_item_75"
             android:background="@drawable/bg_white_top_radius"
             android:backgroundTint="@color/white"
-            tools:listitem="@layout/item_message_text_send"
-            app:layout_constraintTop_toBottomOf="@id/iv_avatar"
-            app:layout_constraintBottom_toTopOf="@id/linear_bottom"/>
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/padding_13"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/linear_bottom"
+            app:layout_constraintTop_toTopOf="parent"
+            app:reverseLayout="true"
+            tools:listitem="@layout/item_message_text_send" />
 
         <LinearLayout
             android:id="@+id/linear_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:gravity="center"
-            app:layout_constraintTop_toBottomOf="@id/recycler_view_messages"
-            app:layout_constraintBottom_toTopOf="@id/image_picker_container">
+            app:layout_constraintBottom_toTopOf="@id/image_picker_container"
+            app:layout_constraintTop_toBottomOf="@id/recycler_view_messages">
+
             <ImageView
                 android:id="@+id/btn_image_picker"
                 android:layout_width="@dimen/size_52"
                 android:layout_height="@dimen/size_52"
-                android:background="@drawable/bg_common_circle"
-                android:padding="@dimen/text_size_14"
                 android:layout_margin="@dimen/margin_item_12"
+                android:background="@drawable/bg_common_circle"
                 android:backgroundTint="@color/grey_f6f6f6"
+                android:padding="@dimen/text_size_14"
                 android:src="@drawable/ic_photo"
                 app:tint="@color/grey_999999" />
 
@@ -88,49 +93,67 @@
                 android:id="@+id/edt_message"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:maxLines="3"
-                android:layout_weight="1"
-                android:drawableEnd="@drawable/ic_smile"
                 android:layout_margin="@dimen/margin_item_12"
-                android:paddingHorizontal="@dimen/padding_20"
+                android:layout_weight="1"
                 android:background="@drawable/custom_btn_large"
                 android:backgroundTint="@color/grey_f6f6f6"
-                android:hint="@string/hint_message"/>
+                android:drawableEnd="@drawable/ic_smile_disable"
+                android:hint="@string/hint_message"
+                android:maxLines="3"
+                android:paddingHorizontal="@dimen/padding_20" />
 
             <ImageView
                 android:id="@+id/btn_send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_send"
-                android:layout_marginEnd="@dimen/margin_item_12"/>
+                android:layout_marginEnd="@dimen/margin_item_12"
+                android:src="@drawable/ic_send" />
         </LinearLayout>
 
         <FrameLayout
             android:id="@+id/image_picker_container"
             android:layout_width="match_parent"
             android:layout_height="@dimen/size_300"
-            app:layout_constraintTop_toBottomOf="@id/linear_bottom"
+            android:background="@color/white"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="gone">
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view_image_picker"
+            app:layout_constraintTop_toBottomOf="@id/linear_bottom">
+
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_image_picker"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/margin_item_5"
+                    android:scrollbarStyle="outsideInset"
+                    android:scrollbars="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    tools:listitem="@layout/item_bottom_picker_image" />
+
+                <Button
+                    android:id="@+id/btn_send_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|bottom"
+                    android:layout_marginBottom="@dimen/margin_item_12"
+                    android:background="@drawable/bg_button_enable"
+                    android:text="@string/send"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
+
+
+            </FrameLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_sticker_picker"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_300"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                tools:listitem="@layout/item_bottom_picker_image"
-                android:scrollbars="vertical"
-                android:scrollbarStyle="outsideInset"
-                android:layout_marginTop="@dimen/margin_item_5"/>
-            <Button
-                android:id="@+id/btn_send_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/send"
-                android:visibility="gone"
-                android:textColor="@color/white"
-                android:layout_gravity="center|bottom"
-                android:layout_marginBottom="@dimen/margin_item_12"
-                android:background="@drawable/bg_button_enable"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="@id/image_picker_container"
+                tools:listitem="@layout/item_bottom_picker_image" />
         </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

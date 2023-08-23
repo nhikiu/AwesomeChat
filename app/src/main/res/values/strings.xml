@@ -64,6 +64,7 @@
     <string name="list_friend">List Friend</string>
     <string name="you">You: </string>
     <string name="sent_picture">Sent a picture</string>
+    <string name="sent_sticker">Sent a sticker</string>
 
     <!--    Friend Screen-->
     <string name="all_friend">All</string>

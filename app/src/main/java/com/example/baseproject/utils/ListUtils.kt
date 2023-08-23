@@ -20,16 +20,17 @@ object ListUtils {
         return sb.toString()
     }
 
-    fun getListSortByName(friendList: List<Friend>) : List<Any> {
+    fun getListSortByName(friendList: List<Friend>): List<Any> {
         val sortList = sortByName(friendList.toMutableList()).toMutableList()
 
         val newList = mutableListOf<Any>()
         for (i in sortList.indices) {
             val current = friendList[i]
-            val word = removeVietnameseAccents(current.name.split(" ").last().lowercase()).uppercase()
+            val word =
+                removeVietnameseAccents(current.name.split(" ").last().lowercase()).uppercase()
 
             if (word.isNotEmpty() && !newList.contains(word.substring(0, 1))) {
-                newList.add(word.substring(0,1))
+                newList.add(word.substring(0, 1))
             }
             newList.add(current)
         }
@@ -42,7 +43,7 @@ object ListUtils {
                 { removeVietnameseAccents(it.name.split(" ").last().lowercase()) },
                 { removeVietnameseAccents(it.name.split(" ").first().lowercase()) },
                 { removeVietnameseAccents(it.name.lowercase()) },
-                {it.id}
+                { it.id }
             )
         )
     }
@@ -51,62 +52,61 @@ object ListUtils {
         return messageList.sortedByDescending { it.sendAt }
     }
 
-    fun getMessageListSortByTime(messageList: MutableList<Message>) : List<Any> {
-        val sortList: MutableList<Message> = sortMessageByTime(messageList).toMutableList()
-        for (i in sortList.indices) {
-            val preMessage = sortList.getOrNull(i - 1)
-            val nextMessage = sortList.getOrNull(i + 1)
-            val currentMessage = sortList[i]
-            if (preMessage == null && nextMessage == null) {
-                sortList[i].position = Constants.POSITION_ONLY
-            } else if (preMessage == null && nextMessage != null) {
-                if (nextMessage.sendId != currentMessage.sendId) {
-                    sortList[i].position = Constants.POSITION_ONLY
-                } else {
-                    sortList[i].position = Constants.POSITION_LAST
-                }
-            } else if (preMessage != null && nextMessage == null) {
-                if (currentMessage.sendId == preMessage.sendId) {
-                    sortList[i].position = Constants.POSITION_FIRST
-                } else {
-                    sortList[i].position = Constants.POSITION_ONLY
-                }
-            } else if (preMessage != null && nextMessage != null){
-                if (currentMessage.sendId != preMessage.sendId && currentMessage.sendId != nextMessage.sendId) {
-                    sortList[i].position = Constants.POSITION_ONLY
-                } else if (currentMessage.sendId != preMessage.sendId && currentMessage.sendId == nextMessage.sendId) {
-                    sortList[i].position = Constants.POSITION_LAST
-                } else if (currentMessage.sendId == preMessage.sendId && currentMessage.sendId != nextMessage.sendId) {
-                    sortList[i].position = Constants.POSITION_FIRST
-                } else if (currentMessage.sendId == preMessage.sendId && currentMessage.sendId == nextMessage.sendId) {
-                    sortList[i].position = Constants.POSITION_MIDDLE
+    fun getMessageListSortByTime(messageList: MutableList<Message>): List<Any> {
+        for (i in messageList) {
+            i.position = Constants.POSITION
+        }
+        var sortList: MutableList<Any> = sortMessageByTime(messageList).toMutableList()
+
+        for (i in sortList.size - 1 downTo 0) {
+            var currentItem = sortList[i]
+            if (currentItem is Message) {
+                val dateTime = DateTimeUtils.convertTimestampToDate(currentItem.sendAt.toLong())
+                if (!sortList.contains(dateTime)) {
+                    sortList.add(i + 1, dateTime)
                 }
             }
         }
 
-        // Thêm thời gian dạng dd/MM/yyyy HH:mm vào list tin nhắn đã sắp xếp theo thời gian
+        sortList = sortList.reversed().toMutableList()
+
+        for (i in sortList.indices) {
+            val pre = sortList.getOrNull(i - 1)
+            val cur = sortList[i]
+            if (cur is Message && pre !is Message) {
+                (sortList[i] as Message).position = Constants.POSITION_ONLY
+            } else if (pre is Message && cur is Message && (pre.sendId != cur.sendId)) {
+                (sortList[i] as Message).position = Constants.POSITION_ONLY
+            } else if (cur is Message && pre is Message && pre.position == Constants.POSITION_ONLY) {
+                if (cur.sendId == pre.sendId) {
+                    (sortList[i - 1] as Message).position = Constants.POSITION_FIRST
+                    (sortList[i] as Message).position = Constants.POSITION_LAST
+                } else {
+                    (sortList[i] as Message).position = Constants.POSITION_ONLY
+                }
+            } else if (pre is Message && pre.position == Constants.POSITION_LAST && cur is Message && cur.sendId == pre.sendId) {
+                (sortList[i - 1] as Message).position = Constants.POSITION_MIDDLE
+                (sortList[i] as Message).position = Constants.POSITION_LAST
+            }
+
+        }
+
+        sortList = sortList.reversed().toMutableList()
+
         val dateTimeList = mutableListOf<Any>()
-        for (i in sortList.indices){
-            if (sortList[i].position == Constants.POSITION_LAST) {
-                dateTimeList.add("${sortList[i].sendId}_${DateTimeUtils.convertTimestampToDateTime(sortList[i].sendAt.toLong())}")
+        for (i in sortList.indices) {
+            if (sortList[i] is Message && (sortList[i] as Message).position == Constants.POSITION_LAST) {
+                dateTimeList.add(
+                    "${(sortList[i] as Message).sendId}_${
+                        DateTimeUtils.convertTimestampToDateTime(
+                            (sortList[i] as Message).sendAt.toLong()
+                        )
+                    }"
+                )
             }
             dateTimeList.add(sortList[i])
         }
 
-        // Thêm thời gian dạng dd/MM/yyyy hoặc Today, Yesterday
-        val dateList = mutableListOf<Any>()
-
-        for (i in dateTimeList.size-1 downTo 0) {
-            val currentItem = dateTimeList[i]
-            if (currentItem is Message) {
-                val dateTime = DateTimeUtils.convertTimestampToDate(currentItem.sendAt.toLong())
-                if (!dateList.contains(dateTime)) {
-                    dateList.add(dateTime)
-                }
-            }
-            dateList.add(dateTimeList[i])
-        }
-
-        return dateList.reversed()
+        return dateTimeList
     }
 }
