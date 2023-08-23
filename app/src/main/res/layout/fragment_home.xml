@@ -6,6 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:theme="@style/Theme.MaterialComponents"
         android:gravity="center">
 
         <FrameLayout
@@ -15,9 +16,7 @@
             app:layout_constraintDimensionRatio="1:0.6"
             android:background="@drawable/background_app_common"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            >
-
+            app:layout_constraintBottom_toBottomOf="parent">
         </FrameLayout>
 
         <androidx.viewpager2.widget.ViewPager2
@@ -39,13 +38,12 @@
                 android:layout_height="match_parent"
                 android:elevation="8dp"
                 android:layout_margin="@dimen/margin_item_15"
+                app:itemIconTint="@drawable/color_item_bottom_nav"
+                app:itemTextColor="@drawable/color_item_bottom_nav"
                 android:background="@drawable/bg_nav_bottom"
-                app:itemTextColor="@color/color_item_bottom_nav"
-                app:itemIconTint="@color/color_item_bottom_nav"
                 android:paddingVertical="@dimen/margin_item_15"
                 app:menu="@menu/bottom_nav"/>
+
         </FrameLayout>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

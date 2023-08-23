@@ -49,7 +49,13 @@
     <!--    Chats Screen-->
     <string name="search_message">Tìm kiếm tin nhắn...</string>
     <string name="is_yesterday">Hôm qua</string>
+    <string name="is_today">Hôm nay</string>
     <string name="search_friend">Tìm kiếm bạn bè...</string>
+    <string name="create_messages">Tạo tin nhắn</string>
+    <string name="list_friend">Danh sách bạn bè</string>
+    <string name="you">Bạn: </string>
+    <string name="sent_picture">Đã gửi 1 ảnh</string>
+    <string name="sent_sticker">Đã gửi 1 nhãn dán</string>
 
     <!--    Friend Screen-->
     <string name="all_friend">Tất cả</string>
@@ -61,6 +67,12 @@
     <string name="receive_friend">Đã gửi kết bạn</string>
     <string name="change_title">Thay đổi</string>
     <string name="change_body">Bạn muốn huỷ yêu cầu kết bạn này?</string>
+    <string name="decline">Từ chối</string>
+    <string name="not_found">Không tìm thấy kết quả phù hợp</string>
+
+    <!--    Message Screen-->
+    <string name="hint_message">Nhập tin nhắn...</string>
+    <string name="send">Gửi</string>
 
     <!--    Personal Screen-->
     <string name="log_out">Đăng xuất</string>

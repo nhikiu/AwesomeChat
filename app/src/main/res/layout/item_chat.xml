@@ -1,63 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
+        android:layout_margin="@dimen/margin_item_12">
+
+        <FrameLayout
+            android:id="@+id/frame_avatar"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_item_12">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/iv_avatar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_avatar_default"
-                android:contentDescription="@string/avatar" />
+            <FrameLayout
+                android:id="@+id/frame_avatar_background"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginEnd="@dimen/margin_item_5"
+                android:background="@drawable/bg_avatar_unread"
+                android:padding="@dimen/margin_item_3"
+                tools:ignore="RtlSymmetry">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_marginStart="@dimen/margin_item_20"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/tv_username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="User Name"
-                    style="@style/text_bold_16"
-                    android:textColor="@color/black"/>
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_avatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/avatar"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_avatar_default"
+                    app:shapeAppearance="@style/circle"
+                    app:strokeColor="@null" />
 
-                <TextView
-                    android:id="@+id/tv_message"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/message"
-                    style="@style/text_bold_14"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="@dimen/margin_item_5"/>
-
-
-            </LinearLayout>
+            </FrameLayout>
 
             <TextView
-                android:id="@+id/tv_sendtime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="11:00"
+                android:id="@+id/tv_unread"
                 style="@style/text_bold_12"
-                android:layout_marginEnd="@dimen/margin_item_12"/>
+                android:layout_width="@dimen/size_25"
+                android:layout_height="@dimen/size_25"
+                android:layout_gravity="top|right"
+                android:background="@drawable/bg_circle_red"
+                android:gravity="center"
+                android:textColor="@color/white" />
+        </FrameLayout>
 
-        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_username"
+            style="@style/text_bold_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_item_25"
+            android:layout_marginTop="@dimen/margin_item_5"
+            android:text="@string/name_hint"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@id/tv_message"
+            app:layout_constraintStart_toEndOf="@id/frame_avatar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_sendtime"
+            style="@style/text_bold_12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_item_12"
+            android:text="@string/time_hint"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_username"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_message"
+            style="@style/text_bold_14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_item_25"
+            android:layout_marginTop="@dimen/margin_item_5"
+            android:maxLines="1"
+            android:text="@string/message"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/frame_avatar"
+            app:layout_constraintTop_toBottomOf="@id/tv_username" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/size_1"
-            android:background="@color/grey_d2d2d2"
             android:layout_marginStart="@dimen/margin_item_89"
-            android:layout_marginEnd="@dimen/margin_item_12"/>
-    </LinearLayout>
+            android:layout_marginEnd="@dimen/margin_item_12"
+            android:background="@color/grey_d2d2d2"
+            android:layout_marginTop="@dimen/margin_item_18"
+            app:layout_constraintTop_toBottomOf="@id/tv_message"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

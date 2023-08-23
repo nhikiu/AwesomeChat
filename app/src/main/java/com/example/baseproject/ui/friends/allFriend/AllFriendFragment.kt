@@ -1,23 +1,30 @@
 package com.example.baseproject.ui.friends.allFriend
 
 import android.os.Bundle
-import androidx.fragment.app.viewModels
+import android.util.Log
+import android.view.View
+import androidx.fragment.app.activityViewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentAllFriendBinding
 import com.example.baseproject.models.Friend
-import com.example.core.base.fragment.BaseFragment
-import dagger.hilt.android.AndroidEntryPoint
+import com.example.baseproject.navigation.AppNavigation
+import com.example.baseproject.ui.friends.FriendsViewModel
 import com.example.baseproject.utils.Constants
 import com.example.baseproject.utils.DialogView
-import com.example.baseproject.utils.UIState
+import com.example.baseproject.utils.ListUtils
+import com.example.core.base.fragment.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AllFriendFragment :
-    BaseFragment<FragmentAllFriendBinding, AllFriendViewModel>(R.layout.fragment_all_friend) {
+    BaseFragment<FragmentAllFriendBinding, FriendsViewModel>(R.layout.fragment_all_friend) {
+    @Inject
+    lateinit var appNavigation: AppNavigation
 
-    private val viewModel: AllFriendViewModel by viewModels()
+    private val shareViewModel: FriendsViewModel by activityViewModels()
 
-    override fun getVM() = viewModel
+    override fun getVM() = shareViewModel
 
     private var allFriendAdapter: AllFriendAdapter? = null
 
@@ -35,43 +42,23 @@ class AllFriendFragment :
         allFriendAdapter?.setOnClickListener(
             object : AllFriendAdapter.OnClickListener {
                 override fun onClickToMessage(friend: Friend) {
-
+                    if (friend.status == Constants.STATE_FRIEND) {
+                        val bundle = Bundle()
+                        bundle.putString(Constants.USER_ID, friend.id)
+                        appNavigation.openHomeToMessageScreen(bundle)
+                    }
                 }
 
                 override fun onClickUnfriendToSending(friend: Friend) {
                     val newFriend =
                         Friend(friend.id, friend.name, friend.avatar, Constants.STATE_SEND)
-                    viewModel.updateFriendState(newFriend) { state ->
-                        when (state) {
-                            is UIState.Loading -> {}
-                            is UIState.Success -> {}
-                            is UIState.Failure -> {
-                                DialogView().showErrorDialog(
-                                    activity,
-                                    resources.getString(R.string.error),
-                                    resources.getString(R.string.error_update)
-                                )
-                            }
-                        }
-                    }
+                    shareViewModel.updateFriendState(newFriend)
                 }
 
                 override fun onClickReceiveToConfirm(friend: Friend) {
                     val newFriend =
                         Friend(friend.id, friend.name, friend.avatar, Constants.STATE_FRIEND)
-                    viewModel.updateFriendState(newFriend) { state ->
-                        when (state) {
-                            is UIState.Loading -> {}
-                            is UIState.Success -> {}
-                            is UIState.Failure -> {
-                                DialogView().showErrorDialog(
-                                    activity,
-                                    resources.getString(R.string.error),
-                                    resources.getString(R.string.error_update)
-                                )
-                            }
-                        }
-                    }
+                    shareViewModel.updateFriendState(newFriend)
                 }
 
                 override fun onClickSendingToCancel(friend: Friend) {
@@ -82,19 +69,7 @@ class AllFriendFragment :
                     ) {
                         val newFriend =
                             Friend(friend.id, friend.name, friend.avatar, Constants.STATE_UNFRIEND)
-                        viewModel.updateFriendState(newFriend) { state ->
-                            when (state) {
-                                is UIState.Loading -> {}
-                                is UIState.Success -> {}
-                                is UIState.Failure -> {
-                                    DialogView().showErrorDialog(
-                                        activity,
-                                        resources.getString(R.string.error),
-                                        resources.getString(R.string.error_update),
-                                    )
-                                }
-                            }
-                        }
+                        shareViewModel.updateFriendState(newFriend)
                     }
                 }
             }
@@ -104,8 +79,14 @@ class AllFriendFragment :
     override fun bindingStateView() {
         super.bindingStateView()
 
-        viewModel.friendListLiveData.observe(viewLifecycleOwner) {
-            allFriendAdapter?.submitList(it.toMutableList())
+        shareViewModel.friendListLiveData.observe(viewLifecycleOwner){
+            if (it.isEmpty()) {
+                Log.e("abc", "EMPTY!!!!!", )
+                binding.fragmentNotFound.visibility = View.VISIBLE
+            } else {
+                binding.fragmentNotFound.visibility = View.GONE
+            }
+            allFriendAdapter?.submitList(ListUtils.getListSortByName(it))
         }
     }
 }

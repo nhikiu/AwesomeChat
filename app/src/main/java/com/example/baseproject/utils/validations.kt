@@ -38,4 +38,11 @@ object ValidationUtils{
         }
         return null
     }
+
+    fun validateChatId(fromId: String, toId: String) : String{
+        if (fromId.hashCode() <= toId.hashCode()) {
+            return "$fromId-$toId"
+        }
+        return "$toId-$fromId"
+    }
 }

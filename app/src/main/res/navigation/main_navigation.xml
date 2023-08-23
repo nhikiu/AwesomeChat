@@ -17,7 +17,9 @@
             app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_splashFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -35,6 +37,15 @@
         <action
             android:id="@+id/action_homeFragment_to_profileDetailFragment"
             app:destination="@id/profileDetailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_messagesFragment"
+            app:destination="@id/messagesFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_homeFragment_to_createMessagesFragment"
+            app:destination="@id/createMessagesFragment" />
 
     </fragment>
 
@@ -42,8 +53,7 @@
         android:id="@+id/loginFragment"
         android:name="com.example.baseproject.ui.login.LoginFragment"
         android:label="LoginFragment"
-        tools:layout="@layout/fragment_login"
-        >
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_signupFragment"
             app:destination="@id/signupFragment" />
@@ -67,5 +77,20 @@
         android:name="com.example.baseproject.ui.profileDetail.ProfileDetailFragment"
         android:label="ProfileDetailFragment"
         tools:layout="@layout/fragment_profile_detail"/>
-
+    <fragment
+        android:id="@+id/messagesFragment"
+        android:name="com.example.baseproject.ui.messages.MessagesFragment"
+        android:label="MessagesFragment"
+        tools:layout="@layout/fragment_messages"/>
+    <fragment
+        android:id="@+id/createMessagesFragment"
+        android:name="com.example.baseproject.ui.friends.createMessages.CreateMessagesFragment"
+        android:label="CreateMessagesFragment"
+        tools:layout="@layout/fragment_create_messages">
+        <action
+            android:id="@+id/action_createMessagesFragment_to_messagesFragment"
+            app:destination="@id/messagesFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
 </navigation>

@@ -18,10 +18,7 @@
             app:layout_constraintDimensionRatio="1:0.6"
             android:background="@drawable/background_app_common"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            >
-
-        </FrameLayout>
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <LinearLayout
             android:id="@+id/linear_header"
@@ -72,18 +69,30 @@
             android:orientation="vertical">
         </FrameLayout>
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/iv_avatar"
+        <FrameLayout
+            android:id="@+id/container_avatar"
             android:layout_width="@dimen/size_156"
             android:layout_height="@dimen/size_156"
             android:layout_marginTop="@dimen/margin_item_50"
-            app:shapeAppearance="@style/circle"
-            android:src="@drawable/ic_avatar_default"
-            android:padding="@dimen/padding_13"
-            android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/frame_background"/>
+            app:layout_constraintTop_toTopOf="@id/frame_background">
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:shapeAppearance="@style/circle"
+                android:src="@drawable/ic_avatar_default"
+                android:padding="@dimen/padding_13"
+                android:scaleType="centerCrop"
+                app:strokeColor="@null" />
+            <ProgressBar
+                android:id="@+id/progress_bar_avatar"
+                android:layout_width="@dimen/size_30"
+                android:layout_height="@dimen/size_30"
+                android:layout_gravity="center"/>
+
+        </FrameLayout>
 
 
         <com.google.android.material.imageview.ShapeableImageView
@@ -91,15 +100,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_camera"
-            app:layout_constraintBottom_toBottomOf="@id/iv_avatar"
-            app:layout_constraintEnd_toEndOf="@id/iv_avatar"/>
+            app:strokeColor="@null"
+            app:layout_constraintBottom_toBottomOf="@id/container_avatar"
+            app:layout_constraintEnd_toEndOf="@id/container_avatar"/>
         
         <TextView
             android:id="@+id/tv_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/full_name"
-            app:layout_constraintTop_toBottomOf="@id/iv_avatar"
+            app:layout_constraintTop_toBottomOf="@id/container_avatar"
             android:textAllCaps="true"
             android:layout_margin="@dimen/margin_item_25"
             android:textSize="@dimen/text_size_12"/>
@@ -219,6 +229,15 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:contentDescription="@string/app_name" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -7,25 +7,41 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.baseproject.R
+import com.example.baseproject.databinding.ItemCharactorBinding
 import com.example.baseproject.databinding.ItemFriendBinding
 import com.example.baseproject.models.Friend
-import com.example.baseproject.ui.friends.FriendCallback
+import com.example.baseproject.ui.friends.ItemCallback
 import com.example.baseproject.utils.Constants
 
-class AllFriendAdapter : ListAdapter<Friend, AllFriendAdapter.FriendViewHolder>(FriendCallback()){
+class AllFriendAdapter : ListAdapter<Any, RecyclerView.ViewHolder>(ItemCallback()){
 
     private var onClickListener: OnClickListener? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllFriendAdapter.FriendViewHolder {
-        val inflate = LayoutInflater.from(parent.context)
-        return FriendViewHolder(ItemFriendBinding.inflate(inflate, parent, false))
+    override fun getItemViewType(position: Int): Int {
+        if (getItem(position) is String) return 0
+        return 1
     }
 
-    override fun onBindViewHolder(holder: AllFriendAdapter.FriendViewHolder, position: Int) {
-        val currentFriend = getItem(position)
-        holder.bindData(currentFriend)
-        holder.itemView.setOnClickListener {
-            onClickListener?.onClickToMessage(currentFriend)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflate = LayoutInflater.from(parent.context)
+        if (viewType == 1){
+            return FriendViewHolder(ItemFriendBinding.inflate(inflate, parent, false))
+        }
+        return CharacterViewHolder(ItemCharactorBinding.inflate(inflate, parent, false))
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val currentItem = getItem(position)
+        holder.apply {
+            when(holder) {
+                is CharacterViewHolder -> holder.bindData(currentItem.toString())
+                is FriendViewHolder -> {
+                    holder.bindData(currentItem as Friend)
+                    holder.itemView.setOnClickListener {
+                        onClickListener?.onClickToMessage(currentItem)
+                    }
+                }
+            }
         }
     }
 
@@ -41,10 +57,18 @@ class AllFriendAdapter : ListAdapter<Friend, AllFriendAdapter.FriendViewHolder>(
         fun onClickSendingToCancel(friend: Friend)
     }
 
+    private class CharacterViewHolder(private val binding: ItemCharactorBinding)
+        : RecyclerView.ViewHolder(binding.root) {
+            fun bindData(character : String) {
+                binding.tvCharactor.text = character
+            }
+        }
+
     inner class FriendViewHolder(private val binding: ItemFriendBinding)
         : RecyclerView.ViewHolder(binding.root) {
             fun bindData(friend: Friend) {
                 binding.tvName.text = friend.name
+                binding.btnDecline.visibility = View.GONE
                 if (friend.avatar != null && friend.avatar.isNotEmpty()){
                     Glide.with(binding.root).load(friend.avatar)
                         .error(R.drawable.ic_error)

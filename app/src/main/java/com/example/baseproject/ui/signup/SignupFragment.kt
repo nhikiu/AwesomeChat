@@ -66,9 +66,9 @@ class SignupFragment : BaseFragment<FragmentSignupBinding, SignupViewModel>(R.la
     }
 
     private fun checkButtonVisibility() {
-        val name = binding.edtFullname.text.toString()
-        val email = binding.edtEmail.text.toString()
-        val password = binding.edtPassword.text.toString()
+        val name = binding.edtFullname.text.toString().trim()
+        val email = binding.edtEmail.text.toString().trim()
+        val password = binding.edtPassword.text.toString().trim()
         val isChecked = binding.cbPolicy.isChecked
 
         if (name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && isChecked) {
@@ -123,8 +123,8 @@ class SignupFragment : BaseFragment<FragmentSignupBinding, SignupViewModel>(R.la
     private fun getUser() : User {
         return User(
             id = "",
-            name = binding.edtFullname.text.toString(),
-            email = binding.edtEmail.text.toString(),
+            name = binding.edtFullname.text.toString().trim(),
+            email = binding.edtEmail.text.toString().trim(),
             avatar = "",
             phoneNumber = "",
             dateOfBirth = "",
@@ -166,8 +166,8 @@ class SignupFragment : BaseFragment<FragmentSignupBinding, SignupViewModel>(R.la
             }
             else {
                 viewModel.signupUser(
-                    email = binding.edtEmail.text.toString(),
-                    password = binding.edtPassword.text.toString(),
+                    email = binding.edtEmail.text.toString().trim(),
+                    password = binding.edtPassword.text.toString().trim(),
                     user = getUser()
                 )
             }

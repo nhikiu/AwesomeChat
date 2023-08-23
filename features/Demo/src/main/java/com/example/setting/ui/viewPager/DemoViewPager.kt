@@ -1,10 +1,6 @@
 package com.example.setting.ui.viewPager
 
-import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.example.core.base.fragment.BaseFragmentNotRequireViewModel
 import com.example.core.utils.getCurrentFragment
@@ -12,7 +8,6 @@ import com.example.core.utils.getFragmentAt
 import com.example.core.utils.setOnSafeClickListener
 import com.example.setting.R
 import com.example.setting.databinding.FragmentDemoViewpagerBinding
-import timber.log.Timber
 
 class DemoViewPager :
     BaseFragmentNotRequireViewModel<FragmentDemoViewpagerBinding>(R.layout.fragment_demo_viewpager),
@@ -132,62 +127,12 @@ class DemoViewPager :
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Timber.tag("VietBH").d("B   " + "onAttach")
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Timber.tag("VietBH").d("B   " + "onCreate")
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        Timber.tag("VietBH").d("B   " + "onCreateView")
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Timber.tag("VietBH").d("B   " + "onViewCreated")
-        super.onViewCreated(view, savedInstanceState)
-    }
-
-    override fun onStart() {
-        Timber.tag("VietBH").d("B   " + "onStart")
-        super.onStart()
-    }
-
-    override fun onResume() {
-        Timber.tag("VietBH").d("B   " + "onResume")
-        super.onResume()
-    }
-
-    override fun onPause() {
-        Timber.tag("VietBH").d("B   " + "onPause")
-        super.onPause()
-    }
-
-    override fun onStop() {
-        Timber.tag("VietBH").d("B   " + "onStop")
-        super.onStop()
-    }
-
     override fun onDestroyView() {
-        Timber.tag("VietBH").d("B   " + "onDestroyView")
         listFragment1.clear()
         binding.viewPager1.adapter = null
 
         listFragment2.clear()
         binding.viewPager2.adapter = null
         super.onDestroyView()
-    }
-
-    override fun onDestroy() {
-        Timber.tag("VietBH").d("B   " + "onDestroy")
-        super.onDestroy()
     }
 }

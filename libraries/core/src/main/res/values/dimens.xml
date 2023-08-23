@@ -5,7 +5,9 @@
     <dimen name="margin_item_5">5dp</dimen>
     <dimen name="margin_item_15">15dp</dimen>
     <dimen name="margin_item_18">18dp</dimen>
+    <dimen name="margin_item_32">32dp</dimen>
     <dimen name="margin_item_40">40dp</dimen>
+    <dimen name="margin_item_47">47dp</dimen>
     <dimen name="margin_item_50">50dp</dimen>
     <dimen name="margin_item_54">54dp</dimen>
     <dimen name="margin_item_60">60dp</dimen>

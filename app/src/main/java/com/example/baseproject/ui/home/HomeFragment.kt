@@ -1,25 +1,28 @@
 package com.example.baseproject.ui.home
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.TypedValue
+import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentHomeBinding
 import com.example.baseproject.models.FragmentData
+import com.example.baseproject.models.Friend
 import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.ui.chats.ChatsFragment
 import com.example.baseproject.ui.friends.FriendsFragment
+import com.example.baseproject.ui.friends.FriendsViewModel
 import com.example.baseproject.ui.profile.ProfileFragment
 import com.example.baseproject.utils.Constants
 import com.example.core.base.fragment.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.fragment_home) {
@@ -28,7 +31,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
     lateinit var appNavigation: AppNavigation
 
     private val viewModel: HomeViewModel by viewModels()
+    private val friendViewModel: FriendsViewModel by viewModels()
 
+    @SuppressLint("MissingInflatedId")
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
         val sharePreferences = context?.getSharedPreferences(Constants.ISLOGIN, Context.MODE_PRIVATE)
@@ -36,7 +41,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
         sharePreferences?.let {
             isLogIn = it.getBoolean(Constants.ISLOGIN, false)
             if (isLogIn) {
-                Log.e("abc", "initView: ${isLogIn}", )
+                Timber.tag("abc").e("Is Login: %s", isLogIn)
+            }
+        }
+
+        friendViewModel.friendListLiveData.observe(viewLifecycleOwner) {
+            val sendList: MutableList<Friend> = it.toMutableList().filter { friend -> (friend.status == Constants.STATE_RECEIVE) } as MutableList<Friend>
+            if (sendList.size > 0) {
+                val badge = binding.bottomNav.getOrCreateBadge(R.id.itFriends)
+                badge.isVisible = true
+                badge.verticalOffset = Math.round(
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                    4.0F, resources.displayMetrics))
+                badge.badgeTextColor = ContextCompat.getColor(requireContext(), R.color.white)
+                badge.number = sendList.size
+                badge.backgroundColor = ContextCompat.getColor(requireContext(), R.color.red)
             }
         }
     }
@@ -46,33 +66,43 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
     override fun bindingStateView() {
         super.bindingStateView()
 
+        context?.let {
+            val fragmentList: List<FragmentData> = listOf(
+                FragmentData(ChatsFragment(), R.drawable.ic_chat, it.getString(R.string.message)),
+                FragmentData(
+                    FriendsFragment(),
+                    R.drawable.ic_friend,
+                    it.getString(R.string.friend)
+                ),
+                FragmentData(
+                    ProfileFragment(),
+                    R.drawable.ic_user_circle,
+                    it.getString(R.string.profile)
+                ),
+            )
+            binding.viewPager.adapter =
+                activity?.let { PagerAdapter(childFragmentManager, lifecycle, fragmentList) }
+
+            binding.viewPager.offscreenPageLimit = 1
+            binding.viewPager.isUserInputEnabled = false
+
+            binding.viewPager.registerOnPageChangeCallback(object :
+                ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    binding.bottomNav.menu.getItem(position).isChecked = true
+                }
+            })
+        }
     }
 
     override fun setOnClick() {
         super.setOnClick()
 
         onClickViewPager()
-
-
     }
 
     private fun onClickViewPager() {
         context?.let {
-            val fragmentList: List<FragmentData> = listOf(
-                FragmentData(ChatsFragment(), R.drawable.ic_chat, it.getString(R.string.message)),
-                FragmentData(FriendsFragment(), R.drawable.ic_friend, it.getString(R.string.friend)),
-                FragmentData(ProfileFragment(), R.drawable.ic_user_circle, it.getString(R.string.profile)),
-            )
-            binding.viewPager.adapter = activity?.let { PagerAdapter(childFragmentManager, lifecycle, fragmentList) }
-
-            binding.viewPager.offscreenPageLimit = 1
-
-            binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    binding.bottomNav.menu.getItem(position).isChecked = true
-                }
-            })
-
             binding.bottomNav.setOnItemSelectedListener { item ->
                 when(item.itemId) {
                     R.id.itChats -> binding.viewPager.currentItem = 0

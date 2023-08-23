@@ -8,19 +8,26 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
 import android.view.Window
 import android.widget.ImageView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentProfileDetailBinding
 import com.example.baseproject.models.User
 import com.example.baseproject.navigation.AppNavigation
+import com.example.baseproject.ui.chats.ActionState
 import com.example.baseproject.utils.*
 import com.example.core.base.fragment.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,7 +51,9 @@ class ProfileDetailFragment :
     private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == RESULT_OK) {
+                // for camera
                 val selectedImageBitmap = result.data?.extras?.get("data") as? Bitmap
+                // for gallery
                 selectedImageUri = result.data?.data
 
                 if (selectedImageBitmap != null) {
@@ -61,17 +70,60 @@ class ProfileDetailFragment :
             }
         }
 
+    override fun initView(savedInstanceState: Bundle?) {
+        super.initView(savedInstanceState)
+        viewModel.getCurrentUser()
+    }
+
     override fun bindingStateView() {
         super.bindingStateView()
+
+        viewModel.actionProfileDetail.observe(viewLifecycleOwner) {
+            when (it) {
+                is ActionState.Loading -> binding.progressBar.visibility = View.VISIBLE
+                else -> binding.progressBar.visibility = View.GONE
+            }
+        }
+
+        viewModel.actionAvatar.observe(viewLifecycleOwner) {
+            when (it) {
+                is ActionState.Loading -> binding.progressBar.visibility = View.VISIBLE
+                else -> binding.progressBar.visibility = View.GONE
+            }
+        }
+
         viewModel.currentUser.observe(viewLifecycleOwner) { user ->
             userProfile = user
             binding.edtFullname.setText(user.name)
             binding.edtPhoneNumber.setText(user.phoneNumber)
             binding.edtDateOfBirth.setText(user.dateOfBirth)
-            Glide.with(this).load(user.avatar)
-                .error(R.drawable.ic_error)
-                .placeholder(R.drawable.ic_avatar_default)
-                .into(binding.ivAvatar)
+            if (user.avatar != null && user.avatar.isNotEmpty()) {
+                Glide.with(this).load(user.avatar)
+                    .listener(object : RequestListener<Drawable> {
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            binding.progressBarAvatar.visibility = View.GONE
+                            return false
+                        }
+
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            binding.progressBarAvatar.visibility = View.GONE
+                            return false
+                        }
+                    }).into(binding.ivAvatar)
+            } else {
+                binding.progressBarAvatar.visibility = View.GONE
+            }
         }
     }
 
@@ -98,14 +150,14 @@ class ProfileDetailFragment :
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setCancelable(false)
             dialog.setContentView(R.layout.bottom_sheet_image_picker)
-            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.setCanceledOnTouchOutside(true)
 
             dialog.show()
 
             val btnImage = dialog.findViewById<ImageView>(R.id.iv_image)
             btnImage.setOnClickListener {
-                dialog.hide()
+                dialog.dismiss()
                 val galleryIntent =
                     Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                 galleryIntent.type = "image/*"
@@ -115,7 +167,7 @@ class ProfileDetailFragment :
             val btnCamera = dialog.findViewById<ImageView>(R.id.iv_camera)
 
             btnCamera.setOnClickListener {
-                dialog.hide()
+                dialog.dismiss()
                 val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 startForResult.launch(cameraIntent)
             }
@@ -154,33 +206,21 @@ class ProfileDetailFragment :
                 )
 
                 if (selectedImageUri != null) {
-                    viewModel.uploadImageToStorage(userUpdate, selectedImageUri!!) { state ->
-                        when (state) {
-                            is UIState.Loading -> ProgressBarView.showProgressBar(activity)
-                            is UIState.Success -> {
-                                ProgressBarView.hideProgressBar()
-//                                appNavigation.navigateUp()
-                                view?.findNavController()?.navigateUp()
-                            }
-                            is UIState.Failure -> {
-                                ProgressBarView.hideProgressBar()
-                            }
+                    viewModel.uploadImageToStorage(userUpdate, selectedImageUri!!)
+                    viewModel.actionAvatar.observe(viewLifecycleOwner) {
+                        if (it == ActionState.Finish) {
+                            appNavigation.navigateUp()
                         }
                     }
+
                 } else {
-                    viewModel.updateUserInfor(userUpdate) { state ->
-                        when (state) {
-                            is UIState.Loading -> ProgressBarView.showProgressBar(activity)
-                            is UIState.Success -> {
-                                ProgressBarView.hideProgressBar()
-//                                appNavigation.navigateUp()
-                                view?.findNavController()?.navigateUp()
-                            }
-                            is UIState.Failure -> {
-                                ProgressBarView.hideProgressBar()
-                            }
+                    viewModel.actionUpdate.observe(viewLifecycleOwner) {
+                        if (it == ActionState.Finish) {
+                            appNavigation.navigateUp()
                         }
                     }
+                    viewModel.updateUserInfor(userUpdate)
+
                 }
             }
         }

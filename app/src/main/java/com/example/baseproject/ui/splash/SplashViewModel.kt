@@ -1,8 +1,6 @@
 package com.example.baseproject.ui.splash
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.baseproject.R
 import com.example.core.base.BaseViewModel
 import com.example.core.utils.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,8 +12,6 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor() : BaseViewModel() {
 
     val actionSPlash = SingleLiveEvent<SplashActionState>()
-
-    val splashTitle = MutableLiveData(R.string.splash)
 
     init {
         viewModelScope.launch {

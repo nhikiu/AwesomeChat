@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/margin_item_3"
+        android:gravity="start">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="@dimen/size_35"
+                android:layout_height="@dimen/size_35"
+                android:scaleType="centerCrop"
+                app:shapeAppearance="@style/circle"
+                android:src="@drawable/ic_avatar_default"
+                app:strokeColor="@null"
+                android:layout_marginHorizontal="@dimen/margin_item_12"/>
+
+            <TextView
+                android:id="@+id/tv_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="@dimen/size_300"
+                android:textSize="@dimen/size_16"
+                android:text="@string/hint_message"
+                android:textColor="@color/black"
+                android:background="@drawable/custom_btn_large"
+                android:backgroundTint="@color/grey_f6f6f6"
+                android:gravity="center_vertical"
+                android:padding="@dimen/margin_item_15"
+                android:layout_marginEnd="@dimen/margin_item_12"
+                tools:ignore="SpUsage" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_sendtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textSize="@dimen/text_size_12"
+            android:textColor="@color/grey_999999"
+            android:layout_marginStart="@dimen/margin_item_64"
+            android:layout_marginEnd="@dimen/margin_item_12"/>
+    </LinearLayout>
+</layout>

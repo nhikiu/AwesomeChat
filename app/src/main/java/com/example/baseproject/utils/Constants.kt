@@ -30,10 +30,45 @@ object Constants {
     const val TOO_MANY_REQUEST = "too_many_request"
     const val USER_EXIST = "user_is_exist"
 
-    const val IS_YESTERDAY = "is_yesterday"
+    const val IS_YESTERDAY = "Yesterday"
+    const val IS_TODAY = "Today"
 
+    // friend state
     const val STATE_UNFRIEND = "unfriend"
     const val STATE_FRIEND = "friend"
     const val STATE_SEND = "send_friend"
     const val STATE_RECEIVE = "receive_friend"
+
+    // chat
+    const val CHATS = "chats"
+    const val MESSAGE_ID = "id"
+    const val MESSAGE_SEND_AT = "sendAt"
+    const val MESSAGE_SEND_ID = "sendId"
+    const val MESSAGE_TO_ID = "toId"
+    const val MESSAGE_TYPE = "type"
+    const val MESSAGE_CONTENT = "content"
+    const val POSITION_FIRST = "first"
+    const val POSITION_LAST = "last"
+    const val POSITION_MIDDLE = "middle"
+    const val POSITION_ONLY = "only"
+    const val MESSAGE_READ = "read"
+    const val MESSAGE_UNREAD = "unread"
+    const val POSITION = "position"
+
+    // message
+    const val TYPE_IMAGE = "image"
+    const val TYPE_TEXT = "text"
+    const val TYPE_STICKER = "sticker"
+    const val VIEW_TYPE_TIME_SEND = 0
+    const val VIEW_TYPE_DAY_SEND = 1
+    const val VIEW_TYPE_MESSAGE_TEXT_SEND = 2
+    const val VIEW_TYPE_MESSAGE_TEXT_RECEIVE = 3
+    const val VIEW_TYPE_MESSAGE_IMAGE_SEND = 4
+    const val VIEW_TYPE_MESSAGE_IMAGE_RECEIVE = 5
+    const val VIEW_TYPE_MESSAGE_STICKER_SEND = 6
+    const val VIEW_TYPE_MESSAGE_STICKER_RECEIVE = 7
+
+    // notification
+    const val CHANNEL_ID = "CHAT_NOTIFICATION"
+
 }

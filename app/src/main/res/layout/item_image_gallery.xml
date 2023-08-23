@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/iv_image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/sticker_1"
+            android:adjustViewBounds="true"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/gallery_image" />
+
+        <TextView
+            android:id="@+id/tv_exam"
+            android:layout_width="@dimen/size_30"
+            android:layout_height="@dimen/size_30"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:visibility="gone"
+            android:background="@drawable/bg_circle_red"
+            android:backgroundTint="@color/primary_color"
+            android:layout_margin="@dimen/margin_item_5"
+            app:layout_constraintTop_toTopOf="@id/iv_image"
+            app:layout_constraintStart_toStartOf="@id/iv_image"/>
+
+        <TextView
+            android:id="@+id/tv_choose"
+            android:layout_width="@dimen/size_30"
+            android:layout_height="@dimen/size_30"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:visibility="gone"
+            android:background="@drawable/bg_circle_red"
+            android:backgroundTint="@color/primary_color"
+            android:layout_margin="@dimen/margin_item_5"
+            app:layout_constraintTop_toTopOf="@id/iv_image"
+            app:layout_constraintEnd_toEndOf="@id/iv_image"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

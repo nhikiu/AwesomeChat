@@ -2,11 +2,19 @@ package com.example.baseproject.ui.profile
 
 import android.app.AlertDialog
 import android.content.Context
+import android.graphics.drawable.Drawable
+import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentProfileBinding
 import com.example.baseproject.navigation.AppNavigation
+import com.example.baseproject.ui.chats.ActionState
 import com.example.baseproject.utils.Constants
 import com.example.baseproject.utils.DialogView
 import com.example.baseproject.utils.ProgressBarView
@@ -30,6 +38,13 @@ class ProfileFragment :
     override fun bindingStateView() {
         super.bindingStateView()
         observer()
+        viewModel.actionFriend.observe(viewLifecycleOwner) {
+            when (it) {
+                is ActionState.Finish -> binding.progressBar.visibility = View.GONE
+                else -> binding.progressBar.visibility = View.VISIBLE
+            }
+        }
+
         viewModel.getCurrentUser()
     }
 
@@ -78,9 +93,11 @@ class ProfileFragment :
                 }
                 is UIState.Failure -> {
                     context?.let {
-                        alert.showErrorDialog(
-                            activity, it.getString(R.string.error), state.error!!
-                        )
+                        state.error?.let { it1 ->
+                            alert.showErrorDialog(
+                                activity, it.getString(R.string.error), it1
+                            )
+                        }
                     }
                     ProgressBarView.hideProgressBar()
                 }
@@ -94,6 +111,8 @@ class ProfileFragment :
                         editor.apply()
                     }
                     ProgressBarView.hideProgressBar()
+                    activity?.viewModelStore?.clear()
+                    viewModelStore.clear()
                 }
             }
         }
@@ -101,12 +120,62 @@ class ProfileFragment :
         viewModel.currentUser.observe(viewLifecycleOwner) { user ->
             binding.tvName.text = user.name
             binding.tvEmail.text = user.email
+
             if (user.avatar != null && user.avatar.isNotEmpty()) {
-                Glide.with(this).load(user.avatar).placeholder(R.drawable.ic_avatar_default)
-                    .error(R.drawable.ic_error).into(binding.ivAvatar)
-                Glide.with(this).load(user.avatar).placeholder(R.drawable.ic_avatar_default)
-                    .error(R.drawable.ic_error).into(binding.ivAvatarLarge)
+                Glide.with(this).load(user.avatar)
+                    .listener(object : RequestListener<Drawable> {
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+//                            binding.progressBarAvatar.visibility = View.GONE
+                            return false
+                        }
+
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+//                            binding.progressBarAvatar.visibility = View.GONE
+                            return false
+                        }
+                    }).into(binding.ivAvatar)
+
+
+                Glide.with(this).load(user.avatar)
+                    .listener(object : RequestListener<Drawable> {
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            binding.progressBarAvatarLarge.visibility = View.GONE
+                            return false
+                        }
+
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            binding.progressBarAvatarLarge.visibility = View.GONE
+                            return false
+                        }
+                    }).into(binding.ivAvatarLarge)
             }
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        viewModel.getCurrentUser()
+        super.onViewCreated(view, savedInstanceState)
     }
 }

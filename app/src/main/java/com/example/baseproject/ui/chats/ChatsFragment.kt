@@ -2,12 +2,14 @@ package com.example.baseproject.ui.chats
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentChatsBinding
 import com.example.baseproject.navigation.AppNavigation
+import com.example.baseproject.utils.Constants
 import com.example.core.base.fragment.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -19,22 +21,60 @@ class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layou
 
     private val viewModel: ChatsViewModel by viewModels()
 
-
     override fun getVM() = viewModel
 
-    private var chatAdapter: ChatAdapter? = null
+    private var chatAdapter: ChatsAdapter? = null
+
+
+    override fun initView(savedInstanceState: Bundle?) {
+        super.initView(savedInstanceState)
+        chatAdapter = ChatsAdapter()
+        binding.recyclerviewChats.adapter = chatAdapter
+    }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        chatAdapter = ChatAdapter()
-        binding.recyclerviewChats.adapter = chatAdapter
+    override fun bindingStateView() {
+        super.bindingStateView()
+
+        viewModel.actionChats.observe(viewLifecycleOwner) {
+            when (it) {
+                is ActionState.Loading -> {
+                    binding.fragmentNotFound.visibility = View.GONE
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+                else -> binding.progressBar.visibility = View.GONE
+            }
+        }
+
         viewModel.chatListLiveData.observe(viewLifecycleOwner) {
-            chatAdapter?.submitList(it.toMutableList())
+            val sortedList = it.sortedByDescending { chat -> chat.messages?.get(chat.messages.size - 1)?.sendAt }
+            Log.e("abc", "Chat Fragment: size sort list = ${sortedList.size}", )
+            chatAdapter?.submitList(sortedList.toMutableList())
+
+            if (sortedList.isEmpty()) {
+                binding.fragmentNotFound.visibility = View.VISIBLE
+            } else {
+                binding.fragmentNotFound.visibility = View.GONE
+            }
+        }
+
+        if (viewModel.chatListLiveData.value == null) {
+            binding.fragmentNotFound.visibility = View.VISIBLE
         }
     }
 
-    override fun bindingStateView() {
-        super.bindingStateView()
+    override fun setOnClick() {
+        super.setOnClick()
+        chatAdapter?.setOnClickListener(object : ChatsAdapter.OnClickToMessage{
+            override fun onClickToMessage(id: String) {
+                val bundle = Bundle()
+                bundle.putString(Constants.USER_ID, id)
+                appNavigation.openHomeToMessageScreen(bundle)
+            }
+        })
+
+        binding.btnCreateMessages.setOnClickListener {
+            appNavigation.openHomeToCreateMessagesScreen()
+        }
     }
 }

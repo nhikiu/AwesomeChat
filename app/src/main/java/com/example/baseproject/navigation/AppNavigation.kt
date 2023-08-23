@@ -21,4 +21,10 @@ interface AppNavigation : BaseNavigator {
 
     fun openHomeToProfileDetail(bundle: Bundle? = null)
 
+    fun openHomeToMessageScreen(bundle: Bundle? = null)
+
+    fun openHomeToCreateMessagesScreen(bundle: Bundle? = null)
+
+    fun openCreateMessagesToMessaagesScreen(bundle: Bundle? = null)
+
 }

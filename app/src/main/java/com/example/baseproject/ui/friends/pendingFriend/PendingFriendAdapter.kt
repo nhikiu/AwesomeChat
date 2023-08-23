@@ -33,16 +33,18 @@ class PendingFriendAdapter : ListAdapter<Friend, PendingFriendAdapter.PendingFri
     }
 
     interface OnClickListener {
-        fun onClickToMessage(friend: Friend)
-
         fun onClickUnfriendToSending(friend: Friend)
         fun onClickReceiveToConfirm(friend: Friend)
         fun onClickSendingToCancel(friend: Friend)
+
+        fun onClickReceiveToUnfriend(friend: Friend)
     }
 
     inner class PendingFriendViewHolder(private val binding: ItemFriendBinding) : RecyclerView.ViewHolder(binding.root) {
+        val btnDecline = binding.btnDecline
         fun bindData(friend: Friend) {
             binding.tvName.text = friend.name
+
             if (friend.avatar != null && friend.avatar.isNotEmpty()){
                 Glide.with(binding.root).load(friend.avatar)
                     .error(R.drawable.ic_error)
@@ -54,21 +56,26 @@ class PendingFriendAdapter : ListAdapter<Friend, PendingFriendAdapter.PendingFri
                     binding.btnUnfriendToSending.visibility = View.VISIBLE
                     binding.btnReceiveToConfirm.visibility = View.GONE
                     binding.btnSendingToCancel.visibility = View.GONE
+                    binding.btnDecline.visibility = View.GONE
                 }
                 Constants.STATE_SEND -> {
                     binding.btnUnfriendToSending.visibility = View.GONE
                     binding.btnReceiveToConfirm.visibility = View.GONE
                     binding.btnSendingToCancel.visibility = View.VISIBLE
+                    binding.btnDecline.visibility = View.GONE
+
                 }
                 Constants.STATE_RECEIVE -> {
                     binding.btnUnfriendToSending.visibility = View.GONE
                     binding.btnReceiveToConfirm.visibility = View.VISIBLE
                     binding.btnSendingToCancel.visibility = View.VISIBLE
+                    binding.btnDecline.visibility = View.VISIBLE
                 }
                 Constants.STATE_FRIEND -> {
                     binding.btnUnfriendToSending.visibility = View.GONE
                     binding.btnReceiveToConfirm.visibility = View.GONE
                     binding.btnSendingToCancel.visibility = View.GONE
+                    binding.btnDecline.visibility = View.GONE
                 }
             }
             binding.btnSendingToCancel.setOnClickListener {
@@ -79,6 +86,10 @@ class PendingFriendAdapter : ListAdapter<Friend, PendingFriendAdapter.PendingFri
             }
             binding.btnReceiveToConfirm.setOnClickListener {
                 onClickListener?.onClickReceiveToConfirm(friend)
+            }
+
+            binding.btnDecline.setOnClickListener {
+                onClickListener?.onClickReceiveToUnfriend(friend)
             }
         }
     }
