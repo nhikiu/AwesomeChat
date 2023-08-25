@@ -1,9 +1,14 @@
 package com.example.baseproject.ui.friends
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.baseproject.R
 import com.example.baseproject.models.Friend
+import com.example.baseproject.notification.SendNotification
 import com.example.baseproject.ui.chats.ActionState
 import com.example.baseproject.utils.Constants
 import com.example.baseproject.utils.ListUtils
@@ -22,7 +27,6 @@ class FriendsViewModel @Inject constructor(
     private val database: FirebaseDatabase,
     private val auth: FirebaseAuth
 ) : BaseViewModel() {
-
     private val mFriendList = arrayListOf<Friend>()
 
     private var _friendListLiveData: MutableLiveData<List<Friend>> = MutableLiveData()
@@ -56,9 +60,10 @@ class FriendsViewModel @Inject constructor(
                     val name = profileRef.child(Constants.USER_NAME).getValue(String::class.java)
                     val avatar =
                         profileRef.child(Constants.USER_AVATAR).getValue(String::class.java)
+                    val token = profileRef.child(Constants.USER_TOKEN).getValue(String::class.java)
 
                     if (id != auth.currentUser?.uid && id != null && name != null) {
-                        mFriendList.add(Friend(id, name, avatar, Constants.STATE_UNFRIEND))
+                        mFriendList.add(Friend(id, name, avatar, Constants.STATE_UNFRIEND, token))
                     }
                 }
 
@@ -102,7 +107,8 @@ class FriendsViewModel @Inject constructor(
         })
     }
 
-    fun updateFriendState(friend: Friend) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updateFriendState(friend: Friend, context: Context) {
         val userRef = database.getReference(Constants.USER)
         val currentId = auth.currentUser?.uid
         //update friend in current user
@@ -111,7 +117,9 @@ class FriendsViewModel @Inject constructor(
                 .child(Constants.FRIEND).child(friend.id)
                 .setValue(friend)
                 .addOnSuccessListener {
-
+                    if (friend.status == Constants.STATE_FRIEND) {
+                        sendNotification(friend, context.getString(R.string.agree_to_be_friend))
+                    }
                 }
                 .addOnFailureListener {
 
@@ -131,21 +139,26 @@ class FriendsViewModel @Inject constructor(
         if (currentId != null) {
             userRef.child(currentId).child(Constants.PROFILE)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
+                    @RequiresApi(Build.VERSION_CODES.O)
                     override fun onDataChange(snapshot: DataSnapshot) {
                         if (snapshot.exists()) {
                             val name = snapshot.child(Constants.USER_NAME).getValue<String?>() ?: ""
                             val avatar = snapshot.child(Constants.USER_AVATAR).getValue<String?>() ?: ""
+                            val token = snapshot.child(Constants.USER_TOKEN).getValue<String?>() ?: ""
                             val currentFriend = Friend(
                                 id = currentId,
                                 name = name,
                                 status = status,
-                                avatar = avatar
+                                avatar = avatar,
+                                token = token
                             )
                             userRef.child(friend.id)
                                 .child(Constants.FRIEND).child(currentId)
                                 .setValue(currentFriend)
                                 .addOnSuccessListener {
-
+                                    if (currentFriend.status == Constants.STATE_RECEIVE) {
+                                        sendNotification(friend, context.getString(R.string.sent_add_friend))
+                                    }
                                 }
                                 .addOnFailureListener {
                                 }
@@ -156,5 +169,16 @@ class FriendsViewModel @Inject constructor(
                     }
                 })
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun sendNotification(friend: Friend, content: String) {
+        SendNotification.sendNotification(
+            friend.token.toString(),
+            FcmNotification(
+                title = friend.name,
+                body = content),
+            DataModel(friend.name, null, true, content, friend.name)
+        )
     }
 }

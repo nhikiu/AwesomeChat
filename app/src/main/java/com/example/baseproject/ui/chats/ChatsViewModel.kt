@@ -1,7 +1,6 @@
 package com.example.baseproject.ui.chats
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -48,6 +47,7 @@ class ChatsViewModel @Inject constructor(
 
         chatRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                mChatList.clear()
                 if (snapshot.exists()) {
                     for (dataSnapshot in snapshot.children) {
                         if (dataSnapshot.key.toString().contains(uid)) {
@@ -85,9 +85,8 @@ class ChatsViewModel @Inject constructor(
                             }
 
                             val userRef = database.getReference(Constants.USER).child(friendId).child(Constants.PROFILE)
-                            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                            userRef.addValueEventListener(object : ValueEventListener {
                                 override fun onDataChange(snapshot: DataSnapshot) {
-                                    mChatList.clear()
                                     if (snapshot.exists()) {
                                         val friendProfile = User(
                                             id = friendId,
@@ -95,7 +94,8 @@ class ChatsViewModel @Inject constructor(
                                             email = snapshot.child(Constants.USER_EMAIL).value.toString(),
                                             phoneNumber = snapshot.child(Constants.USER_PHONENUMBER).value.toString(),
                                             dateOfBirth = snapshot.child(Constants.USER_DATE_OF_BIRTH).value.toString(),
-                                            avatar = snapshot.child(Constants.USER_AVATAR).value.toString()
+                                            avatar = snapshot.child(Constants.USER_AVATAR).value.toString(),
+                                            token = snapshot.child(Constants.USER_TOKEN).value.toString()
                                         )
 
                                         val chat = Chat(chatId, friendProfile, listMessage.count { it.read == Constants.MESSAGE_UNREAD }, listMessage.sortedBy { it.sendAt })
@@ -114,7 +114,6 @@ class ChatsViewModel @Inject constructor(
                     actionChats.value = ActionState.Finish
                 }
                 else {
-                    Log.e("fail", "onDataChange: Fail", )
                     actionChats.value = ActionState.Finish
                 }
             }

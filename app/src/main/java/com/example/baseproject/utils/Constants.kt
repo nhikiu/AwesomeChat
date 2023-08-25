@@ -12,6 +12,7 @@ object Constants {
     const val USER_AVATAR = "avatar"
     const val USER_ID = "id"
     const val USER_STATUS = "status"
+    const val USER_TOKEN = "token"
 
     const val ISLOGIN = "isLogIn"
 
@@ -70,5 +71,6 @@ object Constants {
 
     // notification
     const val CHANNEL_ID = "CHAT_NOTIFICATION"
-
+    const val GOOGLE_API = "https://fcm.googleapis.com/"
+    const val CHANNEL_NAME = "CHAT_NOTIFICATION"
 }

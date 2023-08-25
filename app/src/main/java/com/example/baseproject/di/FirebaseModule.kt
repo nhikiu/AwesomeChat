@@ -2,6 +2,7 @@ package com.example.baseproject.di
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
@@ -28,5 +29,11 @@ class FirebaseModule {
     @Singleton
     fun provideFirebaseStorage() : FirebaseStorage {
         return FirebaseStorage.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseCloudMessaging() : FirebaseMessaging {
+        return FirebaseMessaging.getInstance()
     }
 }

@@ -128,6 +128,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding, SignupViewModel>(R.la
             avatar = "",
             phoneNumber = "",
             dateOfBirth = "",
+            token = ""
         )
     }
 

@@ -112,7 +112,8 @@ class AuthRepositoryImpl @Inject constructor(
                         email = snapshot.child(Constants.USER_EMAIL).getValue<String?>() ?: "",
                         phoneNumber = snapshot.child(Constants.USER_PHONENUMBER).getValue<String?>() ?: "",
                         dateOfBirth = snapshot.child(Constants.USER_DATE_OF_BIRTH).getValue<String?>() ?: "",
-                        avatar = snapshot.child(Constants.USER_AVATAR).getValue<String>() ?: ""
+                        avatar = snapshot.child(Constants.USER_AVATAR).getValue<String>() ?: "",
+                        token = snapshot.child(Constants.USER_TOKEN).getValue<String>() ?: ""
                     )
                     liveData.postValue(user)
                 }
@@ -142,7 +143,8 @@ class AuthRepositoryImpl @Inject constructor(
                             name = userHashMap[Constants.USER_NAME] as? String ?: "",
                             avatar = userHashMap[Constants.USER_AVATAR] as? String ?: "",
                             id = userHashMap[Constants.USER_ID] as? String ?: "",
-                            status = userHashMap[Constants.USER_STATUS] as? String ?: ""
+                            status = userHashMap[Constants.USER_STATUS] as? String ?: "",
+                            token = userHashMap[Constants.USER_TOKEN] as? String ?: "",
                         )
                         friendList.add(friend)
                     }

@@ -47,7 +47,8 @@ class ProfileDetailViewModel @Inject constructor(
                             ?: "",
                         dateOfBirth = snapshot.child(Constants.USER_DATE_OF_BIRTH)
                             .getValue<String>() ?: "",
-                        avatar = snapshot.child(Constants.USER_AVATAR).getValue<String>() ?: ""
+                        avatar = snapshot.child(Constants.USER_AVATAR).getValue<String>() ?: "",
+                        token = snapshot.child(Constants.USER_TOKEN).getValue<String>() ?: ""
                     )
                     _currentUser.postValue(user)
                     actionProfileDetail.value = ActionState.Finish
