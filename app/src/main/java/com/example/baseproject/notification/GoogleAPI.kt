@@ -1,4 +1,4 @@
-package com.example.baseproject.service
+package com.example.baseproject.notification
 
 import com.example.baseproject.models.NotificationResponse
 import com.example.baseproject.ui.friends.FcmNotificationData

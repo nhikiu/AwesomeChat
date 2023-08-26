@@ -2,9 +2,12 @@ package com.example.baseproject.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.*
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
@@ -14,11 +17,13 @@ import com.example.baseproject.models.FragmentData
 import com.example.baseproject.models.Friend
 import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.ui.chats.ChatsFragment
+import com.example.baseproject.ui.chats.ChatsViewModel
 import com.example.baseproject.ui.friends.FriendsFragment
 import com.example.baseproject.ui.friends.FriendsViewModel
 import com.example.baseproject.ui.profile.ProfileFragment
 import com.example.baseproject.utils.Constants
 import com.example.core.base.fragment.BaseFragment
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
@@ -32,7 +37,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
 
     private val viewModel: HomeViewModel by viewModels()
     private val friendViewModel: FriendsViewModel by viewModels()
+    private val chatViewModel: ChatsViewModel by viewModels()
 
+    @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("MissingInflatedId")
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
@@ -45,6 +52,36 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
             }
         }
 
+        // dem so tin nhan chua doc
+        chatViewModel.chatListLiveData.observe(viewLifecycleOwner) { listChat ->
+            var unreadChat = 0
+            for (i in listChat) {
+                if (i.messages?.last()?.sendId != FirebaseAuth.getInstance().currentUser?.uid) {
+                    Log.e("abc", "doan chat duoc nhan: ${i.messages?.size}", )
+                    Log.e("abc", "so tin nhan chua doc: ${i.messages?.count { it.read == Constants.MESSAGE_UNREAD }}", )
+                    val unreadMessage = i.messages?.count { it.read == Constants.MESSAGE_UNREAD}
+                    if (unreadMessage != null && unreadMessage > 0) {
+                        unreadChat++
+                    }
+                }
+            }
+            if (unreadChat > 0) {
+                val badge = binding.bottomNav.getOrCreateBadge(R.id.itChats)
+                badge.isVisible = true
+                badge.verticalOffset = Math.round(
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        4.0F, resources.displayMetrics))
+                badge.badgeTextColor = ContextCompat.getColor(requireContext(), R.color.white)
+                badge.number = unreadChat
+                badge.backgroundColor = ContextCompat.getColor(requireContext(), R.color.red)
+            } else {
+                val badge = binding.bottomNav.getOrCreateBadge(R.id.itChats)
+                badge.isVisible = false
+            }
+        }
+
+        // dem so loi moi ket ban
         friendViewModel.friendListLiveData.observe(viewLifecycleOwner) {
             val sendList: MutableList<Friend> = it.toMutableList().filter { friend -> (friend.status == Constants.STATE_RECEIVE) } as MutableList<Friend>
             if (sendList.size > 0) {

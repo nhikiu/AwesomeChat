@@ -2,6 +2,7 @@ package com.example.baseproject.ui.chats
 
 import android.annotation.SuppressLint
 import android.graphics.Typeface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,18 @@ import com.google.firebase.auth.FirebaseAuth
 
 class ChatsAdapter : ListAdapter<Chat, ChatsAdapter.ChatViewHolder>(ChatDiffCallback()) {
     private var onClickToMessage: OnClickToMessage? = null
+    val unreadChat = mutableListOf<String>()
+    private var unreadChatListener: UnreadChat? = null
+
+
+    interface UnreadChat{
+        fun unreadChatListener(unreadChat: MutableList<String>)
+    }
+
+    fun setUnreadChatListener(listener: UnreadChat) {
+        unreadChatListener = listener
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
         val inflate = LayoutInflater.from(parent.context)
@@ -50,7 +63,7 @@ class ChatsAdapter : ListAdapter<Chat, ChatsAdapter.ChatViewHolder>(ChatDiffCall
     }
 
 
-    class ChatViewHolder(private val binding: ItemChatBinding) :
+    inner class ChatViewHolder(private val binding: ItemChatBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         @SuppressLint("ResourceAsColor")
@@ -64,8 +77,11 @@ class ChatsAdapter : ListAdapter<Chat, ChatsAdapter.ChatViewHolder>(ChatDiffCall
                 }..."
             val unread = chat.unread
             if (unread > 0 && chat.messages?.last()?.toId == FirebaseAuth.getInstance().currentUser?.uid) {
+                if (!unreadChat.contains(chat.id)) unreadChat.add(chat.id)
+                unreadChatListener?.unreadChatListener(unreadChat)
+                Log.e("abc", "unread chat: $unreadChat", )
                 binding.tvUnread.visibility = View.VISIBLE
-                binding.tvUnread.text = "$unread"
+                binding.tvUnread.text = if (unread > 9) "9+" else "$unread"
                 binding.tvMessage.setTextColor(ContextCompat.getColor(itemView.context, R.color.black))
                 binding.tvSendtime.setTextColor(ContextCompat.getColor(itemView.context, R.color.black))
                 binding.tvMessage.setTypeface(null, Typeface.BOLD)
@@ -73,6 +89,7 @@ class ChatsAdapter : ListAdapter<Chat, ChatsAdapter.ChatViewHolder>(ChatDiffCall
                 val padding = itemView.context.getPxFromDp(3.0F)
                 binding.frameAvatarBackground.setPadding(padding, padding, padding, padding)
             } else {
+                if (unreadChat.contains(chat.id)) unreadChat.remove(chat.id)
                 binding.tvUnread.visibility = View.GONE
                 binding.tvMessage.setTextColor(ContextCompat.getColor(itemView.context, R.color.grey_393939))
                 binding.tvSendtime.setTextColor(ContextCompat.getColor(itemView.context, R.color.grey_393939))

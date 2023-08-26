@@ -173,12 +173,16 @@ class FriendsViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun sendNotification(friend: Friend, content: String) {
-        SendNotification.sendNotification(
-            friend.token.toString(),
-            FcmNotification(
-                title = friend.name,
-                body = content),
-            DataModel(friend.name, null, true, content, friend.name)
-        )
+
+        val currentId = auth.currentUser?.uid
+        if (currentId != null) {
+            SendNotification.sendNotification(
+                friend.token.toString(),
+                FcmNotification(
+                    title = friend.name,
+                    body = content),
+                DataModel("high", null, true, content, friend.name, currentId)
+            )
+        }
     }
 }

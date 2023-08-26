@@ -1,6 +1,8 @@
 package com.example.baseproject.container
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
@@ -40,6 +42,8 @@ class MainActivity : BaseActivityNotRequireViewModel<ActivityMainBinding>(), Con
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Log.e("MainActivity", "onCreate: ${savedInstanceState?.getInt("a")}")
+
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host) as NavHostFragment
         appNavigation.bind(navHostFragment.navController)
@@ -60,6 +64,10 @@ class MainActivity : BaseActivityNotRequireViewModel<ActivityMainBinding>(), Con
             .launchIn(lifecycleScope)
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        Log.e("MainActivity", "onNewIntent: ${intent?.getIntExtra("a",-1)}")
+    }
     override fun onStart() {
         super.onStart()
         networkConnectionManager.startListenNetworkState()

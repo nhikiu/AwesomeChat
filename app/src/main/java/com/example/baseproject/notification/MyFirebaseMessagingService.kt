@@ -1,16 +1,16 @@
 package com.example.baseproject.notification
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.pm.PackageManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationManagerCompat
+import android.os.Bundle
+import androidx.core.app.NotificationCompat
 import com.example.baseproject.R
+import com.example.baseproject.container.MainActivity
 import com.example.baseproject.utils.Constants
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -19,29 +19,38 @@ import com.google.firebase.messaging.RemoteMessage
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     private val channelId = Constants.CHANNEL_ID
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
         val title = message.notification?.title
         val body = message.notification?.body
-        val channel = NotificationChannel(channelId, Constants.CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
-        channel.name = Constants.CHANNEL_NAME
-        channel.enableLights(true)
-        getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
 
-        val notification = Notification.Builder(this, channelId)
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+      val bundle = Bundle()
+        bundle.putString("a","abc")
+        intent.putExtra("demo",bundle)
+        val pendingIntent = PendingIntent.getActivity(
+            this, 0, intent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setContentTitle(title)
             .setContentText(body)
-            .setAutoCancel(false)
+            .setAutoCancel(true)
             .setSmallIcon(R.drawable.ic_mail_common)
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
+            .setContentIntent(pendingIntent)
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelId, Constants.CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
+            channel.name = Constants.CHANNEL_NAME
+            channel.enableLights(true)
+            notificationManager.createNotificationChannel(channel)
         }
-        NotificationManagerCompat.from(this).notify(1, notification.build())
+
+        val notificationId = 0
+        notificationManager.notify(notificationId, notificationBuilder.build())
     }
 }

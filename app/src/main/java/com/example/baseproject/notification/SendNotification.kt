@@ -4,7 +4,6 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.baseproject.models.NotificationResponse
-import com.example.baseproject.service.GoogleAPI
 import com.example.baseproject.ui.friends.DataModel
 import com.example.baseproject.ui.friends.FcmNotification
 import com.example.baseproject.ui.friends.FcmNotificationData

@@ -161,5 +161,6 @@ data class DataModel(
     val sound: String?,
     val content_available: Boolean?,
     val bodyText: String?,
-    val title: String?
+    val title: String?,
+    val fromIdUser: String,
 )

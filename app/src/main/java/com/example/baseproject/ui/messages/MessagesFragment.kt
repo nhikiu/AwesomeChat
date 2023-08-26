@@ -17,6 +17,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentMessagesBinding
@@ -89,6 +90,10 @@ class MessagesFragment :
         viewModel.getUserById(toId)
         viewModel.getAllMessage()
 
+        val layoutManager = LinearLayoutManager(context)
+        layoutManager.reverseLayout = true
+        layoutManager.stackFromEnd = true
+        binding.recyclerViewMessages.layoutManager = layoutManager
         messagesAdapter = MessagesAdapter()
         binding.recyclerViewMessages.adapter = messagesAdapter
 
@@ -118,7 +123,9 @@ class MessagesFragment :
     override fun bindingStateView() {
         super.bindingStateView()
         viewModel.messageListLiveData.observe(viewLifecycleOwner) {
-            messagesAdapter?.submitList(ListUtils.getMessageListSortByTime(it.toMutableList()))
+            val listMessage = ListUtils.getMessageListSortByTime(it.toMutableList()).toMutableList()
+            messagesAdapter?.submitList(listMessage)
+            binding.recyclerViewMessages.scrollToPosition(0)
         }
 
         viewModel.friendProfile.observe(viewLifecycleOwner) { user ->

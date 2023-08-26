@@ -2,6 +2,7 @@ package com.example.baseproject.ui.chats
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
@@ -14,7 +15,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layout.fragment_chats) {
+class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layout.fragment_chats),
+ChatsAdapter.UnreadChat{
     @Inject
     lateinit var appNavigation: AppNavigation
 
@@ -75,4 +77,10 @@ class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layou
             appNavigation.openHomeToCreateMessagesScreen()
         }
     }
+
+    override fun unreadChatListener(unreadChat: MutableList<String>) {
+        Log.e("abc", "unreadChatListener: $unreadChat", )
+    }
+
+
 }

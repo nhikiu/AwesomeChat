@@ -162,13 +162,14 @@ class MessagesViewModel @Inject constructor(
                                 val friend = friendProfile.value
                                 val content = context.resources.getString(R.string.sent_picture)
                                 if (friend != null) {
-                                    SendNotification.sendNotification(
-                                        friend.token.toString(),
-                                        FcmNotification(
-                                            title = context.getString(R.string.new_message),
-                                            body = "${friend.name} ${context.getString(R.string.new_message)} $content"),
-                                        DataModel(friend.name, null, true, message.content, friend.name)
-                                    )
+                                        SendNotification.sendNotification(
+                                            friend.token.toString(),
+                                            FcmNotification(
+                                                title = context.getString(R.string.new_message),
+                                                body = "${friend.name} ${context.getString(R.string.new_message)} $content"),
+                                            DataModel("high", null, true, message.content, friend.name, sendId)
+                                        )
+
                                 }
 
                             }
@@ -203,7 +204,7 @@ class MessagesViewModel @Inject constructor(
                             FcmNotification(
                                 title = context.getString(R.string.new_message),
                                 body = "${friend.name} ${context.getString(R.string.new_message)} $content"),
-                            DataModel(friend.name, null, true, message.content, friend.name)
+                            DataModel("high", null, true, message.content, friend.name, sendId)
                         )
                     }
                 }
