@@ -2,7 +2,6 @@ package com.example.baseproject.ui.friends.createMessages
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.activityViewModels
@@ -86,19 +85,26 @@ class CreateMessagesFragment
                 val bundle = Bundle()
                 bundle.putString(Constants.USER_ID, _selectedFriend!!.id)
                 appNavigation.openCreateMessagesToMessaagesScreen(bundle)
+        }
 
+        binding.btnCancel.setOnClickListener {
+            friendAdapter?.cleatSelectedFriend()
         }
     }
 
-    override fun onSingleSelectedListener(friend: Friend?) {
-        if (friend != null) {
-            _selectedFriend = friend
-        }
-        if (friend?.avatar != null && friend.avatar.isNotEmpty()) {
+    override fun onSingleSelectedListener(selectedFriend: Friend?) {
+        if (selectedFriend != null) {
+            _selectedFriend = selectedFriend
             binding.linearChooseFriend.visibility = View.VISIBLE
-            Glide.with(requireContext()).load(friend?.avatar)
+        } else {
+            binding.linearChooseFriend.visibility = View.GONE
+        }
+        if (selectedFriend?.avatar != null && selectedFriend.avatar.isNotEmpty()) {
+            Glide.with(requireContext()).load(selectedFriend.avatar)
                 .into(binding.ivAvatar)
-            Log.e("abc", "onSingleSelectedListener: $friend", )
+        } else {
+            Glide.with(requireContext()).load(R.drawable.ic_avatar_default)
+                .into(binding.ivAvatar)
         }
     }
 }

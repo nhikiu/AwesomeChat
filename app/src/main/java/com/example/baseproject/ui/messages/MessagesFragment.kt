@@ -61,17 +61,16 @@ class MessagesFragment :
         if (isGranted) {
             if (imagePaths.isEmpty()) {
                 getAllImage()
-            } else {
-                galleryAdapter?.submitList(imagePaths)
-                galleryAdapter?.setOnMultiSelectedListener(this)
-
-                binding.btnImagePicker.tint(R.color.primary_color)
-                binding.imagePickerContainer.visibility = View.VISIBLE
-                binding.recyclerViewImagePicker.visibility = View.VISIBLE
-                binding.recyclerStickerPicker.visibility = View.GONE
-                checkEmoji = true
-                checkVisibleStickerButton()
             }
+            binding.btnImagePicker.tint(R.color.primary_color)
+            binding.imagePickerContainer.visibility = View.VISIBLE
+            binding.recyclerViewImagePicker.visibility = View.VISIBLE
+            binding.recyclerStickerPicker.visibility = View.GONE
+            checkEmoji = true
+            checkVisibleStickerButton()
+
+            galleryAdapter?.submitList(imagePaths)
+            galleryAdapter?.setOnMultiSelectedListener(this)
         } else {
             Timber.tag("abc").e("Not granted")
         }
@@ -187,6 +186,7 @@ class MessagesFragment :
             binding.recyclerViewImagePicker.visibility = View.GONE
         }
 
+        // sticker picker
         binding.edtMessage.setOnTouchListener(View.OnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_UP) {
                 if (event.rawX >= binding.edtMessage.right - binding.edtMessage.paddingRight - binding.edtMessage.compoundDrawables[2].bounds.width()) {
@@ -223,6 +223,16 @@ class MessagesFragment :
                 )
             }
         })
+
+        binding.recyclerViewMessages.setOnTouchListener { view, motionEvent ->
+            binding.imagePickerContainer.visibility = View.GONE
+            binding.recyclerStickerPicker.visibility = View.GONE
+            binding.recyclerViewImagePicker.visibility = View.GONE
+            checkEmoji = true
+            checkVisibleStickerButton()
+            binding.btnImagePicker.tint(R.color.grey_999999)
+            true
+        }
     }
 
     private fun checkVisibleStickerButton() {
@@ -276,6 +286,7 @@ class MessagesFragment :
             }
             cursor?.close()
         }
+        galleryAdapter?.submitList(imagePaths)
     }
 
     private fun watchToEnableButton() {

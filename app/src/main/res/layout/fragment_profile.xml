@@ -29,6 +29,7 @@
                 android:id="@+id/progress_bar_avatar_large"
                 android:layout_width="@dimen/size_30"
                 android:layout_height="@dimen/size_30"
+                android:visibility="gone"
                 android:layout_gravity="center"/>
         </FrameLayout>
 

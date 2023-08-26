@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentChatsBinding
@@ -61,6 +62,8 @@ ChatsAdapter.UnreadChat{
         if (viewModel.chatListLiveData.value == null) {
             binding.fragmentNotFound.visibility = View.VISIBLE
         }
+
+        listenerSearchView()
     }
 
     override fun setOnClick() {
@@ -82,5 +85,21 @@ ChatsAdapter.UnreadChat{
         Log.e("abc", "unreadChatListener: $unreadChat", )
     }
 
+    private fun listenerSearchView(){
+        val queryTextListener: SearchView.OnQueryTextListener =
+            object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(p0: String?): Boolean {
+                    return false
+                }
 
+                @RequiresApi(Build.VERSION_CODES.N)
+                override fun onQueryTextChange(p0: String?): Boolean {
+                    viewModel.setSearchQuery(p0 ?: "")
+                    return true
+                }
+
+            }
+
+        binding.searchMessage.setOnQueryTextListener(queryTextListener)
+    }
 }

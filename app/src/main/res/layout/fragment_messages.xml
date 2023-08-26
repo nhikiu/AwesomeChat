@@ -93,7 +93,8 @@
                 android:id="@+id/edt_message"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_item_12"
+                android:layout_marginVertical="@dimen/margin_item_12"
+                android:layout_marginEnd="@dimen/margin_item_12"
                 android:layout_weight="1"
                 android:background="@drawable/custom_btn_large"
                 android:backgroundTint="@color/grey_f6f6f6"
@@ -130,6 +131,7 @@
                     android:layout_marginTop="@dimen/margin_item_5"
                     android:scrollbarStyle="outsideInset"
                     android:scrollbars="vertical"
+                    android:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     tools:listitem="@layout/item_bottom_picker_image" />
 

@@ -36,11 +36,18 @@ class ChatsViewModel @Inject constructor(
     private var _unreadMessage: MutableLiveData<Int> = MutableLiveData()
     val unreadMessage: LiveData<Int> get() = _unreadMessage
 
+    private var _query: MutableLiveData<String> = MutableLiveData()
+
     val actionChats = MutableLiveData<ActionState>()
 
     init {
         getAllUser()
         mChatList.sortWith(compareBy<Chat> { it.messages?.get(it.messages.size - 1)?.sendAt }.reversed())
+    }
+
+    fun setSearchQuery(query: String) {
+        _query.value = query
+        getAllChat()
     }
 
     private fun getAllUser() {
@@ -125,7 +132,21 @@ class ChatsViewModel @Inject constructor(
                                 mChatList.add(Chat(chatId, friendProfile, _unreadMessage.value ?: 0, listMessage))
                         }
                     }
-                    _chatListLiveData.value = mChatList
+                    val searchString: String = _query.value ?: ""
+                    if (searchString != "") {
+                        _chatListLiveData.value = mChatList.filter { chat ->
+                            var check = false
+                            for (i in chat.messages!!) {
+                                if (i.content.lowercase().contains(searchString.lowercase())) {
+                                    check = true
+                                }
+                            }
+                            check
+                        }
+                    } else {
+                        _chatListLiveData.value = mChatList
+                    }
+
                     actionChats.value = ActionState.Finish
                 }
                 else {
