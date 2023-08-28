@@ -163,4 +163,5 @@ data class DataModel(
     val bodyText: String?,
     val title: String?,
     val fromIdUser: String,
+    val type: String
 )

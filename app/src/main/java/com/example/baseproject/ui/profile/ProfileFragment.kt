@@ -2,15 +2,9 @@ package com.example.baseproject.ui.profile
 
 import android.app.AlertDialog
 import android.content.Context
-import android.graphics.drawable.Drawable
-import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentProfileBinding
 import com.example.baseproject.navigation.AppNavigation
@@ -123,59 +117,13 @@ class ProfileFragment :
 
             if (user.avatar != null && user.avatar.isNotEmpty()) {
                 Glide.with(this).load(user.avatar)
-                    .listener(object : RequestListener<Drawable> {
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-//                            binding.progressBarAvatar.visibility = View.GONE
-                            return false
-                        }
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-//                            binding.progressBarAvatar.visibility = View.GONE
-                            return false
-                        }
-                    }).into(binding.ivAvatar)
-
+                    .placeholder(R.drawable.ic_avatar_default)
+                    .into(binding.ivAvatar)
 
                 Glide.with(this).load(user.avatar)
-                    .listener(object : RequestListener<Drawable> {
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            binding.progressBarAvatarLarge.visibility = View.GONE
-                            return false
-                        }
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            binding.progressBarAvatarLarge.visibility = View.GONE
-                            return false
-                        }
-                    }).into(binding.ivAvatarLarge)
+                    .placeholder(R.drawable.ic_avatar_default)
+                    .into(binding.ivAvatarLarge)
             }
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        viewModel.getCurrentUser()
-        super.onViewCreated(view, savedInstanceState)
     }
 }

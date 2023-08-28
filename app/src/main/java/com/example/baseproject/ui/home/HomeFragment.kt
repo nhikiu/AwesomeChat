@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import androidx.annotation.RequiresApi
@@ -57,8 +56,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
             var unreadChat = 0
             for (i in listChat) {
                 if (i.messages?.last()?.sendId != FirebaseAuth.getInstance().currentUser?.uid) {
-                    Log.e("abc", "doan chat duoc nhan: ${i.messages?.size}", )
-                    Log.e("abc", "so tin nhan chua doc: ${i.messages?.count { it.read == Constants.MESSAGE_UNREAD }}", )
                     val unreadMessage = i.messages?.count { it.read == Constants.MESSAGE_UNREAD}
                     if (unreadMessage != null && unreadMessage > 0) {
                         unreadChat++

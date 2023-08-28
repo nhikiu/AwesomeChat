@@ -123,7 +123,7 @@ class MessagesFragment :
         super.bindingStateView()
         viewModel.messageListLiveData.observe(viewLifecycleOwner) {
             val listMessage = ListUtils.getMessageListSortByTime(it.toMutableList()).toMutableList()
-            messagesAdapter?.submitList(listMessage)
+            messagesAdapter?.submitList(listMessage.toMutableList())
             binding.recyclerViewMessages.scrollToPosition(0)
         }
 
@@ -147,7 +147,7 @@ class MessagesFragment :
         watchToEnableButton()
 
         binding.btnBack.setOnClickListener {
-            appNavigation.navigateUp()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         binding.btnImagePicker.setOnClickListener {
@@ -166,9 +166,7 @@ class MessagesFragment :
             if (binding.edtMessage.text.isNotEmpty()) {
                 viewModel.sendMessage(toId, binding.edtMessage.text.toString(), Constants.TYPE_TEXT, requireContext())
                 binding.edtMessage.text.clear()
-                binding.recyclerViewMessages.layoutManager?.smoothScrollToPosition(
-                    binding.recyclerViewMessages, null, 0
-                )
+                binding.recyclerViewMessages.scrollToPosition(0)
             }
         }
 
@@ -223,7 +221,6 @@ class MessagesFragment :
                 )
             }
         })
-
         binding.recyclerViewMessages.setOnTouchListener { view, motionEvent ->
             binding.imagePickerContainer.visibility = View.GONE
             binding.recyclerStickerPicker.visibility = View.GONE
@@ -231,7 +228,7 @@ class MessagesFragment :
             checkEmoji = true
             checkVisibleStickerButton()
             binding.btnImagePicker.tint(R.color.grey_999999)
-            true
+            false
         }
     }
 
@@ -244,7 +241,6 @@ class MessagesFragment :
                 binding.edtMessage.setCompoundDrawablesRelativeWithIntrinsicBounds(
                     null, null, wrapPaper, null
                 )
-
             }
 
         } else {

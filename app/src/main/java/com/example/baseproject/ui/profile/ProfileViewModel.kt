@@ -16,7 +16,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,7 +27,6 @@ class ProfileViewModel @Inject constructor(
     private val database: FirebaseDatabase,
     private val auth: FirebaseAuth,
     private val rxPreferences: RxPreferences,
-    private val fcm: FirebaseMessaging
 ) : BaseViewModel() {
     private val _signout = MutableLiveData<UIState<String>>()
     val signout: LiveData<UIState<String>> get() = _signout
@@ -46,16 +44,11 @@ class ProfileViewModel @Inject constructor(
         _signout.value = UIState.Loading
 
         repository.signoutUser {
-            _signout.value = it
-            if (it == UIState.Success(Constants.SUCCESS)) {
-                fcm.token.addOnSuccessListener { token ->
-                    val userRef = auth.currentUser?.let {
-                        database.reference.child(Constants.USER).child(
-                            it.uid
-                        )
-                    }
-                    userRef?.child(Constants.PROFILE)?.child(Constants.USER_TOKEN)?.setValue(token)
-                }
+            val uid = auth.currentUser?.uid
+            if (it == UIState.Success(Constants.SUCCESS) && uid != null) {
+                val userRef = database.reference.child(Constants.USER).child(uid)
+                userRef.child(Constants.PROFILE).child(Constants.USER_TOKEN).setValue("")
+                _signout.value = it
             }
         }
     }

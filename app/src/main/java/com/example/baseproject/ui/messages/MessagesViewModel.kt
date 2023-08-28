@@ -48,7 +48,6 @@ class MessagesViewModel @Inject constructor(
         val toId = id
         _chatId.value = ValidationUtils.validateChatId(fromId, toId)
 
-
         val userRef =
             id.let { database.getReference(Constants.USER).child(it).child(Constants.PROFILE) }
 
@@ -167,7 +166,7 @@ class MessagesViewModel @Inject constructor(
                                             FcmNotification(
                                                 title = context.getString(R.string.new_message),
                                                 body = "${friend.name} ${context.getString(R.string.new_message)} $content"),
-                                            DataModel("high", null, true, message.content, friend.name, sendId)
+                                            DataModel("high", null, true, message.content, friend.name, sendId, Constants.NOTIFICATION_TYPE_NEW_MESSAGE)
                                         )
 
                                 }
@@ -204,7 +203,7 @@ class MessagesViewModel @Inject constructor(
                             FcmNotification(
                                 title = context.getString(R.string.new_message),
                                 body = "${friend.name} ${context.getString(R.string.new_message)} $content"),
-                            DataModel("high", null, true, message.content, friend.name, sendId)
+                            DataModel("high", null, true, message.content, friend.name, sendId, Constants.NOTIFICATION_TYPE_NEW_MESSAGE)
                         )
                     }
                 }

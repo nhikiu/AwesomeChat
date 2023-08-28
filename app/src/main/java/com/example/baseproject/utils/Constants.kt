@@ -73,4 +73,7 @@ object Constants {
     const val CHANNEL_ID = "CHAT_NOTIFICATION"
     const val GOOGLE_API = "https://fcm.googleapis.com/"
     const val CHANNEL_NAME = "CHAT_NOTIFICATION"
+    const val NOTIFICATION_TYPE_STATE_FRIEND = "newFriend"
+    const val NOTIFICATION_TYPE_NEW_MESSAGE = "newMessage"
+    const val FROM_ID_USER = "fromIdUser"
 }

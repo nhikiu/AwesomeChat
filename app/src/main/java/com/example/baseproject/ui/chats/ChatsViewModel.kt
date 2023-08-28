@@ -37,6 +37,7 @@ class ChatsViewModel @Inject constructor(
     val unreadMessage: LiveData<Int> get() = _unreadMessage
 
     private var _query: MutableLiveData<String> = MutableLiveData()
+    val query get() = _query
 
     val actionChats = MutableLiveData<ActionState>()
 

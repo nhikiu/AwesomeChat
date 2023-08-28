@@ -2,7 +2,6 @@ package com.example.baseproject.ui.chats
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.SearchView
@@ -52,7 +51,7 @@ ChatsAdapter.UnreadChat{
             val sortedList = it.sortedByDescending { chat -> chat.messages?.get(chat.messages.size - 1)?.sendAt }
             chatAdapter?.submitList(sortedList.toMutableList())
 
-            if (sortedList.isEmpty()) {
+            if (sortedList.isEmpty() && viewModel.query.value?.isNotEmpty() == true) {
                 binding.fragmentNotFound.visibility = View.VISIBLE
             } else {
                 binding.fragmentNotFound.visibility = View.GONE
@@ -82,7 +81,7 @@ ChatsAdapter.UnreadChat{
     }
 
     override fun unreadChatListener(unreadChat: MutableList<String>) {
-        Log.e("abc", "unreadChatListener: $unreadChat", )
+//        Log.e("abc", "unreadChatListener: $unreadChat", )
     }
 
     private fun listenerSearchView(){

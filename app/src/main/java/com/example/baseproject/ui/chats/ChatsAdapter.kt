@@ -2,7 +2,6 @@ package com.example.baseproject.ui.chats
 
 import android.annotation.SuppressLint
 import android.graphics.Typeface
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -79,7 +78,6 @@ class ChatsAdapter : ListAdapter<Chat, ChatsAdapter.ChatViewHolder>(ChatDiffCall
             if (unread > 0 && chat.messages?.last()?.toId == FirebaseAuth.getInstance().currentUser?.uid) {
                 if (!unreadChat.contains(chat.id)) unreadChat.add(chat.id)
                 unreadChatListener?.unreadChatListener(unreadChat)
-                Log.e("abc", "unread chat: $unreadChat", )
                 binding.tvUnread.visibility = View.VISIBLE
                 binding.tvUnread.text = if (unread > 9) "9+" else "$unread"
                 binding.tvMessage.setTextColor(ContextCompat.getColor(itemView.context, R.color.black))

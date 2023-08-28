@@ -9,6 +9,9 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.baseproject.R
 import com.example.baseproject.databinding.ActivityMainBinding
 import com.example.baseproject.navigation.AppNavigation
+import com.example.baseproject.ui.home.HomeFragment
+import com.example.baseproject.ui.messages.MessagesFragment
+import com.example.baseproject.utils.Constants
 import com.example.core.base.activity.BaseActivityNotRequireViewModel
 import com.example.core.base.dialog.ConfirmDialogListener
 import com.example.core.pref.RxPreferences
@@ -35,18 +38,26 @@ class MainActivity : BaseActivityNotRequireViewModel<ActivityMainBinding>(), Con
     @Inject
     lateinit var rxPreferences: RxPreferences
 
-    override val layoutId = R.layout.activity_main
+    override val layoutId = com.example.baseproject.R.layout.activity_main
 
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.e("MainActivity", "onCreate: ${savedInstanceState?.getInt("a")}")
-
         val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host) as NavHostFragment
+            .findFragmentById(com.example.baseproject.R.id.nav_host) as NavHostFragment
         appNavigation.bind(navHostFragment.navController)
+
+        Log.e("abc", "onCreate: ${savedInstanceState?.getInt("data")}")
+        val extras = intent?.extras
+        if (extras != null) {
+            Log.d("abc", "onCreate() returned: ${extras.get(Constants.FROM_ID_USER)}")
+            val id = extras.getString(Constants.FROM_ID_USER)
+            val type = extras.getString(Constants.MESSAGE_TYPE)
+            if (id != null && type == Constants.NOTIFICATION_TYPE_NEW_MESSAGE) openMessageScreen(id)
+            if (id != null && type == Constants.NOTIFICATION_TYPE_STATE_FRIEND) openFriendScreen()
+        }
 
         lifecycleScope.launch {
             val language = rxPreferences.getLanguage().first()
@@ -66,8 +77,38 @@ class MainActivity : BaseActivityNotRequireViewModel<ActivityMainBinding>(), Con
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        Log.e("MainActivity", "onNewIntent: ${intent?.getIntExtra("a",-1)}")
+        val id = intent?.getBundleExtra("data")?.getString(Constants.FROM_ID_USER)
+        val type = intent?.getBundleExtra("data")?.getString(Constants.MESSAGE_TYPE)
+        Log.e("abc", "bundle receive in onNewIntent MainActivity: ${intent?.getBundleExtra("data")?.getString(Constants.FROM_ID_USER)}")
+        val bundle = intent?.getBundleExtra("data")
+        for (i in bundle!!.keySet()) {
+            Log.d("abc", "MainActivity: ${bundle.get(i)}", )
+        }
+
+        if (id != null && type == Constants.NOTIFICATION_TYPE_NEW_MESSAGE) openMessageScreen(id)
+        if (id != null && type == Constants.NOTIFICATION_TYPE_STATE_FRIEND) openFriendScreen()
     }
+
+    private fun openMessageScreen(friendId: String) {
+        val bundle = Bundle()
+        bundle.putString(Constants.USER_ID, friendId)
+        val fragment = MessagesFragment()
+        fragment.arguments = bundle
+        supportFragmentManager.beginTransaction()
+            .addToBackStack(null)
+            .add(R.id.nav_host, fragment)
+            .commit()
+    }
+
+    private fun openFriendScreen() {
+        val fragment = HomeFragment()
+        supportFragmentManager.beginTransaction()
+            .addToBackStack(null)
+            .add(R.id.nav_host, fragment)
+            .commit()
+
+    }
+
     override fun onStart() {
         super.onStart()
         networkConnectionManager.startListenNetworkState()

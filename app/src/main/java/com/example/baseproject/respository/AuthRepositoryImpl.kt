@@ -96,8 +96,8 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun signoutUser(result: (UIState<String>) -> Unit) {
-        auth.signOut()
         result.invoke(UIState.Success(Constants.SUCCESS))
+        auth.signOut()
     }
 
     override fun getUserById(id: String, liveData: MutableLiveData<User>) {

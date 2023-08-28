@@ -118,7 +118,7 @@ class FriendsViewModel @Inject constructor(
                 .setValue(friend)
                 .addOnSuccessListener {
                     if (friend.status == Constants.STATE_FRIEND) {
-                        sendNotification(friend, context.getString(R.string.agree_to_be_friend))
+                        sendNotification(friend, context.getString(R.string.agree_to_be_friend), Constants.NOTIFICATION_TYPE_STATE_FRIEND)
                     }
                 }
                 .addOnFailureListener {
@@ -157,7 +157,7 @@ class FriendsViewModel @Inject constructor(
                                 .setValue(currentFriend)
                                 .addOnSuccessListener {
                                     if (currentFriend.status == Constants.STATE_RECEIVE) {
-                                        sendNotification(friend, context.getString(R.string.sent_add_friend))
+                                        sendNotification(friend, context.getString(R.string.sent_add_friend), Constants.NOTIFICATION_TYPE_STATE_FRIEND)
                                     }
                                 }
                                 .addOnFailureListener {
@@ -172,7 +172,7 @@ class FriendsViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun sendNotification(friend: Friend, content: String) {
+    fun sendNotification(friend: Friend, content: String, type: String) {
 
         val currentId = auth.currentUser?.uid
         if (currentId != null) {
@@ -181,7 +181,7 @@ class FriendsViewModel @Inject constructor(
                 FcmNotification(
                     title = friend.name,
                     body = content),
-                DataModel("high", null, true, content, friend.name, currentId)
+                DataModel("high", null, true, content, friend.name, currentId, type)
             )
         }
     }
