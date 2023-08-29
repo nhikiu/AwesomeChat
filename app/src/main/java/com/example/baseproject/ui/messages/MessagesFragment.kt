@@ -3,6 +3,7 @@ package com.example.baseproject.ui.messages
 import android.Manifest
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -10,11 +11,13 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentMessagesBinding
@@ -58,17 +61,16 @@ class MessagesFragment :
         if (isGranted) {
             if (imagePaths.isEmpty()) {
                 getAllImage()
-            } else {
-                galleryAdapter?.submitList(imagePaths)
-                galleryAdapter?.setOnMultiSelectedListener(this)
-
-                binding.btnImagePicker.tint(R.color.primary_color)
-                binding.imagePickerContainer.visibility = View.VISIBLE
-                binding.recyclerViewImagePicker.visibility = View.VISIBLE
-                binding.recyclerStickerPicker.visibility = View.GONE
-                checkEmoji = true
-                checkVisibleStickerButton()
             }
+            binding.btnImagePicker.tint(R.color.primary_color)
+            binding.imagePickerContainer.visibility = View.VISIBLE
+            binding.recyclerViewImagePicker.visibility = View.VISIBLE
+            binding.recyclerStickerPicker.visibility = View.GONE
+            checkEmoji = true
+            checkVisibleStickerButton()
+
+            galleryAdapter?.submitList(imagePaths)
+            galleryAdapter?.setOnMultiSelectedListener(this)
         } else {
             Timber.tag("abc").e("Not granted")
         }
@@ -87,6 +89,10 @@ class MessagesFragment :
         viewModel.getUserById(toId)
         viewModel.getAllMessage()
 
+        val layoutManager = LinearLayoutManager(context)
+        layoutManager.reverseLayout = true
+        layoutManager.stackFromEnd = true
+        binding.recyclerViewMessages.layoutManager = layoutManager
         messagesAdapter = MessagesAdapter()
         binding.recyclerViewMessages.adapter = messagesAdapter
 
@@ -116,7 +122,9 @@ class MessagesFragment :
     override fun bindingStateView() {
         super.bindingStateView()
         viewModel.messageListLiveData.observe(viewLifecycleOwner) {
-            messagesAdapter?.submitList(ListUtils.getMessageListSortByTime(it.toMutableList()))
+            val listMessage = ListUtils.getMessageListSortByTime(it.toMutableList()).toMutableList()
+            messagesAdapter?.submitList(listMessage.toMutableList())
+            binding.recyclerViewMessages.scrollToPosition(0)
         }
 
         viewModel.friendProfile.observe(viewLifecycleOwner) { user ->
@@ -130,6 +138,7 @@ class MessagesFragment :
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("IntentReset", "ClickableViewAccessibility")
     override fun setOnClick() {
         super.setOnClick()
@@ -138,7 +147,7 @@ class MessagesFragment :
         watchToEnableButton()
 
         binding.btnBack.setOnClickListener {
-            appNavigation.navigateUp()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         binding.btnImagePicker.setOnClickListener {
@@ -155,17 +164,15 @@ class MessagesFragment :
 
         binding.btnSend.setOnClickListener {
             if (binding.edtMessage.text.isNotEmpty()) {
-                viewModel.sendMessage(toId, binding.edtMessage.text.toString(), Constants.TYPE_TEXT)
+                viewModel.sendMessage(toId, binding.edtMessage.text.toString(), Constants.TYPE_TEXT, requireContext())
                 binding.edtMessage.text.clear()
-                binding.recyclerViewMessages.layoutManager?.smoothScrollToPosition(
-                    binding.recyclerViewMessages, null, 0
-                )
+                binding.recyclerViewMessages.scrollToPosition(0)
             }
         }
 
         binding.btnSendImage.setOnClickListener {
             for (i in selectedImages) {
-                viewModel.sendMessage(toId, imagePaths[i].toUri().toString(), Constants.TYPE_IMAGE)
+                viewModel.sendMessage(toId, imagePaths[i].toUri().toString(), Constants.TYPE_IMAGE, requireContext())
             }
             binding.recyclerViewImagePicker.visibility = View.GONE
             binding.imagePickerContainer.visibility = View.GONE
@@ -177,6 +184,7 @@ class MessagesFragment :
             binding.recyclerViewImagePicker.visibility = View.GONE
         }
 
+        // sticker picker
         binding.edtMessage.setOnTouchListener(View.OnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_UP) {
                 if (event.rawX >= binding.edtMessage.right - binding.edtMessage.paddingRight - binding.edtMessage.compoundDrawables[2].bounds.width()) {
@@ -209,10 +217,19 @@ class MessagesFragment :
         stickerAdapter?.onClickItem(object : OnItemClickListener {
             override fun onItemClick(position: Int) {
                 viewModel.sendMessage(
-                    toId, stickerList[position].toString(), Constants.TYPE_STICKER
+                    toId, stickerList[position].toString(), Constants.TYPE_STICKER, requireContext()
                 )
             }
         })
+        binding.recyclerViewMessages.setOnTouchListener { view, motionEvent ->
+            binding.imagePickerContainer.visibility = View.GONE
+            binding.recyclerStickerPicker.visibility = View.GONE
+            binding.recyclerViewImagePicker.visibility = View.GONE
+            checkEmoji = true
+            checkVisibleStickerButton()
+            binding.btnImagePicker.tint(R.color.grey_999999)
+            false
+        }
     }
 
     private fun checkVisibleStickerButton() {
@@ -224,7 +241,6 @@ class MessagesFragment :
                 binding.edtMessage.setCompoundDrawablesRelativeWithIntrinsicBounds(
                     null, null, wrapPaper, null
                 )
-
             }
 
         } else {
@@ -266,6 +282,7 @@ class MessagesFragment :
             }
             cursor?.close()
         }
+        galleryAdapter?.submitList(imagePaths)
     }
 
     private fun watchToEnableButton() {

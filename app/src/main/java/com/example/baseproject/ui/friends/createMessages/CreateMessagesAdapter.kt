@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -24,12 +23,13 @@ class CreateMessagesAdapter : ListAdapter<Friend, CreateMessagesAdapter.CreateMe
 
     override fun onBindViewHolder(holder: CreateMessagesViewHolder, position: Int) {
         val currentFriend = getItem(position)
-        holder.bindData(currentFriend)
+        holder.bindData(currentFriend, _selectedFriend == currentFriend)
     }
 
     inner class CreateMessagesViewHolder(private val binding: ItemFriendBinding)
         : RecyclerView.ViewHolder(binding.root) {
-        fun bindData(friend: Friend) {
+        @SuppressLint("NotifyDataSetChanged")
+        fun bindData(friend: Friend, isSelected: Boolean) {
             binding.btnDecline.visibility = View.GONE
             binding.btnReceiveToConfirm.visibility = View.GONE
             binding.btnUnfriendToSending.visibility = View.GONE
@@ -37,7 +37,7 @@ class CreateMessagesAdapter : ListAdapter<Friend, CreateMessagesAdapter.CreateMe
             binding.cbFriend.visibility = View.VISIBLE
             binding.bottomLine.visibility = View.VISIBLE
 
-            binding.cbFriend.isChecked = _selectedFriend != null && _selectedFriend == friend
+            binding.cbFriend.isChecked = isSelected
 
             binding.tvName.text = friend.name
             if (friend.avatar != null && friend.avatar.isNotEmpty()) {
@@ -47,18 +47,16 @@ class CreateMessagesAdapter : ListAdapter<Friend, CreateMessagesAdapter.CreateMe
                     .into(binding.ivAvatar)
             }
 
-            binding.cbFriend.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener{
-                @SuppressLint("NotifyDataSetChanged")
-                override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-                    val position = adapterPosition
-                    if (isChecked && position != RecyclerView.NO_POSITION) {
-                        _selectedFriend = getItem(position)
-                        notifyDataSetChanged()
-                        onSingleSelectedListener?.onSingleSelectedListener(_selectedFriend)
-
-                    }
+            binding.cbFriend.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION && binding.cbFriend.isChecked) {
+                    _selectedFriend = getItem(position)
+                    notifyDataSetChanged()
+                } else {
+                    _selectedFriend = null
                 }
-            })
+                onSingleSelectedListener?.onSingleSelectedListener(_selectedFriend)
+            }
         }
     }
 
@@ -68,5 +66,12 @@ class CreateMessagesAdapter : ListAdapter<Friend, CreateMessagesAdapter.CreateMe
 
     fun setOnSingleSelectedListener(listener: OnSingleSelectedListener) {
         onSingleSelectedListener = listener
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun cleatSelectedFriend() {
+        _selectedFriend = null
+        notifyDataSetChanged()
+        onSingleSelectedListener?.onSingleSelectedListener(null)
     }
 }

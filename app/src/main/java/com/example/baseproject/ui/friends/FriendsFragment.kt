@@ -25,7 +25,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R.layout.fragment_friends){
+class FriendsFragment :
+    BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R.layout.fragment_friends) {
     @Inject
     lateinit var appNavigation: AppNavigation
 
@@ -40,7 +41,11 @@ class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R
         val fragmentList: List<FragmentData> = listOf(
             FragmentData(RealFriendFragment(), null, resources.getString(R.string.friend)),
             FragmentData(AllFriendFragment(), null, resources.getString(R.string.all_friend)),
-            FragmentData(PendingFriendFragment(), null, resources.getString(R.string.pending_friend))
+            FragmentData(
+                PendingFriendFragment(),
+                null,
+                resources.getString(R.string.pending_friend)
+            )
         )
         binding.viewPager.adapter =
             activity?.let { FriendsPagerAdapter(childFragmentManager, lifecycle, fragmentList) }
@@ -48,15 +53,15 @@ class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R
         binding.viewPager.offscreenPageLimit = 1
         binding.viewPager.isUserInputEnabled = false
 
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) {
-                tab, position ->
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             run {
-                val customView = LayoutInflater.from(tab.parent?.context).inflate(R.layout.item_tab_layout, null)
+                val customView =
+                    LayoutInflater.from(tab.parent?.context).inflate(R.layout.item_tab_layout, null)
                 val title = customView.findViewById<TextView>(R.id.tv_tab_title)
                 val countNum = customView.findViewById<TextView>(R.id.tv_tab_count)
                 var count: Int
 
-                viewModel.friendListLiveData.observe(viewLifecycleOwner){
+                viewModel.friendListLiveData.observe(viewLifecycleOwner) {
                     count = it.filter { friend -> friend.status == Constants.STATE_RECEIVE }.size
                     if (position == 2 && count > 0) {
                         if (count > 9) {
@@ -83,7 +88,7 @@ class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R
         super.bindingStateView()
 
         viewModel.actionFriend.observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 is ActionState.Loading -> binding.progressBar.visibility = View.VISIBLE
                 else -> binding.progressBar.visibility = View.GONE
             }
@@ -94,12 +99,22 @@ class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R
                 @SuppressLint("SuspiciousIndentation")
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     val tabTextView = tab?.customView?.findViewById<TextView>(R.id.tv_tab_title)
-                        tabTextView?.setTextColor(ContextCompat.getColor(requireContext(),R.color.primary_color))
+                    tabTextView?.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.primary_color
+                        )
+                    )
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {
                     val tabTextView = tab?.customView?.findViewById<TextView>(R.id.tv_tab_title)
-                    tabTextView?.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey_999999))
+                    tabTextView?.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.grey_999999
+                        )
+                    )
                 }
 
                 override fun onTabReselected(tab: TabLayout.Tab?) {
@@ -108,21 +123,45 @@ class FriendsFragment : BaseFragment<FragmentFriendsBinding, FriendsViewModel>(R
             })
 
         val initialSelectedTab = binding.tabLayout.getTabAt(0)
-        initialSelectedTab?.let { it.customView?.findViewById<TextView>(R.id.tv_tab_title)
-            ?.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary_color)) }
-
-        val queryTextListener: SearchView.OnQueryTextListener = object : SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(p0: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(p0: String?): Boolean {
-                shareViewModel.setSearchQuery(p0 ?: "")
-                return true
-            }
-
+        initialSelectedTab?.let {
+            it.customView?.findViewById<TextView>(R.id.tv_tab_title)
+                ?.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary_color))
         }
+
+        val queryTextListener: SearchView.OnQueryTextListener =
+            object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(p0: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(p0: String?): Boolean {
+                    shareViewModel.setSearchQuery(p0 ?: "")
+                    return true
+                }
+
+            }
 
         binding.searchFriend.setOnQueryTextListener(queryTextListener)
     }
 }
+
+data class FcmNotificationData(
+    val to: String,
+    val notification: FcmNotification,
+    val data: DataModel,
+)
+
+data class FcmNotification(
+    val title: String,
+    val body: String
+)
+
+data class DataModel(
+    val priority: String?,
+    val sound: String?,
+    val content_available: Boolean?,
+    val bodyText: String?,
+    val title: String?,
+    val fromIdUser: String,
+    val type: String
+)

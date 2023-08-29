@@ -26,7 +26,7 @@ class ProfileViewModel @Inject constructor(
     private val repository: AuthRepository,
     private val database: FirebaseDatabase,
     private val auth: FirebaseAuth,
-    private val rxPreferences: RxPreferences
+    private val rxPreferences: RxPreferences,
 ) : BaseViewModel() {
     private val _signout = MutableLiveData<UIState<String>>()
     val signout: LiveData<UIState<String>> get() = _signout
@@ -44,7 +44,12 @@ class ProfileViewModel @Inject constructor(
         _signout.value = UIState.Loading
 
         repository.signoutUser {
-            _signout.value = it
+            val uid = auth.currentUser?.uid
+            if (it == UIState.Success(Constants.SUCCESS) && uid != null) {
+                val userRef = database.reference.child(Constants.USER).child(uid)
+                userRef.child(Constants.PROFILE).child(Constants.USER_TOKEN).setValue("")
+                _signout.value = it
+            }
         }
     }
 
@@ -65,7 +70,8 @@ class ProfileViewModel @Inject constructor(
                             ?: "",
                         dateOfBirth = snapshot.child(Constants.USER_DATE_OF_BIRTH)
                             .getValue<String>() ?: "",
-                        avatar = snapshot.child(Constants.USER_AVATAR).getValue<String>() ?: ""
+                        avatar = snapshot.child(Constants.USER_AVATAR).getValue<String>() ?: "",
+                        token = snapshot.child(Constants.USER_TOKEN).getValue<String>() ?: ""
                     )
 
                     _currentUser.postValue(user)

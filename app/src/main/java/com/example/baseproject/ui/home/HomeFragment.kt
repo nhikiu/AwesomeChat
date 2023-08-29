@@ -2,23 +2,26 @@ package com.example.baseproject.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.*
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.viewpager2.widget.ViewPager2
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentHomeBinding
 import com.example.baseproject.models.FragmentData
 import com.example.baseproject.models.Friend
 import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.ui.chats.ChatsFragment
+import com.example.baseproject.ui.chats.ChatsViewModel
 import com.example.baseproject.ui.friends.FriendsFragment
 import com.example.baseproject.ui.friends.FriendsViewModel
 import com.example.baseproject.ui.profile.ProfileFragment
 import com.example.baseproject.utils.Constants
 import com.example.core.base.fragment.BaseFragment
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
@@ -32,7 +35,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
 
     private val viewModel: HomeViewModel by viewModels()
     private val friendViewModel: FriendsViewModel by viewModels()
+    private val chatViewModel: ChatsViewModel by viewModels()
 
+    @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("MissingInflatedId")
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
@@ -45,6 +50,34 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
             }
         }
 
+        // dem so tin nhan chua doc
+        chatViewModel.chatListLiveData.observe(viewLifecycleOwner) { listChat ->
+            var unreadChat = 0
+            for (i in listChat) {
+                if (i.messages?.last()?.sendId != FirebaseAuth.getInstance().currentUser?.uid) {
+                    val unreadMessage = i.messages?.count { it.read == Constants.MESSAGE_UNREAD}
+                    if (unreadMessage != null && unreadMessage > 0) {
+                        unreadChat++
+                    }
+                }
+            }
+            if (unreadChat > 0) {
+                val badge = binding.bottomNav.getOrCreateBadge(R.id.itChats)
+                badge.isVisible = true
+                badge.verticalOffset = Math.round(
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        4.0F, resources.displayMetrics))
+                badge.badgeTextColor = ContextCompat.getColor(requireContext(), R.color.white)
+                badge.number = unreadChat
+                badge.backgroundColor = ContextCompat.getColor(requireContext(), R.color.red)
+            } else {
+                val badge = binding.bottomNav.getOrCreateBadge(R.id.itChats)
+                badge.isVisible = false
+            }
+        }
+
+        // dem so loi moi ket ban
         friendViewModel.friendListLiveData.observe(viewLifecycleOwner) {
             val sendList: MutableList<Friend> = it.toMutableList().filter { friend -> (friend.status == Constants.STATE_RECEIVE) } as MutableList<Friend>
             if (sendList.size > 0) {
@@ -85,14 +118,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
 
             binding.viewPager.offscreenPageLimit = 1
             binding.viewPager.isUserInputEnabled = false
-
-            binding.viewPager.registerOnPageChangeCallback(object :
-                ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    binding.bottomNav.menu.getItem(position).isChecked = true
-                }
-            })
         }
+
+        onClickNotificationToFriendScreen()
+
     }
 
     override fun setOnClick() {
@@ -114,64 +143,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Timber.tag("HomeFragment").d("A   " + "onAttach")
+    private fun onClickNotificationToFriendScreen(){
+        val bundle = activity?.intent?.extras
+        if (bundle != null) {
+            val type = bundle.getString(Constants.MESSAGE_TYPE)
+            if (type == Constants.NOTIFICATION_TYPE_STATE_FRIEND) {
+                val targetFragmentPosition = 1
+                binding.viewPager.setCurrentItem(1, false)
+                binding.bottomNav.menu.getItem(targetFragmentPosition).isChecked = true
+            }
+        }
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Timber.tag("HomeFragment").d("A   " + "onCreate")
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        Timber.tag("HomeFragment").d("A   " + "onCreateView")
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Timber.tag("HomeFragment").d("A   " + "onViewCreated")
-        super.onViewCreated(view, savedInstanceState)
-    }
-
-    override fun onStart() {
-        Timber.tag("HomeFragment").d("A   " + "onStart")
-        super.onStart()
-    }
-
-    override fun onResume() {
-        Timber.tag("VietBH").d("A   " + "onResume")
-        super.onResume()
-    }
-
-    override fun onPause() {
-        Timber.tag("HomeFragment").d("A   " + "onPause")
-        super.onPause()
-    }
-
-    override fun onStop() {
-        Timber.tag("HomeFragment").d("A   " + "onStop")
-        super.onStop()
-    }
-
-    override fun onDestroyView() {
-        Timber.tag("HomeFragment").d("A   " + "onDestroyView")
-        super.onDestroyView()
-    }
-
-    override fun onDestroy() {
-        Timber.tag("HomeFragment").d("A   " + "onDestroy")
-        super.onDestroy()
-    }
-
-    override fun onDetach() {
-        Timber.tag("HomeFragment").d("A   " + "onCreate")
-        super.onDetach()
-    }
-
-
 }

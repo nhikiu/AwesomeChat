@@ -1,7 +1,7 @@
 package com.example.baseproject.ui.chats
 
+import android.annotation.SuppressLint
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.N)
@@ -25,19 +26,60 @@ class ChatsViewModel @Inject constructor(
     private val auth: FirebaseAuth
 ) : BaseViewModel(){
     private var mChatList = arrayListOf<Chat>()
+    private var mUserList = arrayListOf<User>()
 
     private var _chatListLiveData: MutableLiveData<List<Chat>> = MutableLiveData()
     val chatListLiveData: LiveData<List<Chat>> get() = _chatListLiveData
 
+    private var _userListLiveData: MutableLiveData<List<User>> = MutableLiveData()
+
     private var _unreadMessage: MutableLiveData<Int> = MutableLiveData()
     val unreadMessage: LiveData<Int> get() = _unreadMessage
+
+    private var _query: MutableLiveData<String> = MutableLiveData()
+    val query get() = _query
 
     val actionChats = MutableLiveData<ActionState>()
 
     init {
+        getAllUser()
         mChatList.sortWith(compareBy<Chat> { it.messages?.get(it.messages.size - 1)?.sendAt }.reversed())
+    }
 
+    fun setSearchQuery(query: String) {
+        _query.value = query
         getAllChat()
+    }
+
+    private fun getAllUser() {
+        actionChats.value = ActionState.Loading
+        val myRef = database.getReference(Constants.USER)
+        myRef.addValueEventListener(object : ValueEventListener {
+            @SuppressLint("SuspiciousIndentation")
+            override fun onDataChange(snapshot: DataSnapshot) {
+                mUserList.clear()
+                for (dataSnapshot in snapshot.children) {
+                    val profileRef = dataSnapshot.child(Constants.PROFILE)
+
+                    val id = profileRef.child(Constants.USER_ID).getValue(String::class.java) ?: ""
+                    val name = profileRef.child(Constants.USER_NAME).getValue(String::class.java) ?: ""
+                    val email = profileRef.child(Constants.USER_EMAIL).getValue(String::class.java) ?: ""
+                    val phoneNumber = profileRef.child(Constants.USER_PHONENUMBER).getValue(String::class.java) ?: ""
+                    val dateOfBirth = profileRef.child(Constants.USER_DATE_OF_BIRTH).getValue(String::class.java) ?: ""
+                    val avatar = profileRef.child(Constants.USER_AVATAR).getValue(String::class.java) ?: ""
+                    val token = profileRef.child(Constants.USER_TOKEN).getValue(String::class.java) ?: ""
+
+                    if (id != auth.currentUser?.uid) {
+                        mUserList.add(User(id, name, email, phoneNumber, dateOfBirth, avatar, token))
+                    }
+                }
+                _userListLiveData.value = mUserList
+                getAllChat()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
     }
 
     private fun getAllChat() {
@@ -48,6 +90,7 @@ class ChatsViewModel @Inject constructor(
 
         chatRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                mChatList.clear()
                 if (snapshot.exists()) {
                     for (dataSnapshot in snapshot.children) {
                         if (dataSnapshot.key.toString().contains(uid)) {
@@ -76,45 +119,38 @@ class ChatsViewModel @Inject constructor(
                                 ))
                             }
 
+
                             _unreadMessage.value = listMessage.count { it.read == Constants.MESSAGE_UNREAD }
+
                             var friendId = ""
                             for (i in chatId.split("-")){
                                 if (i != uid) {
                                     friendId = i
                                 }
                             }
-
-                            val userRef = database.getReference(Constants.USER).child(friendId).child(Constants.PROFILE)
-                            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                                override fun onDataChange(snapshot: DataSnapshot) {
-                                    mChatList.clear()
-                                    if (snapshot.exists()) {
-                                        val friendProfile = User(
-                                            id = friendId,
-                                            name = snapshot.child(Constants.USER_NAME).value.toString(),
-                                            email = snapshot.child(Constants.USER_EMAIL).value.toString(),
-                                            phoneNumber = snapshot.child(Constants.USER_PHONENUMBER).value.toString(),
-                                            dateOfBirth = snapshot.child(Constants.USER_DATE_OF_BIRTH).value.toString(),
-                                            avatar = snapshot.child(Constants.USER_AVATAR).value.toString()
-                                        )
-
-                                        val chat = Chat(chatId, friendProfile, listMessage.count { it.read == Constants.MESSAGE_UNREAD }, listMessage.sortedBy { it.sendAt })
-                                        mChatList.add(chat)
-                                        _chatListLiveData.value = mChatList
-                                    }
-                                    actionChats.value = ActionState.Finish
-                                }
-
-                                override fun onCancelled(error: DatabaseError) {
-                                    actionChats.value = ActionState.Fail
-                                }
-                            })
+                            val friendProfile = _userListLiveData.value?.first{it.id == friendId}
+                            if (friendProfile != null)
+                                mChatList.add(Chat(chatId, friendProfile, _unreadMessage.value ?: 0, listMessage))
                         }
                     }
+                    val searchString: String = _query.value ?: ""
+                    if (searchString != "") {
+                        _chatListLiveData.value = mChatList.filter { chat ->
+                            var check = false
+                            for (i in chat.messages!!) {
+                                if (i.content.lowercase().contains(searchString.lowercase())) {
+                                    check = true
+                                }
+                            }
+                            check
+                        }
+                    } else {
+                        _chatListLiveData.value = mChatList
+                    }
+
                     actionChats.value = ActionState.Finish
                 }
                 else {
-                    Log.e("fail", "onDataChange: Fail", )
                     actionChats.value = ActionState.Finish
                 }
             }

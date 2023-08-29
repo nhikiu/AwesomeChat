@@ -202,7 +202,8 @@ class ProfileDetailFragment :
                     email = userProfile.email,
                     phoneNumber = phoneNumber,
                     dateOfBirth = binding.edtDateOfBirth.text.toString(),
-                    avatar = null
+                    avatar = null,
+                    token = userProfile.token
                 )
 
                 if (selectedImageUri != null) {

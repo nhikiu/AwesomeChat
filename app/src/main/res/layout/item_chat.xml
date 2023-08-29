@@ -17,8 +17,8 @@
 
             <FrameLayout
                 android:id="@+id/frame_avatar_background"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:layout_width="@dimen/size_58"
+                android:layout_height="@dimen/size_58"
                 android:layout_marginEnd="@dimen/margin_item_5"
                 android:background="@drawable/bg_avatar_unread"
                 android:padding="@dimen/margin_item_3"
@@ -53,7 +53,7 @@
             style="@style/text_bold_16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_item_25"
+            android:layout_marginStart="@dimen/margin_item_20"
             android:layout_marginTop="@dimen/margin_item_5"
             android:text="@string/name_hint"
             android:textColor="@color/black"
@@ -77,23 +77,22 @@
             style="@style/text_bold_14"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_item_25"
             android:layout_marginTop="@dimen/margin_item_5"
             android:maxLines="1"
             android:text="@string/message"
             android:textColor="@color/black"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/frame_avatar"
+            app:layout_constraintStart_toStartOf="@id/tv_username"
             app:layout_constraintTop_toBottomOf="@id/tv_username" />
 
         <View
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="@dimen/size_1"
-            android:layout_marginStart="@dimen/margin_item_89"
             android:layout_marginEnd="@dimen/margin_item_12"
             android:background="@color/grey_d2d2d2"
             android:layout_marginTop="@dimen/margin_item_18"
             app:layout_constraintTop_toBottomOf="@id/tv_message"
+            app:layout_constraintStart_toStartOf="@id/tv_username"
             app:layout_constraintBottom_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

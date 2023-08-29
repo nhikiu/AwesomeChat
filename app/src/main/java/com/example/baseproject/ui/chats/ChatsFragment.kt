@@ -2,9 +2,9 @@ package com.example.baseproject.ui.chats
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentChatsBinding
@@ -15,7 +15,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layout.fragment_chats) {
+class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layout.fragment_chats),
+ChatsAdapter.UnreadChat{
     @Inject
     lateinit var appNavigation: AppNavigation
 
@@ -48,10 +49,9 @@ class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layou
 
         viewModel.chatListLiveData.observe(viewLifecycleOwner) {
             val sortedList = it.sortedByDescending { chat -> chat.messages?.get(chat.messages.size - 1)?.sendAt }
-            Log.e("abc", "Chat Fragment: size sort list = ${sortedList.size}", )
             chatAdapter?.submitList(sortedList.toMutableList())
 
-            if (sortedList.isEmpty()) {
+            if (sortedList.isEmpty() && viewModel.query.value?.isNotEmpty() == true) {
                 binding.fragmentNotFound.visibility = View.VISIBLE
             } else {
                 binding.fragmentNotFound.visibility = View.GONE
@@ -61,6 +61,8 @@ class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layou
         if (viewModel.chatListLiveData.value == null) {
             binding.fragmentNotFound.visibility = View.VISIBLE
         }
+
+        listenerSearchView()
     }
 
     override fun setOnClick() {
@@ -76,5 +78,27 @@ class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layou
         binding.btnCreateMessages.setOnClickListener {
             appNavigation.openHomeToCreateMessagesScreen()
         }
+    }
+
+    override fun unreadChatListener(unreadChat: MutableList<String>) {
+//        Log.e("abc", "unreadChatListener: $unreadChat", )
+    }
+
+    private fun listenerSearchView(){
+        val queryTextListener: SearchView.OnQueryTextListener =
+            object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(p0: String?): Boolean {
+                    return false
+                }
+
+                @RequiresApi(Build.VERSION_CODES.N)
+                override fun onQueryTextChange(p0: String?): Boolean {
+                    viewModel.setSearchQuery(p0 ?: "")
+                    return true
+                }
+
+            }
+
+        binding.searchMessage.setOnQueryTextListener(queryTextListener)
     }
 }

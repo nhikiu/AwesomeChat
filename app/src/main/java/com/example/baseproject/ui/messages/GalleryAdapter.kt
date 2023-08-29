@@ -13,7 +13,7 @@ import com.example.baseproject.databinding.ItemImageGalleryBinding
 class GalleryAdapter : ListAdapter<String, GalleryAdapter.ImageGalleryViewHolder>(
     UriDiffCallback()
 ) {
-    val selectedItems = mutableListOf<Int>()
+    private val selectedItems = mutableListOf<Int>()
     private var onSelectedListener: OnMultiSelectedListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageGalleryViewHolder {

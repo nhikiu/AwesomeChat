@@ -1,10 +1,17 @@
 package com.example.baseproject.ui.messages
 
+import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.baseproject.R
 import com.example.baseproject.models.Message
 import com.example.baseproject.models.User
+import com.example.baseproject.notification.SendNotification
+import com.example.baseproject.ui.friends.DataModel
+import com.example.baseproject.ui.friends.FcmNotification
 import com.example.baseproject.utils.Constants
 import com.example.baseproject.utils.ListUtils
 import com.example.baseproject.utils.ValidationUtils
@@ -41,7 +48,6 @@ class MessagesViewModel @Inject constructor(
         val toId = id
         _chatId.value = ValidationUtils.validateChatId(fromId, toId)
 
-
         val userRef =
             id.let { database.getReference(Constants.USER).child(it).child(Constants.PROFILE) }
 
@@ -56,7 +62,8 @@ class MessagesViewModel @Inject constructor(
                             ?: "",
                         dateOfBirth = snapshot.child(Constants.USER_DATE_OF_BIRTH)
                             .getValue<String>() ?: "",
-                        avatar = snapshot.child(Constants.USER_AVATAR).getValue<String>() ?: ""
+                        avatar = snapshot.child(Constants.USER_AVATAR).getValue<String>() ?: "",
+                        token = snapshot.child(Constants.USER_TOKEN).getValue<String>() ?: ""
                     )
 
                     _friendProfile.postValue(user)
@@ -121,7 +128,8 @@ class MessagesViewModel @Inject constructor(
         })
     }
 
-    fun sendMessage(toId: String, text: String, type: String) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun sendMessage(toId: String, text: String, type: String, context: Context) {
         val sendId = auth.currentUser?.uid
 
         if (sendId != null) {
@@ -150,6 +158,19 @@ class MessagesViewModel @Inject constructor(
                                 mMessageList.add(message)
                                 _messageListLiveData.value =
                                     ListUtils.sortMessageByTime(mMessageList)
+                                val friend = friendProfile.value
+                                val content = context.resources.getString(R.string.sent_picture)
+                                if (friend != null) {
+                                        SendNotification.sendNotification(
+                                            friend.token.toString(),
+                                            FcmNotification(
+                                                title = context.getString(R.string.new_message),
+                                                body = "${friend.name} ${context.getString(R.string.new_message)} $content"),
+                                            DataModel("high", null, true, message.content, friend.name, sendId, Constants.NOTIFICATION_TYPE_NEW_MESSAGE)
+                                        )
+
+                                }
+
                             }
                         }
                     }
@@ -167,6 +188,24 @@ class MessagesViewModel @Inject constructor(
                 chatRef.setValue(message).addOnSuccessListener {
                     mMessageList.add(message)
                     _messageListLiveData.value = ListUtils.sortMessageByTime(mMessageList)
+                    val friend = friendProfile.value
+                    val content = when (message.type) {
+                        Constants.TYPE_STICKER -> {
+                            context.resources.getString(R.string.sent_sticker)
+                        }
+                        else -> {
+                            message.content
+                        }
+                    }
+                    if (friend != null) {
+                        SendNotification.sendNotification(
+                            friend.token.toString(),
+                            FcmNotification(
+                                title = context.getString(R.string.new_message),
+                                body = "${friend.name} ${context.getString(R.string.new_message)} $content"),
+                            DataModel("high", null, true, message.content, friend.name, sendId, Constants.NOTIFICATION_TYPE_NEW_MESSAGE)
+                        )
+                    }
                 }
             }
         }

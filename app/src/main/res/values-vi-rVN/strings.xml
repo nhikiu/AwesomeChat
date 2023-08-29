@@ -69,6 +69,8 @@
     <string name="change_body">Bạn muốn huỷ yêu cầu kết bạn này?</string>
     <string name="decline">Từ chối</string>
     <string name="not_found">Không tìm thấy kết quả phù hợp</string>
+    <string name="sent_add_friend">Đã gửi lời mời kết bạn</string>
+    <string name="agree_to_be_friend">Đã đồng ý kết bạn</string>
 
     <!--    Message Screen-->
     <string name="hint_message">Nhập tin nhắn...</string>

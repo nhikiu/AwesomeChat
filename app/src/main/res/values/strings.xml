@@ -78,6 +78,8 @@
     <string name="change_body">Do you want to unsend this friend request?</string>
     <string name="decline">Decline</string>
     <string name="not_found">Not found</string>
+    <string name="sent_add_friend">Sent a friend request</string>
+    <string name="agree_to_be_friend">Agree to be a friend</string>
 
     <!--    Profile Screen-->
     <string name="log_out">Log out</string>
@@ -98,6 +100,10 @@
     <!--    Message Screen-->
     <string name="hint_message">Enter a message...</string>
     <string name="send">Send</string>
+
+    <!--    Notification-->
+    <string name="new_message">You have a new Message</string>
+    <string name="sent">Sent:</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
