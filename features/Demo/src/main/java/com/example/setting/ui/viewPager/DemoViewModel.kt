@@ -1,6 +1,5 @@
 package com.example.setting.ui.viewPager
 
-import android.util.Log
 import com.example.core.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -12,7 +11,7 @@ class DemoViewModel @Inject constructor() : BaseViewModel() {
 
     fun fetchData(id: String) {
         if (!isLoadedData) {
-            Log.d("ahihihi", "fetchData: " + id)
+//            Log.d("ahihihi", "fetchData: " + id)
             isLoadedData = true
         }
     }

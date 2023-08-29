@@ -19,16 +19,8 @@ import com.example.setting.R
 import com.example.setting.databinding.ItemAlbumLayoutBinding
 import com.example.setting.databinding.ItemHomeSlideLayoutBinding
 import com.example.setting.databinding.ItemTitleHomeLayoutBinding
-import com.example.setting.model.AlbumHome
-import com.example.setting.model.HomePageItem
-import com.example.setting.model.SlideHome
-import com.example.setting.model.SongHome
-import com.example.setting.model.TitleHome
-import timber.log.Timber
+import com.example.setting.model.*
 
-/**
- * Created by vietbh on 2022-03-17.
- */
 class HomePageAdapter(
     private val onItemClickListener: OnItemClickListener? = null
 ) : ListAdapter<HomePageItem, RecyclerView.ViewHolder>(HomePageDiffUtil()) {
@@ -54,7 +46,7 @@ class HomePageAdapter(
 
             R.layout.item_song_layout -> {
                 numberSong++
-                Timber.tag("ahihi").d(" ahehe  $numberSong")
+//                Timber.tag("ahihi").d(" ahehe  $numberSong")
                 HomeSongHolder(
                     LayoutInflater.from(parent.context).inflate(
                         R.layout.item_song_layout,

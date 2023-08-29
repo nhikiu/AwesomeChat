@@ -101,12 +101,12 @@ class MainActivity : BaseActivityNotRequireViewModel<ActivityMainBinding>(), Con
     }
 
     private fun openFriendScreen() {
-        val fragment = HomeFragment()
-        supportFragmentManager.beginTransaction()
-            .addToBackStack(null)
-            .add(R.id.nav_host, fragment)
-            .commit()
 
+        val fragment = HomeFragment()
+        val bundle = Bundle()
+        bundle.putString(Constants.MESSAGE_TYPE, Constants.FRIEND)
+        fragment.arguments = bundle
+        Log.e("abc", "openFriendScreen: ${fragment.arguments} ", )
     }
 
     override fun onStart() {

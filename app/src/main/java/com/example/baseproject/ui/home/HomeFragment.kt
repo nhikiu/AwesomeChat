@@ -9,7 +9,6 @@ import android.view.*
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.viewpager2.widget.ViewPager2
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentHomeBinding
 import com.example.baseproject.models.FragmentData
@@ -119,14 +118,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
 
             binding.viewPager.offscreenPageLimit = 1
             binding.viewPager.isUserInputEnabled = false
-
-            binding.viewPager.registerOnPageChangeCallback(object :
-                ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    binding.bottomNav.menu.getItem(position).isChecked = true
-                }
-            })
         }
+
+        onClickNotificationToFriendScreen()
+
     }
 
     override fun setOnClick() {
@@ -148,64 +143,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Timber.tag("HomeFragment").d("A   " + "onAttach")
+    private fun onClickNotificationToFriendScreen(){
+        val bundle = activity?.intent?.extras
+        if (bundle != null) {
+            val type = bundle.getString(Constants.MESSAGE_TYPE)
+            if (type == Constants.NOTIFICATION_TYPE_STATE_FRIEND) {
+                val targetFragmentPosition = 1
+                binding.viewPager.setCurrentItem(1, false)
+                binding.bottomNav.menu.getItem(targetFragmentPosition).isChecked = true
+            }
+        }
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Timber.tag("HomeFragment").d("A   " + "onCreate")
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        Timber.tag("HomeFragment").d("A   " + "onCreateView")
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Timber.tag("HomeFragment").d("A   " + "onViewCreated")
-        super.onViewCreated(view, savedInstanceState)
-    }
-
-    override fun onStart() {
-        Timber.tag("HomeFragment").d("A   " + "onStart")
-        super.onStart()
-    }
-
-    override fun onResume() {
-        Timber.tag("VietBH").d("A   " + "onResume")
-        super.onResume()
-    }
-
-    override fun onPause() {
-        Timber.tag("HomeFragment").d("A   " + "onPause")
-        super.onPause()
-    }
-
-    override fun onStop() {
-        Timber.tag("HomeFragment").d("A   " + "onStop")
-        super.onStop()
-    }
-
-    override fun onDestroyView() {
-        Timber.tag("HomeFragment").d("A   " + "onDestroyView")
-        super.onDestroyView()
-    }
-
-    override fun onDestroy() {
-        Timber.tag("HomeFragment").d("A   " + "onDestroy")
-        super.onDestroy()
-    }
-
-    override fun onDetach() {
-        Timber.tag("HomeFragment").d("A   " + "onCreate")
-        super.onDetach()
-    }
-
-
 }
