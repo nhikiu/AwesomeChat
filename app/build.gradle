@@ -51,12 +51,12 @@ dependencies {
 
     implementation libraries.hilt
     implementation libraries.firestore
-    implementation 'com.google.firebase:firebase-auth-ktx:22.1.0'
-    implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
-    implementation 'com.google.firebase:firebase-database-ktx:20.0.4'
-    implementation 'com.google.firebase:firebase-storage-ktx:20.0.1'
-    implementation 'com.github.nex3z:NotificationBadge:v1.0.2'
-    implementation 'com.google.firebase:firebase-messaging:23.0.3'
+    implementation libraries.auth
+    implementation(platform(libraries.bom))
+    implementation libraries.database
+    implementation libraries.storage
+    implementation libraries.badge
+    implementation libraries.messaging
     kapt libraries.hiltSupport
     //implementation libraries.hiltViewModel
     //kapt libraries.hiltCompiler

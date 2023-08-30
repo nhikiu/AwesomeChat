@@ -1,6 +1,5 @@
 package com.example.baseproject.respository
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.baseproject.models.Friend
 import com.example.baseproject.models.User
@@ -17,9 +16,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
+import timber.log.Timber
 import javax.inject.Inject
-
-
 
 class AuthRepositoryImpl @Inject constructor(
     private val auth : FirebaseAuth,
@@ -128,7 +126,6 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun getAllFriend(liveData: MutableLiveData<List<Friend>>) {
-
         auth.currentUser?.uid?.let {
             database.getReference(Constants.USER).child(it).child(Constants.FRIEND)
         }?.addValueEventListener(object : ValueEventListener {
@@ -136,8 +133,7 @@ class AuthRepositoryImpl @Inject constructor(
                 val friendList: MutableList<Friend> = mutableListOf()
 
                 for (dataSnapshot in snapshot.children) {
-                    val userHashMap: HashMap<String, User>? =
-                        dataSnapshot.value as? HashMap<String, User>
+                    val userHashMap: HashMap<*, *>? = dataSnapshot.value as? HashMap<*, *>
                     userHashMap?.let {
                         val friend = Friend(
                             name = userHashMap[Constants.USER_NAME] as? String ?: "",
@@ -155,7 +151,7 @@ class AuthRepositoryImpl @Inject constructor(
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("database", "onCancelled: Fail ${error.toException()}",)
+                Timber.tag("database").e(error.toException().toString(), "onCancelled: Fail %s")
             }
 
         })

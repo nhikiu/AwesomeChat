@@ -2,8 +2,6 @@ package com.example.baseproject.container
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.example.baseproject.R
@@ -38,21 +36,17 @@ class MainActivity : BaseActivityNotRequireViewModel<ActivityMainBinding>(), Con
     @Inject
     lateinit var rxPreferences: RxPreferences
 
-    override val layoutId = com.example.baseproject.R.layout.activity_main
-
-    private val viewModel: MainViewModel by viewModels()
+    override val layoutId = R.layout.activity_main
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val navHostFragment = supportFragmentManager
-            .findFragmentById(com.example.baseproject.R.id.nav_host) as NavHostFragment
+            .findFragmentById(R.id.nav_host) as NavHostFragment
         appNavigation.bind(navHostFragment.navController)
 
-        Log.e("abc", "onCreate: ${savedInstanceState?.getInt("data")}")
         val extras = intent?.extras
         if (extras != null) {
-            Log.d("abc", "onCreate() returned: ${extras.get(Constants.FROM_ID_USER)}")
             val id = extras.getString(Constants.FROM_ID_USER)
             val type = extras.getString(Constants.MESSAGE_TYPE)
             if (id != null && type == Constants.NOTIFICATION_TYPE_NEW_MESSAGE) openMessageScreen(id)
@@ -77,13 +71,8 @@ class MainActivity : BaseActivityNotRequireViewModel<ActivityMainBinding>(), Con
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        val id = intent?.getBundleExtra("data")?.getString(Constants.FROM_ID_USER)
-        val type = intent?.getBundleExtra("data")?.getString(Constants.MESSAGE_TYPE)
-        Log.e("abc", "bundle receive in onNewIntent MainActivity: ${intent?.getBundleExtra("data")?.getString(Constants.FROM_ID_USER)}")
-        val bundle = intent?.getBundleExtra("data")
-        for (i in bundle!!.keySet()) {
-            Log.d("abc", "MainActivity: ${bundle.get(i)}", )
-        }
+        val id = intent?.getBundleExtra(Constants.NOTIFICATION_DATA)?.getString(Constants.FROM_ID_USER)
+        val type = intent?.getBundleExtra(Constants.NOTIFICATION_DATA)?.getString(Constants.MESSAGE_TYPE)
 
         if (id != null && type == Constants.NOTIFICATION_TYPE_NEW_MESSAGE) openMessageScreen(id)
         if (id != null && type == Constants.NOTIFICATION_TYPE_STATE_FRIEND) openFriendScreen()
@@ -101,12 +90,10 @@ class MainActivity : BaseActivityNotRequireViewModel<ActivityMainBinding>(), Con
     }
 
     private fun openFriendScreen() {
-
         val fragment = HomeFragment()
         val bundle = Bundle()
         bundle.putString(Constants.MESSAGE_TYPE, Constants.FRIEND)
         fragment.arguments = bundle
-        Log.e("abc", "openFriendScreen: ${fragment.arguments} ", )
     }
 
     override fun onStart() {

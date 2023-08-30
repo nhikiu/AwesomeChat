@@ -50,8 +50,9 @@ class CreateMessagesAdapter : ListAdapter<Friend, CreateMessagesAdapter.CreateMe
             binding.cbFriend.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION && binding.cbFriend.isChecked) {
+                    notifyItemChanged(currentList.indexOf(_selectedFriend))
                     _selectedFriend = getItem(position)
-                    notifyDataSetChanged()
+                    notifyItemChanged(position)
                 } else {
                     _selectedFriend = null
                 }
@@ -70,8 +71,8 @@ class CreateMessagesAdapter : ListAdapter<Friend, CreateMessagesAdapter.CreateMe
 
     @SuppressLint("NotifyDataSetChanged")
     fun cleatSelectedFriend() {
+        notifyItemChanged(currentList.indexOf(_selectedFriend))
         _selectedFriend = null
-        notifyDataSetChanged()
         onSingleSelectedListener?.onSingleSelectedListener(null)
     }
 }

@@ -1,9 +1,7 @@
 package com.example.baseproject.ui.friends.allFriend
 
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentAllFriendBinding
@@ -50,21 +48,18 @@ class AllFriendFragment :
                     }
                 }
 
-                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onClickUnfriendToSending(friend: Friend) {
                     val newFriend =
                         Friend(friend.id, friend.name, friend.avatar, Constants.STATE_SEND, friend.token)
                     shareViewModel.updateFriendState(newFriend, requireContext())
                 }
 
-                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onClickReceiveToConfirm(friend: Friend) {
                     val newFriend =
                         Friend(friend.id, friend.name, friend.avatar, Constants.STATE_FRIEND, friend.token)
                     shareViewModel.updateFriendState(newFriend, requireContext())
                 }
 
-                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onClickSendingToCancel(friend: Friend) {
                     DialogView().showConfirmDialog(
                         activity,

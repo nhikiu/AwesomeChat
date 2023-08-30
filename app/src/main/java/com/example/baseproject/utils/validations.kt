@@ -20,7 +20,7 @@ object ValidationUtils{
     }
 
     fun validatePassword(password: String) : String? {
-        val regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).+\$".toRegex()
+        val regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+\$".toRegex()
 
         if (password.isEmpty()) {
             return Constants.PASSWORD_REQUIRED

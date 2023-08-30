@@ -1,8 +1,6 @@
 package com.example.baseproject.ui.friends.pendingFriend
 
-import android.os.Build
 import android.os.Bundle
-import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -59,25 +57,21 @@ class PendingFriendFragment : BaseFragment<FragmentPendingFriendBinding, Friends
     private fun onClickReceiveFriend() {
         receiveFriendAdapter.setOnClickListener(object : PendingFriendAdapter.OnClickListener{
 
-            @RequiresApi(Build.VERSION_CODES.O)
             override fun onClickUnfriendToSending(friend: Friend) {
                 friend.status = Constants.STATE_SEND
                 shareViewModel.updateFriendState(friend, requireContext())
             }
 
-            @RequiresApi(Build.VERSION_CODES.O)
             override fun onClickReceiveToConfirm(friend: Friend) {
                 friend.status = Constants.STATE_FRIEND
                 shareViewModel.updateFriendState(friend, requireContext())
             }
 
-            @RequiresApi(Build.VERSION_CODES.O)
             override fun onClickSendingToCancel(friend: Friend) {
                 friend.status = Constants.STATE_UNFRIEND
                 shareViewModel.updateFriendState(friend, requireContext())
             }
 
-            @RequiresApi(Build.VERSION_CODES.O)
             override fun onClickReceiveToUnfriend(friend: Friend) {
                 friend.status = Constants.STATE_UNFRIEND
                 shareViewModel.updateFriendState(friend, requireContext())
@@ -109,19 +103,16 @@ class PendingFriendFragment : BaseFragment<FragmentPendingFriendBinding, Friends
     private fun onClickSendingFriend() {
         sendFriendAdapter.setOnClickListener(object : PendingFriendAdapter.OnClickListener{
 
-            @RequiresApi(Build.VERSION_CODES.O)
             override fun onClickUnfriendToSending(friend: Friend) {
                 friend.status = Constants.STATE_SEND
                 shareViewModel.updateFriendState(friend, requireContext())
             }
 
-            @RequiresApi(Build.VERSION_CODES.O)
             override fun onClickReceiveToConfirm(friend: Friend) {
                 friend.status = Constants.STATE_FRIEND
                 shareViewModel.updateFriendState(friend, requireContext())
             }
 
-            @RequiresApi(Build.VERSION_CODES.O)
             override fun onClickSendingToCancel(friend: Friend) {
                 friend.status = Constants.STATE_UNFRIEND
                 shareViewModel.updateFriendState(friend, requireContext())

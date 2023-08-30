@@ -59,7 +59,7 @@ object ListUtils {
         var sortList: MutableList<Any> = sortMessageByTime(messageList).toMutableList()
 
         for (i in sortList.size - 1 downTo 0) {
-            var currentItem = sortList[i]
+            val currentItem = sortList[i]
             if (currentItem is Message) {
                 val dateTime = DateTimeUtils.convertTimestampToDate(currentItem.sendAt.toLong())
                 if (!sortList.contains(dateTime)) {
