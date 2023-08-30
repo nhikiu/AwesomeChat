@@ -1,8 +1,6 @@
 package com.example.baseproject.ui.chats
 
 import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.baseproject.models.Chat
@@ -19,7 +17,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
-@RequiresApi(Build.VERSION_CODES.N)
 @HiltViewModel
 class ChatsViewModel @Inject constructor(
     private val database: FirebaseDatabase,
@@ -34,7 +31,6 @@ class ChatsViewModel @Inject constructor(
     private var _userListLiveData: MutableLiveData<List<User>> = MutableLiveData()
 
     private var _unreadMessage: MutableLiveData<Int> = MutableLiveData()
-    val unreadMessage: LiveData<Int> get() = _unreadMessage
 
     private var _query: MutableLiveData<String> = MutableLiveData()
     val query get() = _query
@@ -43,12 +39,21 @@ class ChatsViewModel @Inject constructor(
 
     init {
         getAllUser()
-        mChatList.sortWith(compareBy<Chat> { it.messages?.get(it.messages.size - 1)?.sendAt }.reversed())
     }
 
     fun setSearchQuery(query: String) {
         _query.value = query
-        getAllChat()
+        _chatListLiveData.value = mChatList.filter { chat ->
+            var check = false
+            if (chat.messages != null) {
+                for (i in chat.messages) {
+                    if (i.content.lowercase().contains(query.lowercase())) {
+                        check = true
+                    }
+                }
+            }
+            check
+        }
     }
 
     private fun getAllUser() {
@@ -137,9 +142,11 @@ class ChatsViewModel @Inject constructor(
                     if (searchString != "") {
                         _chatListLiveData.value = mChatList.filter { chat ->
                             var check = false
-                            for (i in chat.messages!!) {
-                                if (i.content.lowercase().contains(searchString.lowercase())) {
-                                    check = true
+                            if (chat.messages != null) {
+                                for (i in chat.messages) {
+                                    if (i.content.lowercase().contains(searchString.lowercase())) {
+                                        check = true
+                                    }
                                 }
                             }
                             check

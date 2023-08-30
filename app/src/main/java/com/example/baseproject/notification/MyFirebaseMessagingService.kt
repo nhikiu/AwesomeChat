@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.baseproject.R
 import com.example.baseproject.container.MainActivity
@@ -20,25 +19,31 @@ import com.google.firebase.messaging.RemoteMessage
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     private val channelId = Constants.CHANNEL_ID
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
         val title = message.notification?.title
         val body = message.notification?.body
         val uid = message.data[Constants.FROM_ID_USER]
-        Log.e("abc", "notification: ${message.data}", )
 
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val bundle = Bundle()
         bundle.putString(Constants.FROM_ID_USER, uid)
         bundle.putString(Constants.MESSAGE_TYPE, message.data[Constants.MESSAGE_TYPE])
-        intent.putExtra("data",bundle)
-        Log.e("abc", "onMessageReceived: ${intent.getBundleExtra("data")?.getString(Constants.FROM_ID_USER)}")
-        val pendingIntent = PendingIntent.getActivity(
-            this, 0, intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-        )
+        intent.putExtra(Constants.NOTIFICATION_DATA,bundle)
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getActivity(
+                this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            )
+        } else {
+            PendingIntent.getActivity(
+                this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
 
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setContentTitle(title)

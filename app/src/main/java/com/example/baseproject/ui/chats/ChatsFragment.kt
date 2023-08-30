@@ -1,9 +1,7 @@
 package com.example.baseproject.ui.chats
 
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import com.example.baseproject.R
@@ -15,8 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layout.fragment_chats),
-ChatsAdapter.UnreadChat{
+class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel>(R.layout.fragment_chats) {
     @Inject
     lateinit var appNavigation: AppNavigation
 
@@ -26,14 +23,12 @@ ChatsAdapter.UnreadChat{
 
     private var chatAdapter: ChatsAdapter? = null
 
-
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
         chatAdapter = ChatsAdapter()
         binding.recyclerviewChats.adapter = chatAdapter
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun bindingStateView() {
         super.bindingStateView()
 
@@ -80,10 +75,6 @@ ChatsAdapter.UnreadChat{
         }
     }
 
-    override fun unreadChatListener(unreadChat: MutableList<String>) {
-//        Log.e("abc", "unreadChatListener: $unreadChat", )
-    }
-
     private fun listenerSearchView(){
         val queryTextListener: SearchView.OnQueryTextListener =
             object : SearchView.OnQueryTextListener {
@@ -91,7 +82,6 @@ ChatsAdapter.UnreadChat{
                     return false
                 }
 
-                @RequiresApi(Build.VERSION_CODES.N)
                 override fun onQueryTextChange(p0: String?): Boolean {
                     viewModel.setSearchQuery(p0 ?: "")
                     return true

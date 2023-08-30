@@ -52,7 +52,7 @@ class ProfileDetailFragment :
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == RESULT_OK) {
                 // for camera
-                val selectedImageBitmap = result.data?.extras?.get("data") as? Bitmap
+                val selectedImageBitmap = result.data?.extras?.get(Constants.NOTIFICATION_DATA) as? Bitmap
                 // for gallery
                 selectedImageUri = result.data?.data
 
@@ -207,7 +207,7 @@ class ProfileDetailFragment :
                 )
 
                 if (selectedImageUri != null) {
-                    viewModel.uploadImageToStorage(userUpdate, selectedImageUri!!)
+                    selectedImageUri?.let { viewModel.uploadImageToStorage(userUpdate, it) }
                     viewModel.actionAvatar.observe(viewLifecycleOwner) {
                         if (it == ActionState.Finish) {
                             appNavigation.navigateUp()

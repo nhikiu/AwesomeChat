@@ -23,15 +23,9 @@ class ChatsAdapter : ListAdapter<Chat, ChatsAdapter.ChatViewHolder>(ChatDiffCall
     val unreadChat = mutableListOf<String>()
     private var unreadChatListener: UnreadChat? = null
 
-
     interface UnreadChat{
         fun unreadChatListener(unreadChat: MutableList<String>)
     }
-
-    fun setUnreadChatListener(listener: UnreadChat) {
-        unreadChatListener = listener
-    }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
         val inflate = LayoutInflater.from(parent.context)
@@ -41,15 +35,6 @@ class ChatsAdapter : ListAdapter<Chat, ChatsAdapter.ChatViewHolder>(ChatDiffCall
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
         val currentChat = getItem(position)
         holder.bindData(currentChat)
-        var friendId = ""
-        for (i in currentChat.id.split("-")) {
-            if (i != FirebaseAuth.getInstance().currentUser?.uid) {
-                friendId = i
-            }
-        }
-        holder.itemView.setOnClickListener {
-            onClickToMessage?.onClickToMessage(friendId)
-        }
     }
 
     interface OnClickToMessage {
@@ -60,7 +45,6 @@ class ChatsAdapter : ListAdapter<Chat, ChatsAdapter.ChatViewHolder>(ChatDiffCall
     fun setOnClickListener(onClickListener: OnClickToMessage) {
         this.onClickToMessage = onClickListener
     }
-
 
     inner class ChatViewHolder(private val binding: ItemChatBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -138,9 +122,19 @@ class ChatsAdapter : ListAdapter<Chat, ChatsAdapter.ChatViewHolder>(ChatDiffCall
                     binding.tvSendtime.text = time
                 }
             }
+
+            // onclick to message screen
+            itemView.setOnClickListener {
+                var friendId = ""
+                for (i in chat.id.split("-")) {
+                    if (i != FirebaseAuth.getInstance().currentUser?.uid) {
+                        friendId = i
+                    }
+                }
+                onClickToMessage?.onClickToMessage(friendId)
+            }
         }
     }
-
 
     class ChatDiffCallback : DiffUtil.ItemCallback<Chat>() {
         override fun areItemsTheSame(oldItem: Chat, newItem: Chat): Boolean {

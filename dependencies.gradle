@@ -36,6 +36,10 @@ ext {
             firestore       : '24.1.1',
             googleService   : "4.3.10",
             auth            : "22.1.0",
+            database        : "20.0.4",
+            storage         : "20.0.1",
+            messaging       : "23.0.3",
+            bom             : "32.2.0",
 
             //test
             junit           : "4.13",
@@ -90,13 +94,18 @@ ext {
             jackson         : "com.squareup.retrofit2:converter-jackson:${versions.jackson}",
             fcm             : "com.google.firebase:firebase-messaging:${versions.fcm}",
             coroutine       : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutine}",
-
             //firebase analytics
             analytics       : "com.google.firebase:firebase-analytics:${versions.analytics}",
             crashlytics     : "com.google.firebase:firebase-crashlytics:${versions.crashlytics}",
             firestore       : "com.google.firebase:firebase-firestore-ktx:${versions.firestore}",
             auth            : "com.google.firebase:firebase-auth-ktx:${versions.auth}",
+            database        : "com.google.firebase:firebase-database-ktx:${versions.database}",
+            storage         : "com.google.firebase:firebase-storage-ktx:${versions.storage}",
+            messaging       : "com.google.firebase:firebase-messaging:${versions.messaging}",
+            bom             : "com.google.firebase:firebase-bom:${versions.bom}",
 
+            // notification
+            badge           : "com.github.nex3z:NotificationBadge:v1.0.2",
 
             //Data store
             dataStore       : "androidx.datastore:datastore-preferences:${versions.dataStore}",

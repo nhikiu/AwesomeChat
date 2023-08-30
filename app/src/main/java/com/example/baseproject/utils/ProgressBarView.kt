@@ -16,7 +16,7 @@ object ProgressBarView {
             progressBar.requestWindowFeature(Window.FEATURE_NO_TITLE)
             progressBar.setCancelable(false)
             progressBar.setContentView(R.layout.layout_loading)
-            progressBar.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            progressBar.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
             progressBar.show()
         }

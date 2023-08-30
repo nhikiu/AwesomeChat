@@ -3,7 +3,6 @@ package com.example.baseproject.ui.messages
 import android.Manifest
 import android.annotation.SuppressLint
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -11,7 +10,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.net.toUri
@@ -43,7 +41,6 @@ class MessagesFragment :
 
     private val viewModel: MessagesViewModel by viewModels()
 
-    private lateinit var sendId: String
     private lateinit var toId: String
     private var selectedImages = mutableListOf<Int>()
 
@@ -53,7 +50,7 @@ class MessagesFragment :
     private val imagePaths = mutableListOf<String>()
     private var stickerList = listOf<Int>()
 
-    var checkEmoji = false
+    private var checkEmoji = false
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -138,7 +135,6 @@ class MessagesFragment :
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("IntentReset", "ClickableViewAccessibility")
     override fun setOnClick() {
         super.setOnClick()
@@ -221,7 +217,7 @@ class MessagesFragment :
                 )
             }
         })
-        binding.recyclerViewMessages.setOnTouchListener { view, motionEvent ->
+        binding.recyclerViewMessages.setOnTouchListener { _, _ ->
             binding.imagePickerContainer.visibility = View.GONE
             binding.recyclerStickerPicker.visibility = View.GONE
             binding.recyclerViewImagePicker.visibility = View.GONE
@@ -321,6 +317,7 @@ class MessagesFragment :
         }
     }
 
+    @SuppressLint("DiscouragedApi")
     private fun getAllSticker(): List<Int> {
         val stickerList = mutableListOf<Int>()
         for (i in 1..12) {

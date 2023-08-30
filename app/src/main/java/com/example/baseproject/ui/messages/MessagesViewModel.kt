@@ -1,14 +1,13 @@
 package com.example.baseproject.ui.messages
 
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.baseproject.R
 import com.example.baseproject.models.Message
 import com.example.baseproject.models.User
+import com.example.baseproject.notification.GoogleAPI
 import com.example.baseproject.notification.SendNotification
 import com.example.baseproject.ui.friends.DataModel
 import com.example.baseproject.ui.friends.FcmNotification
@@ -30,13 +29,13 @@ import javax.inject.Inject
 class MessagesViewModel @Inject constructor(
     private val database: FirebaseDatabase,
     private val auth: FirebaseAuth,
-    private val storage: FirebaseStorage
+    private val storage: FirebaseStorage,
+    private val api: GoogleAPI
 ) : BaseViewModel() {
     private val _friendProfile: MutableLiveData<User> = MutableLiveData()
     val friendProfile: LiveData<User> get() = _friendProfile
 
     private val _chatId: MutableLiveData<String> = MutableLiveData()
-    val chatId: LiveData<String> get() = _chatId
 
     private val mMessageList = arrayListOf<Message>()
 
@@ -45,8 +44,7 @@ class MessagesViewModel @Inject constructor(
 
     fun getUserById(id: String) {
         val fromId = auth.currentUser?.uid.toString()
-        val toId = id
-        _chatId.value = ValidationUtils.validateChatId(fromId, toId)
+        _chatId.value = ValidationUtils.validateChatId(fromId, id)
 
         val userRef =
             id.let { database.getReference(Constants.USER).child(it).child(Constants.PROFILE) }
@@ -58,10 +56,8 @@ class MessagesViewModel @Inject constructor(
                         id = id,
                         name = snapshot.child(Constants.USER_NAME).getValue<String?>() ?: "",
                         email = snapshot.child(Constants.USER_EMAIL).getValue<String?>() ?: "",
-                        phoneNumber = snapshot.child(Constants.USER_PHONENUMBER).getValue<String?>()
-                            ?: "",
-                        dateOfBirth = snapshot.child(Constants.USER_DATE_OF_BIRTH)
-                            .getValue<String>() ?: "",
+                        phoneNumber = snapshot.child(Constants.USER_PHONENUMBER).getValue<String?>() ?: "",
+                        dateOfBirth = snapshot.child(Constants.USER_DATE_OF_BIRTH).getValue<String>() ?: "",
                         avatar = snapshot.child(Constants.USER_AVATAR).getValue<String>() ?: "",
                         token = snapshot.child(Constants.USER_TOKEN).getValue<String>() ?: ""
                     )
@@ -128,7 +124,6 @@ class MessagesViewModel @Inject constructor(
         })
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun sendMessage(toId: String, text: String, type: String, context: Context) {
         val sendId = auth.currentUser?.uid
 
@@ -161,14 +156,14 @@ class MessagesViewModel @Inject constructor(
                                 val friend = friendProfile.value
                                 val content = context.resources.getString(R.string.sent_picture)
                                 if (friend != null) {
-                                        SendNotification.sendNotification(
-                                            friend.token.toString(),
-                                            FcmNotification(
-                                                title = context.getString(R.string.new_message),
-                                                body = "${friend.name} ${context.getString(R.string.new_message)} $content"),
-                                            DataModel("high", null, true, message.content, friend.name, sendId, Constants.NOTIFICATION_TYPE_NEW_MESSAGE)
-                                        )
-
+                                    SendNotification.sendNotification(
+                                        friend.token.toString(),
+                                        FcmNotification(
+                                            title = context.getString(R.string.new_message),
+                                            body = "${friend.name} ${context.getString(R.string.new_message)} $content"),
+                                        DataModel("high", null, true, message.content, friend.name, sendId, Constants.NOTIFICATION_TYPE_NEW_MESSAGE),
+                                        api
+                                    )
                                 }
 
                             }
@@ -203,7 +198,8 @@ class MessagesViewModel @Inject constructor(
                             FcmNotification(
                                 title = context.getString(R.string.new_message),
                                 body = "${friend.name} ${context.getString(R.string.new_message)} $content"),
-                            DataModel("high", null, true, message.content, friend.name, sendId, Constants.NOTIFICATION_TYPE_NEW_MESSAGE)
+                            DataModel("high", null, true, message.content, friend.name, sendId, Constants.NOTIFICATION_TYPE_NEW_MESSAGE),
+                            api
                         )
                     }
                 }

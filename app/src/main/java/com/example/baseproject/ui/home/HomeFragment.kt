@@ -1,12 +1,9 @@
 package com.example.baseproject.ui.home
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.*
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.example.baseproject.R
@@ -23,8 +20,8 @@ import com.example.baseproject.utils.Constants
 import com.example.core.base.fragment.BaseFragment
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 
 @AndroidEntryPoint
@@ -37,18 +34,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
     private val friendViewModel: FriendsViewModel by viewModels()
     private val chatViewModel: ChatsViewModel by viewModels()
 
-    @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("MissingInflatedId")
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
-        val sharePreferences = context?.getSharedPreferences(Constants.ISLOGIN, Context.MODE_PRIVATE)
-        var isLogIn: Boolean
-        sharePreferences?.let {
-            isLogIn = it.getBoolean(Constants.ISLOGIN, false)
-            if (isLogIn) {
-                Timber.tag("abc").e("Is Login: %s", isLogIn)
-            }
-        }
 
         // dem so tin nhan chua doc
         chatViewModel.chatListLiveData.observe(viewLifecycleOwner) { listChat ->
@@ -64,10 +52,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
             if (unreadChat > 0) {
                 val badge = binding.bottomNav.getOrCreateBadge(R.id.itChats)
                 badge.isVisible = true
-                badge.verticalOffset = Math.round(
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        4.0F, resources.displayMetrics))
+                badge.verticalOffset = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    4.0F, resources.displayMetrics
+                ).roundToInt()
                 badge.badgeTextColor = ContextCompat.getColor(requireContext(), R.color.white)
                 badge.number = unreadChat
                 badge.backgroundColor = ContextCompat.getColor(requireContext(), R.color.red)
@@ -83,10 +71,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
             if (sendList.size > 0) {
                 val badge = binding.bottomNav.getOrCreateBadge(R.id.itFriends)
                 badge.isVisible = true
-                badge.verticalOffset = Math.round(
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                    4.0F, resources.displayMetrics))
+                badge.verticalOffset = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    4.0F, resources.displayMetrics
+                ).roundToInt()
                 badge.badgeTextColor = ContextCompat.getColor(requireContext(), R.color.white)
                 badge.number = sendList.size
                 badge.backgroundColor = ContextCompat.getColor(requireContext(), R.color.red)

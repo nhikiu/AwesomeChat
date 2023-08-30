@@ -76,4 +76,5 @@ object Constants {
     const val NOTIFICATION_TYPE_STATE_FRIEND = "newFriend"
     const val NOTIFICATION_TYPE_NEW_MESSAGE = "newMessage"
     const val FROM_ID_USER = "fromIdUser"
+    const val NOTIFICATION_DATA = "data"
 }

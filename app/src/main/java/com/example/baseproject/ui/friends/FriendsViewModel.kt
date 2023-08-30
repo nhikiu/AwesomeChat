@@ -2,12 +2,11 @@ package com.example.baseproject.ui.friends
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.baseproject.R
 import com.example.baseproject.models.Friend
+import com.example.baseproject.notification.GoogleAPI
 import com.example.baseproject.notification.SendNotification
 import com.example.baseproject.ui.chats.ActionState
 import com.example.baseproject.utils.Constants
@@ -25,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class FriendsViewModel @Inject constructor(
     private val database: FirebaseDatabase,
-    private val auth: FirebaseAuth
+    private val auth: FirebaseAuth,
+    private val api: GoogleAPI
 ) : BaseViewModel() {
     private val mFriendList = arrayListOf<Friend>()
 
@@ -33,12 +33,19 @@ class FriendsViewModel @Inject constructor(
     val friendListLiveData: LiveData<List<Friend>> get() = _friendListLiveData
 
     private var _query: MutableLiveData<String> = MutableLiveData()
-    val query: LiveData<String> get() = _query
 
     val actionFriend = MutableLiveData<ActionState>()
     fun setSearchQuery(query: String) {
         _query.value = query
-        getAllUser()
+        _friendListLiveData.value = ListUtils.sortByName(mFriendList.filter { friend ->
+            ListUtils.removeVietnameseAccents(
+                friend.name.lowercase()
+            ).contains(
+                ListUtils.removeVietnameseAccents(
+                    query.lowercase().trim()
+                )
+            )
+        }.toMutableList())
     }
 
     init {
@@ -107,7 +114,6 @@ class FriendsViewModel @Inject constructor(
         })
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun updateFriendState(friend: Friend, context: Context) {
         val userRef = database.getReference(Constants.USER)
         val currentId = auth.currentUser?.uid
@@ -139,7 +145,6 @@ class FriendsViewModel @Inject constructor(
         if (currentId != null) {
             userRef.child(currentId).child(Constants.PROFILE)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
-                    @RequiresApi(Build.VERSION_CODES.O)
                     override fun onDataChange(snapshot: DataSnapshot) {
                         if (snapshot.exists()) {
                             val name = snapshot.child(Constants.USER_NAME).getValue<String?>() ?: ""
@@ -171,7 +176,6 @@ class FriendsViewModel @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun sendNotification(friend: Friend, content: String, type: String) {
 
         val currentId = auth.currentUser?.uid
@@ -182,7 +186,7 @@ class FriendsViewModel @Inject constructor(
                     title = friend.name,
                     body = content),
                 DataModel("high", null, true, content, friend.name, currentId, type)
-            )
+            ,api)
         }
     }
 }

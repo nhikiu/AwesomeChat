@@ -83,7 +83,7 @@ class CreateMessagesFragment
 
         binding.btnNext.setOnClickListener {
                 val bundle = Bundle()
-                bundle.putString(Constants.USER_ID, _selectedFriend!!.id)
+                bundle.putString(Constants.USER_ID, _selectedFriend?.id)
                 appNavigation.openCreateMessagesToMessaagesScreen(bundle)
         }
 
