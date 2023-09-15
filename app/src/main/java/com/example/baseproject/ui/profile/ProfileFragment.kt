@@ -47,6 +47,7 @@ class ProfileFragment :
 
         binding.btnLogOut.setOnClickListener {
             viewModel.logoutUser()
+            appNavigation.navigateUp()
         }
 
         binding.btnEdit.setOnClickListener {
